@@ -63,14 +63,14 @@
             android:text="Device Details"
             android:textSize="20sp" />
 
-        <EditText
+        <TextView
+            android:textSize="20sp"
+            android:text="Details..."
             android:id="@+id/etDeviceDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:freezesText="true"
-            android:hint="More Details"
-            android:inputType="text" />
+            android:freezesText="true"/>
 
     </LinearLayout>
 
