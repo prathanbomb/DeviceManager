@@ -14,12 +14,12 @@ import androidx.fragment.app.Fragment;
 import com.example.devicemanager.R;
 import com.example.devicemanager.manager.Contextor;
 
-public class DeviceDetailFragment extends Fragment {
+public class AddDeviceFragment extends Fragment {
 
-    Spinner spType ;
+    private Spinner spType ;
 
-    public static DeviceDetailFragment newInstances(){
-        DeviceDetailFragment fragment = new DeviceDetailFragment();
+    public static AddDeviceFragment newInstances(){
+        AddDeviceFragment fragment = new AddDeviceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -34,15 +34,11 @@ public class DeviceDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.fragment_edit_detail, container, false);
-        initIntances(view,savedInstanceState);
+        initInstances(view,savedInstanceState);
         return view;
     }
 
-    public void init(){
-
-    }
-
-    public void initIntances(View view, Bundle savedInstanceState){
+    private void initInstances(View view, Bundle savedInstanceState){
 
         spType = view.findViewById(R.id.spinnerDeviceType);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(

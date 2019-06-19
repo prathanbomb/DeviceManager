@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.AddDeviceActivity"
+            android:label="@string/add_device"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activity.CheckDeviceActivity"
+            android:label="@string/device_detail"/>
     </application>
 
 </manifest>

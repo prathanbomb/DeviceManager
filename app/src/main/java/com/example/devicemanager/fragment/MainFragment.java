@@ -10,7 +10,8 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.MainActivity;
+import com.example.devicemanager.activity.AddDeviceActivity;
+import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.SummaryActivity;
 
 
@@ -96,12 +97,11 @@ public class MainFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if (view == btnAdd) {
-                // TODO:add next page here
-//                Intent intent = new Intent(getActivity(), SummaryActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
+                startActivity(intent);
             } else if (view == btnCheck) {
-//                Intent intent = new Intent(getActivity(), SummaryActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), CheckDeviceActivity.class);
+                startActivity(intent);
             } else if (view == btnSummary) {
                 Intent intent = new Intent(getActivity(), SummaryActivity.class);
                 startActivity(intent);

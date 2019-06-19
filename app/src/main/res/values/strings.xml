@@ -10,4 +10,10 @@
     <string name="summary">Summary</string>
     <string name="check">Check</string>
     <string name="add">Add</string>
+    <string name="add_device">Add Device</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="device_detail">Device Detail</string>
+    <string name="edit_device">Edit Device</string>
 </resources>
