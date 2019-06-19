@@ -1,13 +1,17 @@
 package com.example.devicemanager.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
+import com.example.devicemanager.activity.MainActivity;
+import com.example.devicemanager.activity.SummaryActivity;
 
 
 /**
@@ -15,6 +19,7 @@ import com.example.devicemanager.R;
  */
 @SuppressWarnings("unused")
 public class MainFragment extends Fragment {
+    Button btnAdd, btnCheck, btnSummary;
 
     public MainFragment() {
         super();
@@ -29,7 +34,7 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
 
@@ -51,7 +56,13 @@ public class MainFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        // Init 'View' instance(s) with rootView.findViewById here
+        btnAdd = (Button) rootView.findViewById(R.id.btnAdd);
+        btnCheck = (Button) rootView.findViewById(R.id.btnCheck);
+        btnSummary = (Button) rootView.findViewById(R.id.btnSummary);
+
+        btnAdd.setOnClickListener(clickListener);
+        btnCheck.setOnClickListener(clickListener);
+        btnSummary.setOnClickListener(clickListener);
     }
 
     @Override
@@ -80,5 +91,22 @@ public class MainFragment extends Fragment {
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         // Restore Instance State here
     }
+
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view == btnAdd) {
+                // TODO:add next page here
+//                Intent intent = new Intent(getActivity(), SummaryActivity.class);
+//                startActivity(intent);
+            } else if (view == btnCheck) {
+//                Intent intent = new Intent(getActivity(), SummaryActivity.class);
+//                startActivity(intent);
+            } else if (view == btnSummary) {
+                Intent intent = new Intent(getActivity(), SummaryActivity.class);
+                startActivity(intent);
+            }
+        }
+    };
 
 }

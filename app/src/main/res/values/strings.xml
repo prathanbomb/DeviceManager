@@ -6,4 +6,8 @@
         <item>Others</item>
     </string-array>
 
+    <string name="search">Search</string>
+    <string name="summary">Summary</string>
+    <string name="check">Check</string>
+    <string name="add">Add</string>
 </resources>
