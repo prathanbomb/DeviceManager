@@ -72,7 +72,7 @@ public class SummaryFragment extends Fragment {
             public CharSequence getPageTitle(int position) {
                 switch (position) {
                     case 0:
-                        return "Notebook";
+                        return "Laptop";
                     case 1:
                         return "Other";
                     default:

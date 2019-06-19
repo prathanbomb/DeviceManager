@@ -58,14 +58,10 @@ public class SummaryNoteBookFragment extends Fragment {
         brand.add("Apple");
         brand.add("Asus");
         brand.add("Acer");
-        brand.add("Lenovo");
-        brand.add("msi");
         count = new ArrayList<Integer>();
         count.add(40);
         count.add(12);
         count.add(8);
-        count.add(15);
-        count.add(2);
         recyclerNotebookAdapter = new RecyclerNotebookAdapter();
         recyclerNotebookAdapter.setBrand(brand);
         recyclerNotebookAdapter.setCount(count);
