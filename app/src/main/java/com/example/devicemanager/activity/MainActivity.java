@@ -18,10 +18,10 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.contentContainer, MainFragment.newInstance())
                     .commit();
         }
-        initInstance();
+        initInstances();
     }
 
-    private void initInstance() {
+    private void initInstances() {
     }
 
 }

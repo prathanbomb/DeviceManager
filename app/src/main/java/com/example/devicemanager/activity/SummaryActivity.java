@@ -21,10 +21,10 @@ public class SummaryActivity extends AppCompatActivity {
                     .add(R.id.contentContainer, SummaryFragment.newInstance())
                     .commit();
         }
-        initInstance();
+        initInstances();
     }
 
-    private void initInstance() {
+    private void initInstances() {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
