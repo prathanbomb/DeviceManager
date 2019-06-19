@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity"
-    android:padding="24dp">
+    tools:context=".activity.MainActivity">
     <FrameLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></FrameLayout>
 
     <androidx.appcompat.widget.SearchView
+        android:layout_gravity="top|right"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></androidx.appcompat.widget.SearchView>
+        android:layout_height="wrap_content">
+
+    </androidx.appcompat.widget.SearchView>
 
 
 

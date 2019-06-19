@@ -15,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="7"
-            android:textSize="36dp" />
+            android:textSize="24sp" />
 
         <TextView
             android:gravity="center"
@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:textSize="36dp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
