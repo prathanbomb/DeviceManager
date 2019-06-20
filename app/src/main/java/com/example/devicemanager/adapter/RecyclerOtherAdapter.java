@@ -1,5 +1,7 @@
 package com.example.devicemanager.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
+import com.example.devicemanager.activity.MainActivity;
 
 import java.util.ArrayList;
 
 public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdapter.Holder> {
     ArrayList<String> brand = new ArrayList<String>();
+    Context context;
 
+    public RecyclerOtherAdapter(Context context){
+        this.context = context;
+    }
     public void setBrand(ArrayList<String> brand) {
         this.brand = brand;
     }
@@ -34,8 +41,18 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
+    public void onBindViewHolder(@NonNull Holder holder, final int position) {
         holder.setItem(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:intent summary item
+
+//                Intent intent = new Intent(context, MainActivity.class);
+//                intent.putExtra("Type",brand.get(position));
+//                context.startActivity(intent);
+            }
+        });
     }
 
 

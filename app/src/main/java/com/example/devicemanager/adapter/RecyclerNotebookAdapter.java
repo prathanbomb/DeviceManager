@@ -1,5 +1,7 @@
 package com.example.devicemanager.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
+import com.example.devicemanager.activity.MainActivity;
+import com.example.devicemanager.fragment.SummaryFragment;
+import com.example.devicemanager.manager.Contextor;
 
 import java.util.ArrayList;
 
 public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebookAdapter.Holder> {
     ArrayList<String> brand = new ArrayList<String>();
+    public RecyclerNotebookAdapter(Context context){
+        this.context = context;
+    }
+
+
+    Context context;
+
 
     public ArrayList<String> getBrand() {
         return brand;
@@ -42,8 +54,17 @@ public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
+    public void onBindViewHolder(@NonNull Holder holder, final int position) {
         holder.setItem(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:intent summary item
+//                Intent intent = new Intent(context, MainActivity.class);
+//                intent.putExtra("Type",brand.get(position));
+//                context.startActivity(intent);
+            }
+        });
     }
 
 

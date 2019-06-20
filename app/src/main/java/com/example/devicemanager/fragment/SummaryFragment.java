@@ -11,11 +11,15 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.devicemanager.R;
+import com.example.devicemanager.adapter.RecyclerNotebookAdapter;
+import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import com.example.devicemanager.view.SlidingTabLayout;
 
 public class SummaryFragment extends Fragment {
     ViewPager viewPager;
     SlidingTabLayout slidingTabLayout;
+    RecyclerOtherAdapter recyclerOtherAdapter;
+    RecyclerNotebookAdapter recyclerNotebookAdapter;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();

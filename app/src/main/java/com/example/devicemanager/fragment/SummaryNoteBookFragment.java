@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerNotebookAdapter;
+import com.example.devicemanager.manager.Contextor;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public class SummaryNoteBookFragment extends Fragment {
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
         // Init 'View' instance(s) with rootView.findViewById here
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getContext());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvNotebook);
         recyclerView.setLayoutManager(layoutManager);
         brand = new ArrayList<String>();
@@ -62,7 +63,7 @@ public class SummaryNoteBookFragment extends Fragment {
         count.add(40);
         count.add(12);
         count.add(8);
-        recyclerNotebookAdapter = new RecyclerNotebookAdapter();
+        recyclerNotebookAdapter = new RecyclerNotebookAdapter(getContext());
         recyclerNotebookAdapter.setBrand(brand);
         recyclerNotebookAdapter.setCount(count);
         recyclerView.setAdapter(recyclerNotebookAdapter);

@@ -66,7 +66,7 @@ public class SummaryOtherFragment extends Fragment {
         count.add(8);
         count.add(15);
         count.add(2);
-        recyclerOtherAdapter = new RecyclerOtherAdapter();
+        recyclerOtherAdapter = new RecyclerOtherAdapter(getContext());
         recyclerOtherAdapter.setBrand(brand);
         recyclerOtherAdapter.setCount(count);
         recyclerView.setAdapter(recyclerOtherAdapter);
