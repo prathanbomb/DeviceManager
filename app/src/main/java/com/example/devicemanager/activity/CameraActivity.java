@@ -10,6 +10,8 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
+import com.example.devicemanager.MainApplication;
 import com.example.devicemanager.manager.Contextor;
 
 import java.io.File;
@@ -64,6 +66,9 @@ public class CameraActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+        }
+        else {
+            finish();
         }
     }
 

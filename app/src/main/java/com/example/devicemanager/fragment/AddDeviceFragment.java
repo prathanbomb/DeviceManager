@@ -89,6 +89,7 @@ public class AddDeviceFragment extends Fragment {
         public void onClick(View view) {
             Intent intent = new Intent(Contextor.getInstance().getContext(), CameraActivity.class);
             startActivity(intent);
+            getActivity().finish();
         }
     };
 }
