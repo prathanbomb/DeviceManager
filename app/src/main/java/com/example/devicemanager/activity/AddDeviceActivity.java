@@ -35,7 +35,8 @@ public class AddDeviceActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
 
             bundle.putString("Path", getIntent().getStringExtra("Path"));
-            AddDeviceFragment fragment = AddDeviceFragment.newInstances();
+            String serial = getIntent().getStringExtra("serial");
+            AddDeviceFragment fragment = AddDeviceFragment.newInstances(serial);
             fragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction()

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
 import com.example.devicemanager.activity.CameraActivity;
+import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;

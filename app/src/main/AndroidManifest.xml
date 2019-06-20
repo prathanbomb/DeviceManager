@@ -40,7 +40,9 @@
             android:label="@string/add_device"
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activity.CameraActivity"/>
-        <activity android:name=".activity.SearchActivity"/>
+        <activity android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.noActionbar"/>
+        <activity android:name=".activity.CheckDeviceActivity"/>
     </application>
 
 </manifest>

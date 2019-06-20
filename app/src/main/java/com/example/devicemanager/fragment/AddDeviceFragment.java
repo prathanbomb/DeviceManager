@@ -1,5 +1,7 @@
 package com.example.devicemanager.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,9 +32,10 @@ public class AddDeviceFragment extends Fragment {
     private ImageView ivDevice;
     private static String serial;
     EditText etOwnerName,etSerialNumber,etDeviceDetail;
+    private Button btnConfirm, btnCancel;
 
     public static AddDeviceFragment newInstances(String barcode){
-        serial=barcode;
+        serial = barcode;
         AddDeviceFragment fragment = new AddDeviceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -65,6 +70,13 @@ public class AddDeviceFragment extends Fragment {
         etOwnerName=(EditText) view.findViewById(R.id.etOwnerName);
         etSerialNumber=(EditText) view.findViewById(R.id.etSerialNumber);
         etDeviceDetail=(EditText) view.findViewById(R.id.etDeviceDetail);
+
+        btnConfirm = view.findViewById(R.id.btnConfirm);
+        btnCancel = view.findViewById(R.id.btnCancel);
+        btnConfirm.setOnClickListener(clickListener);
+        btnCancel.setOnClickListener(clickListener);
+
+
         String path = getArguments().getString("Path");
 
         if ( path != null) {
@@ -83,6 +95,27 @@ public class AddDeviceFragment extends Fragment {
         }
     }
 
+    private void showAlertDialog(int msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String dialogMsg = getResources().getString(msg);
+
+        builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     // TODO: Save State in this condition & Fix stacked activity
     View.OnClickListener onClickImage = new View.OnClickListener() {
         @Override
@@ -90,6 +123,19 @@ public class AddDeviceFragment extends Fragment {
             Intent intent = new Intent(Contextor.getInstance().getContext(), CameraActivity.class);
             startActivity(intent);
             getActivity().finish();
+        }
+    };
+
+
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(view == btnCancel){
+                showAlertDialog(R.string.dialog_msg_cancel);
+            }
+            else if (view == btnConfirm) {
+                showAlertDialog(R.string.dialog_msg_confirm);
+            }
         }
     };
 }
