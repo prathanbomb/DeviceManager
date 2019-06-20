@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,9 +20,13 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.CameraActivity;
+import com.example.devicemanager.activity.MainActivity;
+import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
 
 import java.io.File;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
@@ -28,6 +34,7 @@ public class AddDeviceFragment extends Fragment {
     private ImageView ivDevice;
     private static String serial;
     EditText etOwnerName,etSerialNumber,etDeviceDetail;
+    Button btnScanBarcode;
 
     public static AddDeviceFragment newInstances(String barcode){
         serial=barcode;
@@ -65,6 +72,14 @@ public class AddDeviceFragment extends Fragment {
         etOwnerName=(EditText) view.findViewById(R.id.etOwnerName);
         etSerialNumber=(EditText) view.findViewById(R.id.etSerialNumber);
         etDeviceDetail=(EditText) view.findViewById(R.id.etDeviceDetail);
+        btnScanBarcode = (Button) view.findViewById(R.id.btnScanBarcode);
+        btnScanBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
+                startActivityForResult(intent , 12345);
+            }
+        });
         String path = getArguments().getString("Path");
 
         if ( path != null) {
@@ -91,4 +106,13 @@ public class AddDeviceFragment extends Fragment {
             startActivity(intent);
         }
     };
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 12345) {
+            if (resultCode == RESULT_OK) {
+                etSerialNumber.setText(data.getStringExtra("serial"));
+            }
+        }
+    }
 }

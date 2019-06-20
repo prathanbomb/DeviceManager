@@ -1,4 +1,4 @@
-package com.example.devicemanager;
+package com.example.devicemanager.manager;
 
 import java.util.ArrayList;
 

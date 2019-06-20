@@ -103,8 +103,7 @@ public class MainFragment extends Fragment {
                 intent.putExtra("serial","null");
                 startActivity(intent);
             } else if (view == btnCheck) {
-                Intent intent = new Intent(getActivity(), CheckDeviceActivity.class);
-                intent.putExtra("serial","09845236214".toString());
+                Intent intent = new Intent(getActivity(), ScanBarcodeActivity.class);
                 startActivity(intent);
             } else if (view == btnSummary) {
                 Intent intent = new Intent(getActivity(), SummaryActivity.class);
