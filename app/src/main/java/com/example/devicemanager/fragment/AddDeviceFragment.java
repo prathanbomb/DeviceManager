@@ -1,5 +1,7 @@
 package com.example.devicemanager.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,9 +22,12 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.CameraActivity;
+import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
 
 import java.io.File;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
