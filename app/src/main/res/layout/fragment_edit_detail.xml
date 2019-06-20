@@ -91,6 +91,27 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:text="@string/cancel"
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="@string/confirm"
+                android:id="@+id/btnConfirm"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 </ScrollView>

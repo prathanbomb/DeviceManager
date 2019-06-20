@@ -36,7 +36,6 @@ public class AddDeviceActivity extends AppCompatActivity {
 
             bundle.putString("Path", getIntent().getStringExtra("Path"));
             String serial = getIntent().getStringExtra("serial");
-
             AddDeviceFragment fragment = AddDeviceFragment.newInstances(serial);
             fragment.setArguments(bundle);
 
@@ -50,11 +49,10 @@ public class AddDeviceActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btnCancel = findViewById(R.id.btnCancel);
+        /*btnCancel = findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(onClickBtnCancel);
         btnConfirm = findViewById(R.id.btnConfirm);
-        btnConfirm.setOnClickListener(onClickBtnConfirm);
-
+        btnConfirm.setOnClickListener(onClickBtnConfirm);*/
     }
 
     @Override

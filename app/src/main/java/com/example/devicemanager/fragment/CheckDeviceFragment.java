@@ -1,5 +1,7 @@
 package com.example.devicemanager.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,26 +15,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.CheckDeviceActivity;
-import com.example.devicemanager.activity.MainActivity;
 import com.example.devicemanager.manager.Contextor;
-
-import java.io.File;
 
 public class CheckDeviceFragment extends Fragment {
 
     private Spinner spType;
-    TextView tvSerialNumber, tvOwnerName, etDeviceDetail;
+    private TextView tvSerialNumber, tvOwnerName, etDeviceDetail;
     private static String serial;
-    Button btnConfirm,btnCancel,btnEdit;
+    private Button btnConfirm,btnCancel,btnEdit;
 
     public static CheckDeviceFragment newInstances(String barcode) {
         CheckDeviceFragment fragment = new CheckDeviceFragment();
@@ -73,16 +71,19 @@ public class CheckDeviceFragment extends Fragment {
         Glide.with(Contextor.getInstance().getContext())
                 .load(uri)
                 .into(ivDevice);*/
-        tvSerialNumber = (TextView) view.findViewById(R.id.tvSerialNumber);
-        tvOwnerName = (TextView) view.findViewById(R.id.tvOwnerName);
-        etDeviceDetail = (TextView) view.findViewById(R.id.etDeviceDetail);
+
+        tvSerialNumber = view.findViewById(R.id.tvSerialNumber);
+        tvOwnerName = view.findViewById(R.id.tvOwnerName);
+        etDeviceDetail = view.findViewById(R.id.etDeviceDetail);
 
         tvSerialNumber.setText(serial.toString());
         tvOwnerName.setText("Mr.Natthapat Phatthana");
         etDeviceDetail.setText("Macbook Pro 14");
-        btnEdit = (Button) view.findViewById(R.id.btnEdit);
-        btnCancel = (Button) view.findViewById(R.id.btnCancel);
-        btnConfirm = (Button) view.findViewById(R.id.btnConfirm);
+
+        btnEdit = view.findViewById(R.id.btnEdit);
+        btnCancel = view.findViewById(R.id.btnCancel);
+        btnConfirm = view.findViewById(R.id.btnConfirm);
+
         btnEdit.setOnClickListener(clickListener);
         btnCancel.setOnClickListener(clickListener);
         btnConfirm.setOnClickListener(clickListener);
@@ -91,18 +92,39 @@ public class CheckDeviceFragment extends Fragment {
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(view==btnEdit) {
+            if(view == btnEdit) {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                 intent.putExtra("serial", "09845236214");
                 startActivity(intent);
                 getActivity().finish();
             }
-            else if(view==btnCancel){
-                getActivity().finish();
+            else if(view == btnCancel){
+                showAlertDialog(R.string.dialog_msg_cancel);
             }
             else if (view == btnConfirm) {
-                getActivity().finish();
+                showAlertDialog(R.string.dialog_msg_confirm);
             }
         }
     };
+
+    private void showAlertDialog(int msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String dialogMsg = getResources().getString(msg);
+
+        builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }

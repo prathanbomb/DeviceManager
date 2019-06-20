@@ -3,9 +3,13 @@ package com.example.devicemanager.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -14,7 +18,10 @@ import com.example.devicemanager.activity.AddDeviceActivity;
 import com.example.devicemanager.activity.CameraActivity;
 import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
+import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
+import com.example.devicemanager.manager.Contextor;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 
 /**
@@ -23,6 +30,7 @@ import com.example.devicemanager.activity.SummaryActivity;
 @SuppressWarnings("unused")
 public class MainFragment extends Fragment {
     Button btnAdd, btnCheck, btnSummary;
+    LinearLayout linearLayout;
 
     public MainFragment() {
         super();
@@ -66,6 +74,16 @@ public class MainFragment extends Fragment {
         btnAdd.setOnClickListener(clickListener);
         btnCheck.setOnClickListener(clickListener);
         btnSummary.setOnClickListener(clickListener);
+
+        linearLayout = rootView.findViewById(R.id.layout_search);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Contextor.getInstance().getContext(), SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
