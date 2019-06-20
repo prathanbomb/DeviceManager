@@ -100,7 +100,7 @@ public class MainFragment extends Fragment {
         public void onClick(View view) {
             if (view == btnAdd) {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
-                intent.putExtra("serial","09845236214");
+                intent.putExtra("serial","null");
                 startActivity(intent);
             } else if (view == btnCheck) {
                 Intent intent = new Intent(getActivity(), CheckDeviceActivity.class);
