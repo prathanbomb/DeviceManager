@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.devicemanager">
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +15,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".MainApplication">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.devicemanager.fragment.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
         <activity android:name=".activity.SummaryActivity"></activity>
         <activity android:name=".activity.MainActivity"
             android:theme="@style/AppTheme">
@@ -24,6 +40,7 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activity.CheckDeviceActivity"
             android:label="@string/device_detail"/>
+        <activity android:name=".activity.CameraActivity"/>
     </application>
 
 </manifest>

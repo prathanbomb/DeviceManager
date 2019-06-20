@@ -2,7 +2,8 @@
     <string name="app_name">DeviceManager</string>
 
     <string-array name="device_types">
-        <item>Notebook</item>
+        <item>Device</item>
+        <item>Furniture</item>
         <item>Others</item>
     </string-array>
 
@@ -16,4 +17,6 @@
     <string name="cancel">Cancel</string>
     <string name="device_detail">Device Detail</string>
     <string name="edit_device">Edit Device</string>
+    <string name="dialog_msg_confirm">Save the Data?</string>
+    <string name="dialog_msg_cancel">Discard data?</string>
 </resources>

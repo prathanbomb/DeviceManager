@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.CheckDeviceActivity;
+import com.example.devicemanager.activity.CameraActivity;
 import com.example.devicemanager.activity.SummaryActivity;
 
 
@@ -100,13 +100,12 @@ public class MainFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                 startActivity(intent);
             } else if (view == btnCheck) {
-                Intent intent = new Intent(getActivity(), CheckDeviceActivity.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(getActivity(), CameraActivity.class);
+                startActivity(intent);*/
             } else if (view == btnSummary) {
                 Intent intent = new Intent(getActivity(), SummaryActivity.class);
                 startActivity(intent);
             }
         }
     };
-
 }

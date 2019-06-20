@@ -1,10 +1,12 @@
 package com.example.devicemanager.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.devicemanager.R;
@@ -12,6 +14,7 @@ import com.example.devicemanager.fragment.CheckDeviceFragment;
 
 public class CheckDeviceActivity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,7 @@ public class CheckDeviceActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
     private void initInstances() {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -38,4 +42,5 @@ public class CheckDeviceActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

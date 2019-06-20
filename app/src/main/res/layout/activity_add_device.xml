@@ -15,8 +15,8 @@
         android:orientation="horizontal">
 
         <Button
-            android:text="@string/edit"
-            android:id="@+id/btnEdit"
+            android:text="@string/cancel"
+            android:id="@+id/btnCancel"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1" />
