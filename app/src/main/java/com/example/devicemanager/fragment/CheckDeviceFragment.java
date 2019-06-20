@@ -94,7 +94,7 @@ public class CheckDeviceFragment extends Fragment {
         public void onClick(View view) {
             if(view == btnEdit) {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
-                intent.putExtra("serial", "09845236214");
+                intent.putExtra("Serial", "09845236214");
                 startActivity(intent);
                 getActivity().finish();
             }

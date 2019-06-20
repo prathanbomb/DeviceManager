@@ -33,13 +33,11 @@ public class AddDeviceFragment extends Fragment {
 
     private Spinner spType ;
     private ImageView ivDevice;
-    private static String serial;
-    EditText etOwnerName,etSerialNumber,etDeviceDetail;
+    private EditText etOwnerName,etSerialNumber,etDeviceDetail;
     private Button btnConfirm, btnCancel;
-    Button btnScanBarcode;
+    private Button btnScanBarcode;
 
-    public static AddDeviceFragment newInstances(String barcode){
-        serial = barcode;
+    public static AddDeviceFragment newInstances(){
         AddDeviceFragment fragment = new AddDeviceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -75,21 +73,15 @@ public class AddDeviceFragment extends Fragment {
         etSerialNumber=(EditText) view.findViewById(R.id.etSerialNumber);
         etDeviceDetail=(EditText) view.findViewById(R.id.etDeviceDetail);
         btnScanBarcode = (Button) view.findViewById(R.id.btnScanBarcode);
-        btnScanBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
-                startActivityForResult(intent , 12345);
-            }
-        });
+        btnScanBarcode.setOnClickListener(onClickBtnScan);
 
         btnConfirm = view.findViewById(R.id.btnConfirm);
         btnCancel = view.findViewById(R.id.btnCancel);
         btnConfirm.setOnClickListener(clickListener);
         btnCancel.setOnClickListener(clickListener);
 
-
         String path = getArguments().getString("Path");
+        String serial = getArguments().getString("Serial");
 
         if ( path != null) {
             Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
@@ -97,13 +89,10 @@ public class AddDeviceFragment extends Fragment {
                     .load(uri)
                     .into(ivDevice);
         }
-        if(!serial.matches("null")){
+        if( serial != null){
             etSerialNumber.setText(serial);
             etDeviceDetail.setText("Macbook Pro 14");
             etOwnerName.setText("Mr.Natthapat Phatthana");
-        }
-        else {
-
         }
     }
 
@@ -128,6 +117,16 @@ public class AddDeviceFragment extends Fragment {
         dialog.show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 12345) {
+            if (resultCode == RESULT_OK) {
+                etSerialNumber.setText(data.getStringExtra("serial"));
+            }
+        }
+    }
+
     // TODO: Save State in this condition & Fix stacked activity
     View.OnClickListener onClickImage = new View.OnClickListener() {
         @Override
@@ -150,13 +149,12 @@ public class AddDeviceFragment extends Fragment {
             }
         }
     };
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 12345) {
-            if (resultCode == RESULT_OK) {
-                etSerialNumber.setText(data.getStringExtra("serial"));
-            }
+
+    View.OnClickListener onClickBtnScan = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
+            startActivityForResult(intent, 12345);
         }
-    }
+    };
 }

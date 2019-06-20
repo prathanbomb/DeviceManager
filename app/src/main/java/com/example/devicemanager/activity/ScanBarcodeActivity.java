@@ -42,7 +42,7 @@ public class ScanBarcodeActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Scanned");
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ScanBarcodeActivity.this, CheckDeviceActivity.class);
-                intent.putExtra("serial",result.getContents().toString());
+                intent.putExtra("serial",result.getContents());
                 startActivity(intent);
                 finish();
             }
