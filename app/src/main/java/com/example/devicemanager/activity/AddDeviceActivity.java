@@ -85,7 +85,7 @@ public class AddDeviceActivity extends AppCompatActivity {
     View.OnClickListener onClickBtnCancel = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //showAlertDialog(R.string.dialog_msg_cancel);
+            finish();
         }
     };
 
@@ -93,6 +93,7 @@ public class AddDeviceActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             //showAlertDialog(R.string.dialog_msg_confirm);
+            finish();
         }
     };
 }
