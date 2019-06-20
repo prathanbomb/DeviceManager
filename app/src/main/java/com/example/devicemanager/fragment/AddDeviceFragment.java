@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -25,8 +26,11 @@ public class AddDeviceFragment extends Fragment {
 
     private Spinner spType ;
     private ImageView ivDevice;
+    private static String serial;
+    EditText etOwnerName,etSerialNumber,etDeviceDetail;
 
-    public static AddDeviceFragment newInstances(){
+    public static AddDeviceFragment newInstances(String barcode){
+        serial=barcode;
         AddDeviceFragment fragment = new AddDeviceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -58,7 +62,9 @@ public class AddDeviceFragment extends Fragment {
 
         ivDevice = view.findViewById(R.id.ivDevice);
         ivDevice.setOnClickListener(onClickImage);
-
+        etOwnerName=(EditText) view.findViewById(R.id.etOwnerName);
+        etSerialNumber=(EditText) view.findViewById(R.id.etSerialNumber);
+        etDeviceDetail=(EditText) view.findViewById(R.id.etDeviceDetail);
         String path = getArguments().getString("Path");
 
         if ( path != null) {
@@ -66,6 +72,14 @@ public class AddDeviceFragment extends Fragment {
             Glide.with(Contextor.getInstance().getContext())
                     .load(uri)
                     .into(ivDevice);
+        }
+        if(!serial.matches("null")){
+            etSerialNumber.setText(serial);
+            etDeviceDetail.setText("Macbook Pro 14");
+            etOwnerName.setText("Mr.Natthapat Phatthana");
+        }
+        else {
+
         }
     }
 

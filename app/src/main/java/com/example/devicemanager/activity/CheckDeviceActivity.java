@@ -14,17 +14,17 @@ import com.example.devicemanager.fragment.CheckDeviceFragment;
 
 public class CheckDeviceActivity extends AppCompatActivity {
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_device);
+        String serial = getIntent().getStringExtra("serial");
 
         initInstances();
 
         if (savedInstanceState == null){
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contentContainer, CheckDeviceFragment.newInstances())
+                    .add(R.id.contentContainer, CheckDeviceFragment.newInstances(serial))
                     .commit();
         }
     }

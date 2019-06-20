@@ -7,8 +7,10 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +24,13 @@ import java.io.File;
 
 public class CheckDeviceFragment extends Fragment {
 
-    private Spinner spType ;
+    private Spinner spType;
+    TextView tvSerialNumber, tvOwnerName, etDeviceDetail;
+    private static String serial;
 
-    public static CheckDeviceFragment newInstances(){
+    public static CheckDeviceFragment newInstances(String barcode) {
         CheckDeviceFragment fragment = new CheckDeviceFragment();
+        serial = barcode;
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -44,7 +49,7 @@ public class CheckDeviceFragment extends Fragment {
         return view;
     }
 
-    private void initInstances(View view){
+    private void initInstances(View view) {
 
         spType = view.findViewById(R.id.spinnerDeviceType);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
@@ -53,6 +58,8 @@ public class CheckDeviceFragment extends Fragment {
                 R.layout.spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         spType.setAdapter(spinnerAdapter);
+        spType.setSelection(0);
+
 
         /*ivDevice = view.findViewById(R.id.ivDevice);
         Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
@@ -60,6 +67,13 @@ public class CheckDeviceFragment extends Fragment {
         Glide.with(Contextor.getInstance().getContext())
                 .load(uri)
                 .into(ivDevice);*/
+        tvSerialNumber = (TextView) view.findViewById(R.id.tvSerialNumber);
+        tvOwnerName = (TextView) view.findViewById(R.id.tvOwnerName);
+        etDeviceDetail = (TextView) view.findViewById(R.id.etDeviceDetail);
+
+        tvSerialNumber.setText(serial.toString());
+        tvOwnerName.setText("Mr.Natthapat Phatthana");
+        etDeviceDetail.setText("Macbook Pro 14");
 
     }
 }

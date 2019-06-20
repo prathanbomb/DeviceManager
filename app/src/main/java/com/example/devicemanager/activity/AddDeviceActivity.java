@@ -35,7 +35,9 @@ public class AddDeviceActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
 
             bundle.putString("Path", getIntent().getStringExtra("Path"));
-            AddDeviceFragment fragment = AddDeviceFragment.newInstances();
+            String serial = getIntent().getStringExtra("serial");
+
+            AddDeviceFragment fragment = AddDeviceFragment.newInstances(serial);
             fragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction()
@@ -52,6 +54,7 @@ public class AddDeviceActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(onClickBtnCancel);
         btnConfirm = findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(onClickBtnConfirm);
+
     }
 
     @Override
