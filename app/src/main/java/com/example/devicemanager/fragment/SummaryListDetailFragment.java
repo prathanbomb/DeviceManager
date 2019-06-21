@@ -10,26 +10,34 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.adapter.RecyclerOtherAdapter;
+import com.example.devicemanager.adapter.RecyclerFunitureAdapter;
+import com.example.devicemanager.adapter.RecyclerListDetailAdapter;
 
-import java.util.ArrayList;
 
-public class SummaryOtherFragment extends Fragment {
-    ArrayList count,type;
+/**
+ * Created by nuuneoi on 11/16/2014.
+ */
+@SuppressWarnings("unused")
+public class SummaryListDetailFragment extends Fragment {
     RecyclerView recyclerView;
-    RecyclerOtherAdapter recyclerOtherAdapter;
+    RecyclerListDetailAdapter recyclerListDetailAdapter;
     RecyclerView.LayoutManager layoutManager;
 
-    public static SummaryOtherFragment newInstance() {
-        SummaryOtherFragment fragment = new SummaryOtherFragment();
+
+    @SuppressWarnings("unused")
+    public static SummaryListDetailFragment newInstance() {
+        SummaryListDetailFragment fragment = new SummaryListDetailFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
+
+
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
+        //setHasOptionsMenu(true);
 
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
@@ -38,7 +46,7 @@ public class SummaryOtherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_summary_other, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_summary_list_detail, container, false);
         initInstances(rootView, savedInstanceState);
         return rootView;
     }
@@ -49,31 +57,29 @@ public class SummaryOtherFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        // Init 'View' instance(s) with rootView.findViewById here
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvOther);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
-        type = new ArrayList<String>();
-        type.add("SSD");
-        type.add("Software");
-        type.add("Program");
-        type.add("Apple Care");
-        type.add("Car");
-        type.add("Film");
-
-        count = new ArrayList<Integer>();
-        count.add("24");
-        count.add("18");
-        count.add("12");
-        count.add("28");
-        count.add("1");
-        count.add("1");
-
-        recyclerOtherAdapter = new RecyclerOtherAdapter(getContext());
-        recyclerOtherAdapter.setBrand(type);
-        recyclerOtherAdapter.setCount(count);
-        recyclerView.setAdapter(recyclerOtherAdapter);
+        String type = getArguments().getString("Type");
+        int count = getArguments().getInt("Count");
+        recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
+        recyclerListDetailAdapter.setCount(count);
+        recyclerView.setAdapter(recyclerListDetailAdapter);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    /*
+     * Save Instance State Here
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -87,4 +93,7 @@ public class SummaryOtherFragment extends Fragment {
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         // Restore Instance State here
     }
+
+
+
 }

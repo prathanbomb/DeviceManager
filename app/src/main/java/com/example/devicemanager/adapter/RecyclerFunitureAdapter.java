@@ -11,16 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.MainActivity;
 import com.example.devicemanager.activity.SummaryListDetailActivity;
 
 import java.util.ArrayList;
 
-public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdapter.Holder> {
+public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitureAdapter.Holder> {
     ArrayList<String> brand = new ArrayList<String>();
     Context context;
 
-    public RecyclerOtherAdapter(Context context){
+    public RecyclerFunitureAdapter(Context context){
         this.context = context;
     }
     public void setBrand(ArrayList<String> brand) {
@@ -35,7 +34,7 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
 
     @NonNull
     @Override
-    public RecyclerOtherAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerFunitureAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_other_item, parent, false);
         Holder holder = new Holder(view);
         return holder;

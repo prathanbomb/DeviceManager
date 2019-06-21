@@ -11,15 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.MainActivity;
-import com.example.devicemanager.fragment.SummaryFragment;
-import com.example.devicemanager.manager.Contextor;
+import com.example.devicemanager.activity.SummaryListDetailActivity;
 
 import java.util.ArrayList;
 
-public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebookAdapter.Holder> {
+public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAdapter.Holder> {
     ArrayList<String> brand = new ArrayList<String>();
-    public RecyclerNotebookAdapter(Context context){
+    public RecyclerDeviceAdapter(Context context){
         this.context = context;
     }
 
@@ -47,8 +45,8 @@ public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebo
 
     @NonNull
     @Override
-    public RecyclerNotebookAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_notebook_item, parent, false);
+    public RecyclerDeviceAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_device_item, parent, false);
         Holder holder = new Holder(view);
         return holder;
     }
@@ -59,10 +57,10 @@ public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:intent summary item
-//                Intent intent = new Intent(context, MainActivity.class);
-//                intent.putExtra("Type",brand.get(position));
-//                context.startActivity(intent);
+                Intent intent = new Intent(context, SummaryListDetailActivity.class);
+                intent.putExtra("Type",brand.get(position));
+                intent.putExtra("Count",count.get(position));
+                context.startActivity(intent);
             }
         });
     }

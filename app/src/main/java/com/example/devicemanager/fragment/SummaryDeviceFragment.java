@@ -10,19 +10,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.adapter.RecyclerNotebookAdapter;
-import com.example.devicemanager.manager.Contextor;
+import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
 
 import java.util.ArrayList;
 
-public class SummaryNoteBookFragment extends Fragment {
-    ArrayList count,brand;
+public class SummaryDeviceFragment extends Fragment {
+    ArrayList count,type;
     RecyclerView recyclerView;
-    RecyclerNotebookAdapter recyclerNotebookAdapter;
+    RecyclerDeviceAdapter recyclerDeviceAdapter;
     RecyclerView.LayoutManager layoutManager;
 
-    public static SummaryNoteBookFragment newInstance() {
-        SummaryNoteBookFragment fragment = new SummaryNoteBookFragment();
+    public static SummaryDeviceFragment newInstance() {
+        SummaryDeviceFragment fragment = new SummaryDeviceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -40,7 +39,7 @@ public class SummaryNoteBookFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_summary_notebook, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_summary_device, container, false);
         initInstances(rootView, savedInstanceState);
         return rootView;
     }
@@ -53,20 +52,28 @@ public class SummaryNoteBookFragment extends Fragment {
     private void initInstances(View rootView, Bundle savedInstanceState) {
         // Init 'View' instance(s) with rootView.findViewById here
         layoutManager = new LinearLayoutManager(getContext());
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvNotebook);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvDevice);
         recyclerView.setLayoutManager(layoutManager);
-        brand = new ArrayList<String>();
-        brand.add("Apple");
-        brand.add("Asus");
-        brand.add("Acer");
+        type = new ArrayList<String>();
+        type.add("Laptop");
+        type.add("Printer");
+        type.add("Scanner");
+        type.add("Tablet");
+        type.add("Monitor");
+        type.add("Adapter");
+
         count = new ArrayList<Integer>();
         count.add(40);
-        count.add(12);
-        count.add(8);
-        recyclerNotebookAdapter = new RecyclerNotebookAdapter(getContext());
-        recyclerNotebookAdapter.setBrand(brand);
-        recyclerNotebookAdapter.setCount(count);
-        recyclerView.setAdapter(recyclerNotebookAdapter);
+        count.add(4);
+        count.add(4);
+        count.add(4);
+        count.add(15);
+        count.add(30);
+
+        recyclerDeviceAdapter = new RecyclerDeviceAdapter(getContext());
+        recyclerDeviceAdapter.setBrand(type);
+        recyclerDeviceAdapter.setCount(count);
+        recyclerView.setAdapter(recyclerDeviceAdapter);
 
     }
     @Override
