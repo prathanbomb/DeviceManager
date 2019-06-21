@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.devicemanager">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -16,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ScanBarCodeAddDeviceActivity"></activity>
+        <activity android:name=".activity.SummaryListDetailActivity"></activity>
+        <activity android:name=".activity.ScanBarCodeAddDeviceActivity" />
         <activity android:name=".activity.ScanBarcodeActivity" />
 
         <provider
@@ -26,28 +29,30 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activity.SummaryActivity"
-            android:label="@string/summary"
-            />
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.SummaryActivity"
+            android:label="@string/summary" />
+        <activity
+            android:name=".activity.MainActivity"
             android:theme="@style/AppTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AddDeviceActivity"
+        <activity
+            android:name=".activity.AddDeviceActivity"
             android:label="@string/add_device"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.CameraActivity"/>
-        <activity android:name=".activity.SearchActivity"
-            android:theme="@style/AppTheme.noActionbar"/>
-        <activity android:name=".activity.CheckDeviceActivity"/>
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activity.CameraActivity" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.noActionbar" />
+        <activity android:name=".activity.CheckDeviceActivity" />
     </application>
 
 </manifest>
