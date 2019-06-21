@@ -1,40 +1,36 @@
 package com.example.devicemanager.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 
-public class CustomNotebookListview extends RecyclerView {
+public class CustomFunitureListview extends RecyclerView {
     TextView tvBrand, tvCount;
 
-    public CustomNotebookListview(Context context) {
+    public CustomFunitureListview(Context context) {
         super(context);
         initInflate();
         initInstances();
     }
 
-    public CustomNotebookListview(Context context, AttributeSet attrs) {
+    public CustomFunitureListview(Context context, AttributeSet attrs) {
         super(context, attrs);
         initInflate();
         initInstances();
     }
 
-    public CustomNotebookListview(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomFunitureListview(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initInflate();
         initInstances();
     }
 
     private void initInflate() {
-        inflate(getContext(), R.layout.list_notebook_item, this);
+        inflate(getContext(), R.layout.list_other_item, this);
     }
 
     private void initInstances() {

@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.adapter.RecyclerNotebookAdapter;
+import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import com.example.devicemanager.view.SlidingTabLayout;
 
@@ -19,7 +19,7 @@ public class SummaryFragment extends Fragment {
     ViewPager viewPager;
     SlidingTabLayout slidingTabLayout;
     RecyclerOtherAdapter recyclerOtherAdapter;
-    RecyclerNotebookAdapter recyclerNotebookAdapter;
+    RecyclerDeviceAdapter recyclerDeviceAdapter;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();
@@ -29,7 +29,7 @@ public class SummaryFragment extends Fragment {
     }
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
 
@@ -52,14 +52,16 @@ public class SummaryFragment extends Fragment {
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
         // Init 'View' instance(s) with rootView.findViewById here
-        viewPager= (ViewPager) rootView.findViewById(R.id.viewPager);
+        viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         FragmentStatePagerAdapter viewPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return SummaryNoteBookFragment.newInstance();
+                        return SummaryDeviceFragment.newInstance();
                     case 1:
+                        return SummaryFunitureFragment.newInstance();
+                    case 2:
                         return SummaryOtherFragment.newInstance();
                     default:
                         return null;
@@ -68,7 +70,7 @@ public class SummaryFragment extends Fragment {
 
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
 
             @Nullable
@@ -76,8 +78,10 @@ public class SummaryFragment extends Fragment {
             public CharSequence getPageTitle(int position) {
                 switch (position) {
                     case 0:
-                        return "Laptop";
+                        return "Device";
                     case 1:
+                        return "Furniture";
+                    case 2:
                         return "Other";
                     default:
                         return "";
@@ -88,6 +92,7 @@ public class SummaryFragment extends Fragment {
         slidingTabLayout = (SlidingTabLayout) rootView.findViewById(R.id.slidingTabLayout);
         slidingTabLayout.setViewPager(viewPager);
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

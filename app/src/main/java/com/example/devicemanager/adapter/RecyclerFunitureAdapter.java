@@ -1,7 +1,6 @@
 package com.example.devicemanager.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,32 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.MainActivity;
-import com.example.devicemanager.fragment.SummaryFragment;
-import com.example.devicemanager.manager.Contextor;
 
 import java.util.ArrayList;
 
-public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebookAdapter.Holder> {
+public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitureAdapter.Holder> {
     ArrayList<String> brand = new ArrayList<String>();
-    public RecyclerNotebookAdapter(Context context){
-        this.context = context;
-    }
-
-
     Context context;
 
-
-    public ArrayList<String> getBrand() {
-        return brand;
+    public RecyclerFunitureAdapter(Context context){
+        this.context = context;
     }
-
     public void setBrand(ArrayList<String> brand) {
         this.brand = brand;
-    }
-
-    public ArrayList<Integer> getCount() {
-        return count;
     }
 
     public void setCount(ArrayList<Integer> count) {
@@ -47,8 +32,8 @@ public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebo
 
     @NonNull
     @Override
-    public RecyclerNotebookAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_notebook_item, parent, false);
+    public RecyclerFunitureAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_other_item, parent, false);
         Holder holder = new Holder(view);
         return holder;
     }
@@ -60,6 +45,7 @@ public class RecyclerNotebookAdapter extends RecyclerView.Adapter<RecyclerNotebo
             @Override
             public void onClick(View view) {
                 //TODO:intent summary item
+
 //                Intent intent = new Intent(context, MainActivity.class);
 //                intent.putExtra("Type",brand.get(position));
 //                context.startActivity(intent);
