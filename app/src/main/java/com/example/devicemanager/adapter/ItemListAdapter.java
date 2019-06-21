@@ -1,7 +1,6 @@
 package com.example.devicemanager.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.manager.Contextor;
-import com.example.devicemanager.manager.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        if (list.size()> 0 && list.get(position) != null) {
+        if (getItemCount() > 0 && list.get(position) != null) {
             holder.setText(list.get(position));
         }
         else {
@@ -49,7 +47,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
 
     @Override
     public int getItemCount() {
-        return brand.size();
+        return list.size();
     }
 
     public Filter getFilter() {
