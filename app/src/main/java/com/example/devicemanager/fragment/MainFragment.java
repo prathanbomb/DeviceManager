@@ -63,7 +63,7 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -91,7 +91,7 @@ public class MainFragment extends Fragment {
         }
         searchView.setOnQueryTextListener(queryTextListener);
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     private void init(Bundle savedInstanceState) {
         // Init Fragment level's variable(s) here
