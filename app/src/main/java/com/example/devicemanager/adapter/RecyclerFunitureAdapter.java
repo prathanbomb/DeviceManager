@@ -48,6 +48,7 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
                 intent.putExtra("Type",brand.get(position));
+                intent.putExtra("Count",count.get(position));
                 context.startActivity(intent);
             }
         });

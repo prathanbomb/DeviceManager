@@ -31,13 +31,13 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
-    private Spinner spType ;
+    private Spinner spType;
     private ImageView ivDevice;
-    private EditText etOwnerName,etSerialNumber,etDeviceDetail;
-    private Button btnConfirm, btnCancel;
+    private EditText etOwnerName, etSerialNumber, etDeviceDetail;
+    private Button btnConfirm;
     private Button btnScanBarcode;
 
-    public static AddDeviceFragment newInstances(){
+    public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -53,11 +53,11 @@ public class AddDeviceFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.fragment_edit_detail, container, false);
-        initInstances(view,savedInstanceState);
+        initInstances(view, savedInstanceState);
         return view;
     }
 
-    private void initInstances(View view, Bundle savedInstanceState){
+    private void initInstances(View view, Bundle savedInstanceState) {
 
         spType = view.findViewById(R.id.spinnerDeviceType);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
@@ -69,34 +69,32 @@ public class AddDeviceFragment extends Fragment {
 
         ivDevice = view.findViewById(R.id.ivDevice);
         ivDevice.setOnClickListener(onClickImage);
-        etOwnerName=(EditText) view.findViewById(R.id.etOwnerName);
-        etSerialNumber=(EditText) view.findViewById(R.id.etSerialNumber);
-        etDeviceDetail=(EditText) view.findViewById(R.id.etDeviceDetail);
+        etOwnerName = (EditText) view.findViewById(R.id.etOwnerName);
+        etSerialNumber = (EditText) view.findViewById(R.id.etSerialNumber);
+        etDeviceDetail = (EditText) view.findViewById(R.id.etDeviceDetail);
         btnScanBarcode = (Button) view.findViewById(R.id.btnScanBarcode);
         btnScanBarcode.setOnClickListener(onClickBtnScan);
 
         btnConfirm = view.findViewById(R.id.btnConfirm);
-        btnCancel = view.findViewById(R.id.btnCancel);
         btnConfirm.setOnClickListener(clickListener);
-        btnCancel.setOnClickListener(clickListener);
 
         String path = getArguments().getString("Path");
         String serial = getArguments().getString("Serial");
 
-        if ( path != null) {
+        if (path != null) {
             Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
             Glide.with(Contextor.getInstance().getContext())
                     .load(uri)
                     .into(ivDevice);
         }
-        if( serial != null){
+        if (serial != null) {
             etSerialNumber.setText(serial);
             etDeviceDetail.setText("Macbook Pro 14");
             etOwnerName.setText("Mr.Natthapat Phatthana");
         }
     }
 
-    private void showAlertDialog(int msg){
+    private void showAlertDialog(int msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String dialogMsg = getResources().getString(msg);
 
@@ -104,6 +102,8 @@ public class AddDeviceFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                Intent intentBack = new Intent();
+                getActivity().setResult(RESULT_OK,intentBack);
                 getActivity().finish();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -120,7 +120,7 @@ public class AddDeviceFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 12345) {
+        if (requestCode == 12345) {
             if (resultCode == RESULT_OK) {
                 etSerialNumber.setText(data.getStringExtra("serial"));
             }
@@ -141,10 +141,7 @@ public class AddDeviceFragment extends Fragment {
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(view == btnCancel){
-                showAlertDialog(R.string.dialog_msg_cancel);
-            }
-            else if (view == btnConfirm) {
+            if (view == btnConfirm) {
                 showAlertDialog(R.string.dialog_msg_confirm);
             }
         }

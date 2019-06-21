@@ -34,12 +34,10 @@ public class ScanBarCodeAddDeviceActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null) {
             if(result.getContents() == null) {
-                Log.d("MainActivity", "Cancelled scan");
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
                 finish();
 
             } else {
-                Log.d("MainActivity", "Scanned");
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
                 Intent intentBack = new Intent();
                 intentBack.putExtra("serial",result.getContents());
@@ -47,7 +45,6 @@ public class ScanBarCodeAddDeviceActivity extends AppCompatActivity {
                 finish();
             }
         } else {
-            // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
     }

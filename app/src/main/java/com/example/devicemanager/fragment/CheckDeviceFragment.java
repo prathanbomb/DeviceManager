@@ -23,14 +23,17 @@ import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
+import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
+
+import static android.app.Activity.RESULT_OK;
 
 public class CheckDeviceFragment extends Fragment {
 
     private Spinner spType;
     private TextView tvSerialNumber, tvOwnerName, etDeviceDetail;
     private static String serial;
-    private Button btnConfirm,btnCancel,btnEdit;
+    private Button btnConfirm,btnEdit;
 
     public static CheckDeviceFragment newInstances(String barcode) {
         CheckDeviceFragment fragment = new CheckDeviceFragment();
@@ -81,11 +84,9 @@ public class CheckDeviceFragment extends Fragment {
         etDeviceDetail.setText("Macbook Pro 14");
 
         btnEdit = view.findViewById(R.id.btnEdit);
-        btnCancel = view.findViewById(R.id.btnCancel);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
         btnEdit.setOnClickListener(clickListener);
-        btnCancel.setOnClickListener(clickListener);
         btnConfirm.setOnClickListener(clickListener);
 
     }
@@ -94,12 +95,8 @@ public class CheckDeviceFragment extends Fragment {
         public void onClick(View view) {
             if(view == btnEdit) {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
-                intent.putExtra("Serial", "09845236214");
-                startActivity(intent);
-                getActivity().finish();
-            }
-            else if(view == btnCancel){
-                showAlertDialog(R.string.dialog_msg_cancel);
+                intent.putExtra("Serial", serial);
+                startActivityForResult(intent, 11111);
             }
             else if (view == btnConfirm) {
                 showAlertDialog(R.string.dialog_msg_confirm);
@@ -126,5 +123,14 @@ public class CheckDeviceFragment extends Fragment {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 11111) {
+            if (resultCode == RESULT_OK) {
+                getActivity().finish();
+            }
+        }
     }
 }

@@ -49,6 +49,7 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
                 intent.putExtra("Type",brand.get(position));
+                intent.putExtra("Count",count.get(position));
                 context.startActivity(intent);
             }
         });

@@ -24,10 +24,6 @@ public class SummaryListDetailFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
 
 
-    public SummaryListDetailFragment() {
-        super();
-    }
-
     @SuppressWarnings("unused")
     public static SummaryListDetailFragment newInstance() {
         SummaryListDetailFragment fragment = new SummaryListDetailFragment();
@@ -35,6 +31,7 @@ public class SummaryListDetailFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,8 +60,10 @@ public class SummaryListDetailFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
+        String type = getArguments().getString("Type");
+        int count = getArguments().getInt("Count");
         recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
-
+        recyclerListDetailAdapter.setCount(count);
         recyclerView.setAdapter(recyclerListDetailAdapter);
     }
 
