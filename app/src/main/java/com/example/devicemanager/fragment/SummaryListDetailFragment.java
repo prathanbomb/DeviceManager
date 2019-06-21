@@ -1,6 +1,8 @@
 package com.example.devicemanager.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +63,8 @@ public class SummaryListDetailFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
         String type = getArguments().getString("Type");
-        int count = getArguments().getInt("Count");
+        Integer count = getArguments().getInt("Count");
+        Log.d("countinsummary",""+count);
         recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
         recyclerListDetailAdapter.setCount(count);
         recyclerView.setAdapter(recyclerListDetailAdapter);

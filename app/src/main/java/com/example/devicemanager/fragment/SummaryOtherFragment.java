@@ -62,12 +62,12 @@ public class SummaryOtherFragment extends Fragment {
         type.add("Film");
 
         count = new ArrayList<Integer>();
-        count.add("24");
-        count.add("18");
-        count.add("12");
-        count.add("28");
-        count.add("1");
-        count.add("1");
+        count.add(24);
+        count.add(18);
+        count.add(12);
+        count.add(28);
+        count.add(1);
+        count.add(1);
 
         recyclerOtherAdapter = new RecyclerOtherAdapter(getContext());
         recyclerOtherAdapter.setBrand(type);

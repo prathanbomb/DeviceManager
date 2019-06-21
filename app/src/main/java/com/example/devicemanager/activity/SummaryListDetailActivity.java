@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.devicemanager.R;
@@ -22,6 +23,7 @@ public class SummaryListDetailActivity extends AppCompatActivity {
 
             bundle.putString("Type", getIntent().getStringExtra("Type"));
             bundle.putInt("Count", getIntent().getIntExtra("Count",0));
+
             SummaryListDetailFragment fragment = SummaryListDetailFragment.newInstance();
             fragment.setArguments(bundle);
 

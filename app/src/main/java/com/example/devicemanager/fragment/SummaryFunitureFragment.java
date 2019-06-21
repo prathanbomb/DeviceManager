@@ -65,13 +65,13 @@ public class SummaryFunitureFragment extends Fragment {
         type.add("Cabinet");
 
         count = new ArrayList<Integer>();
-        count.add("97");
-        count.add("2");
-        count.add("1");
-        count.add("57");
-        count.add("5");
-        count.add("4");
-        count.add("8");
+        count.add(97);
+        count.add(2);
+        count.add(1);
+        count.add(57);
+        count.add(5);
+        count.add(4);
+        count.add(8);
 
         recyclerOtherAdapter = new RecyclerFunitureAdapter(getContext());
         recyclerOtherAdapter.setBrand(type);
