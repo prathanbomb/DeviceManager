@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.MainActivity;
+import com.example.devicemanager.activity.SummaryListDetailActivity;
 
 import java.util.ArrayList;
 
@@ -46,11 +47,9 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:intent summary item
-
-//                Intent intent = new Intent(context, MainActivity.class);
-//                intent.putExtra("Type",brand.get(position));
-//                context.startActivity(intent);
+                Intent intent = new Intent(context, SummaryListDetailActivity.class);
+                intent.putExtra("Type",brand.get(position));
+                context.startActivity(intent);
             }
         });
     }

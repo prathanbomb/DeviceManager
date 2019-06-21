@@ -1,26 +1,17 @@
 package com.example.devicemanager.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.ScanBarcodeActivity;
-import com.example.devicemanager.activity.SearchActivity;
-import com.example.devicemanager.activity.SummaryActivity;
+import com.example.devicemanager.adapter.RecyclerFunitureAdapter;
+import com.example.devicemanager.adapter.RecyclerListDetailAdapter;
 
 
 /**
@@ -28,6 +19,10 @@ import com.example.devicemanager.activity.SummaryActivity;
  */
 @SuppressWarnings("unused")
 public class SummaryListDetailFragment extends Fragment {
+    RecyclerView recyclerView;
+    RecyclerListDetailAdapter recyclerListDetailAdapter;
+    RecyclerView.LayoutManager layoutManager;
+
 
     public SummaryListDetailFragment() {
         super();
@@ -65,6 +60,12 @@ public class SummaryListDetailFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
+
+        recyclerView.setAdapter(recyclerListDetailAdapter);
     }
 
     @Override

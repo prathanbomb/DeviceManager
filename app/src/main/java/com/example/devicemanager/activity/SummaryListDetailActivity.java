@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.fragment.SummaryFragment;
+import com.example.devicemanager.fragment.SummaryListDetailFragment;
 
 public class SummaryListDetailActivity extends AppCompatActivity {
 
@@ -17,7 +18,7 @@ public class SummaryListDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_summary_list_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contentContainer, SummaryFragment.newInstance())
+                    .add(R.id.contentContainer, SummaryListDetailFragment.newInstance())
                     .commit();
         }
         initInstances();

@@ -57,7 +57,6 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:intent summary item
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
                 intent.putExtra("Type",brand.get(position));
                 context.startActivity(intent);
