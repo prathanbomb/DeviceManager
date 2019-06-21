@@ -1,17 +1,24 @@
 package com.example.devicemanager.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import com.example.devicemanager.MainApplication;
 import com.example.devicemanager.manager.Contextor;
 
 import java.io.File;
@@ -21,20 +28,39 @@ import java.util.Date;
 
 public class CameraActivity extends AppCompatActivity {
 
-    String currentPhotoPath = null;
+    private String currentPhotoPath = null;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    private Uri photoURI;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_camera);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
+            if (checkSelfPermission(Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        PERMISSION_REQUEST_CODE);
+            }
             dispatchTakePictureIntent();
         }
     }
 
-    static final int REQUEST_TAKE_PHOTO = 1;
-    Uri photoURI;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -43,7 +69,7 @@ public class CameraActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                Log.d("Exception",ex + "");
+                Log.d("Exception", ex + "");
             }
             if (photoFile != null) {
                 photoURI = FileProvider.getUriForFile(Contextor.getInstance().getContext(),
@@ -59,15 +85,14 @@ public class CameraActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             galleryAddPic();
-            File imgFile = new  File(currentPhotoPath);
-            if(imgFile.exists())            {
+            File imgFile = new File(currentPhotoPath);
+            if (imgFile.exists()) {
                 Intent intent = new Intent(Contextor.getInstance().getContext(), AddDeviceActivity.class);
                 intent.putExtra("Path", currentPhotoPath);
                 startActivity(intent);
                 finish();
             }
-        }
-        else {
+        } else {
             finish();
         }
     }

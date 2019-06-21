@@ -1,7 +1,10 @@
 package com.example.devicemanager.fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,17 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.CameraActivity;
-import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
-import com.example.devicemanager.manager.Contextor;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 
 /**
@@ -31,6 +31,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 public class MainFragment extends Fragment {
     Button btnAdd, btnCheck, btnSummary;
     LinearLayout linearLayout;
+    android.widget.SearchView searchView;
 
     public MainFragment() {
         super();
@@ -48,6 +49,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
+        //setHasOptionsMenu(true);
 
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
@@ -59,6 +61,36 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         initInstances(rootView, savedInstanceState);
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getActivity()
+                .getSystemService(Context.SEARCH_SERVICE);
+
+        if (searchItem != null) {
+            searchView = (android.widget.SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                // Not implemented here
+                return false;
+            default:
+                break;
+        }
+        searchView.setOnQueryTextListener(queryTextListener);
+        return super.onOptionsItemSelected(item);
     }
 
     private void init(Bundle savedInstanceState) {
@@ -127,6 +159,22 @@ public class MainFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SummaryActivity.class);
                 startActivity(intent);
             }
+        }
+    };
+
+    android.widget.SearchView.OnQueryTextListener queryTextListener = new android.widget.SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            Log.i("onQueryTextChange", query);
+
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            Log.i("onQueryTextSubmit", newText);
+
+            return true;
         }
     };
 }
