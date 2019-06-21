@@ -39,15 +39,12 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        if(getItemCount() > 0){
+        if (list.size()> 0 && list.get(position) != null) {
             holder.setText(list.get(position));
         }
-        Log.d("data", list.get(position));
-        /*if(itemList.getBrand().size() > 0 && itemList.getBrand().get(position) != null){
-            DataManager newData = itemList;
-            holder.setText(newData.getBrand().get(position));
-            Log.d("itemlist",">0");
-        }*/
+        else {
+            holder.setText("");
+        }
     }
 
     @Override
@@ -66,8 +63,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
 
             if (charSequence == null || charSequence.length() == 0) {
                 filteredList.addAll(brand);
-            }
-            else {
+            } else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
                 for (int i = 0; i < brand.size(); i++) {
                     if (brand.get(i).toLowerCase().contains(filterPattern)) {
