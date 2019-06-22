@@ -2,9 +2,13 @@ package com.example.devicemanager.activity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -15,11 +19,8 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.manager.DataManager;
 
-import java.util.ArrayList;
+public class SearchActivity extends AppCompatActivity implements ItemListAdapter.Holder.ItemClickListener {
 
-public class SearchActivity extends AppCompatActivity {
-
-    private SearchView searchView;
     private RecyclerView recyclerView;
     private DataManager dataManager;
     private ItemListAdapter adapter;
@@ -29,8 +30,6 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        searchView = findViewById(R.id.searchView);
         recyclerView = findViewById(R.id.recyclerView);
 
         dataManager = new DataManager();
@@ -38,12 +37,19 @@ public class SearchActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new ItemListAdapter(getApplicationContext(), dataManager.getBrand());
+        adapter = new ItemListAdapter(getApplicationContext());
+        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+    }
 
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        menuItem.expandActionView();
+        final SearchView searchViewActionBar = (SearchView) menuItem.getActionView();
+        searchViewActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 adapter.getFilter().filter(query);
@@ -56,5 +62,28 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        // TODO: Set
+        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
     }
 }

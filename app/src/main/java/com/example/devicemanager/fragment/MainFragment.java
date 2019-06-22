@@ -22,6 +22,7 @@ import com.example.devicemanager.activity.AddDeviceActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 /**
@@ -29,9 +30,10 @@ import com.example.devicemanager.activity.SummaryActivity;
  */
 @SuppressWarnings("unused")
 public class MainFragment extends Fragment {
-    Button btnAdd, btnCheck, btnSummary;
-    LinearLayout linearLayout;
-    android.widget.SearchView searchView;
+    private Button btnAdd, btnCheck, btnSummary;
+    private FloatingActionButton floatingButton, floatingButton2, floatingButton3;
+    private android.widget.SearchView searchView;
+    private boolean isFABOpen = false;
 
     public MainFragment() {
         super();
@@ -107,14 +109,11 @@ public class MainFragment extends Fragment {
         btnCheck.setOnClickListener(clickListener);
         btnSummary.setOnClickListener(clickListener);
 
-        linearLayout = rootView.findViewById(R.id.layout_search);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
-            }
-        });
+        floatingButton = rootView.findViewById(R.id.fabSearch);
+        floatingButton2 = rootView.findViewById(R.id.fabTag);
+        floatingButton3 = rootView.findViewById(R.id.fabName);
+        floatingButton3.setOnClickListener(onClickFABName);
+        floatingButton.setOnClickListener(onClickFABSearch);
 
     }
 
@@ -145,36 +144,60 @@ public class MainFragment extends Fragment {
         // Restore Instance State here
     }
 
+    private void closeFABMenu() {
+        isFABOpen = false;
+        floatingButton2.animate().translationY(0);
+        floatingButton3.animate().translationY(0).translationX(0);
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+        floatingButton2.setVisibility(View.VISIBLE);
+        floatingButton3.setVisibility(View.VISIBLE);
+        floatingButton2.animate()
+                .translationY(-getResources().getDimension(R.dimen.transition_floating_y));
+        floatingButton3.animate()
+                .translationY(-getResources().getDimension(R.dimen.transition_floating_y))
+                .translationX(-getResources().getDimension(R.dimen.transition_floating_x));
+    }
+
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view == btnAdd) {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
+                closeFABMenu();
                 intent.putExtra("serial","null");
                 startActivity(intent);
             } else if (view == btnCheck) {
                 Intent intent = new Intent(getActivity(), ScanBarcodeActivity.class);
+                closeFABMenu();
                 startActivity(intent);
             } else if (view == btnSummary) {
                 Intent intent = new Intent(getActivity(), SummaryActivity.class);
+                closeFABMenu();
                 startActivity(intent);
             }
         }
     };
 
-    android.widget.SearchView.OnQueryTextListener queryTextListener = new android.widget.SearchView.OnQueryTextListener() {
+    private View.OnClickListener onClickFABSearch = new View.OnClickListener() {
         @Override
-        public boolean onQueryTextSubmit(String query) {
-            Log.i("onQueryTextChange", query);
-
-            return true;
+        public void onClick(View view) {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
+            }
         }
+    };
 
+    private View.OnClickListener onClickFABName = new View.OnClickListener() {
         @Override
-        public boolean onQueryTextChange(String newText) {
-            Log.i("onQueryTextSubmit", newText);
-
-            return true;
+        public void onClick(View view) {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            closeFABMenu();
+            startActivity(intent);
         }
     };
 }

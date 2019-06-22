@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -72,8 +73,24 @@ public class AddDeviceFragment extends Fragment {
         etOwnerName = (EditText) view.findViewById(R.id.etOwnerName);
         etSerialNumber = (EditText) view.findViewById(R.id.etSerialNumber);
         etDeviceDetail = (EditText) view.findViewById(R.id.etDeviceDetail);
-        btnScanBarcode = (Button) view.findViewById(R.id.btnScanBarcode);
-        btnScanBarcode.setOnClickListener(onClickBtnScan);
+        /*btnScanBarcode = (Button) view.findViewById(R.id.btnScanBarcode);
+        btnScanBarcode.setOnClickListener(onClickBtnScan);*/
+        etSerialNumber.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if(motionEvent.getX() >= (etSerialNumber.getWidth()
+                            - etSerialNumber.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
+                        startActivityForResult(intent, 12345);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         btnConfirm = view.findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(clickListener);
@@ -110,7 +127,6 @@ public class AddDeviceFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-                getActivity().finish();
             }
         });
         AlertDialog dialog = builder.create();
@@ -147,11 +163,11 @@ public class AddDeviceFragment extends Fragment {
         }
     };
 
-    View.OnClickListener onClickBtnScan = new View.OnClickListener() {
+    /*View.OnClickListener onClickBtnScan = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
             startActivityForResult(intent, 12345);
         }
-    };
+    };*/
 }

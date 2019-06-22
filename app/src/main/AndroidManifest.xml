@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.devicemanager">
 
     <uses-feature
@@ -18,16 +19,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.SummaryListDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ScanBarCodeAddDeviceActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ScanBarcodeActivity"
-            android:screenOrientation="portrait" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.devicemanager.fragment.provider"
@@ -39,10 +30,6 @@
         </provider>
 
         <activity
-            android:name=".activity.SummaryActivity"
-            android:label="@string/summary"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.noActionbar">
@@ -52,18 +39,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.SummaryActivity"
+            android:label="@string/summary"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SummaryListDetailActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ScanBarCodeAddDeviceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ScanBarcodeActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.AddDeviceActivity"
             android:label="@string/add_device"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.CameraActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchActivity"
+            android:label="Search"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.noActionbar" />
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activity.CheckDeviceActivity"
             android:screenOrientation="portrait" />

@@ -3,16 +3,12 @@ package com.example.devicemanager.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
 
 import static android.app.Activity.RESULT_OK;
@@ -67,7 +62,6 @@ public class CheckDeviceFragment extends Fragment {
         spType.setAdapter(spinnerAdapter);
         spType.setSelection(0);
 
-
         /*ivDevice = view.findViewById(R.id.ivDevice);
         Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
 
@@ -90,6 +84,7 @@ public class CheckDeviceFragment extends Fragment {
         btnConfirm.setOnClickListener(clickListener);
 
     }
+
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -118,12 +113,12 @@ public class CheckDeviceFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-                getActivity().finish();
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
