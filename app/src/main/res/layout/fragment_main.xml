@@ -1,45 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="16dp"
     tools:context=".activity.MainActivity">
 
     <LinearLayout
-        android:id="@+id/layout_search"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#fff"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
-        <ImageView
+        <TextView
+            style="@style/TextViewDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:padding="10dp"
-            android:src="@mipmap/icon_search" />
+            android:text="Welcome..." />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/btnAdd"
+            style="@style/AppTheme.RoundedCornerMaterialButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/add" />
 
-    <Button
-        android:id="@+id/btnAdd"
-        style="@style/btnStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/add" />
-
-    <Button
-        android:id="@+id/btnCheck"
-        style="@style/btnStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/check" />
+        <Button
+            android:id="@+id/btnCheck"
+            style="@style/AppTheme.RoundedCornerMaterialButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/check" />
 
         <Button
             android:id="@+id/btnSummary"
