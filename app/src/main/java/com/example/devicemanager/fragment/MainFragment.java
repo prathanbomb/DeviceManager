@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -15,6 +16,7 @@ import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 /**
@@ -22,10 +24,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 @SuppressWarnings("unused")
 public class MainFragment extends Fragment {
+
     private Button btnAdd, btnCheck, btnSummary;
     private FloatingActionButton floatingButton, floatingButton2, floatingButton3;
     private android.widget.SearchView searchView;
     private boolean isFABOpen = false;
+    private TextView tvLogout;
+    private FirebaseAuth mAuth;
 
     public MainFragment() {
         super();
@@ -106,6 +111,15 @@ public class MainFragment extends Fragment {
         floatingButton3 = rootView.findViewById(R.id.fabName);
         floatingButton3.setOnClickListener(onClickFABName);
         floatingButton.setOnClickListener(onClickFABSearch);
+
+        tvLogout = rootView.findViewById(R.id.tvLogout);
+        tvLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+            }
+        });
 
     }
 

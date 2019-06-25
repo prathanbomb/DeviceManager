@@ -32,7 +32,8 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.noActionbar">
+            android:theme="@style/AppTheme.noActionbar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -70,6 +71,7 @@
         <activity
             android:name=".activity.CheckDeviceActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.LoginActivity"/>
     </application>
 
 </manifest>
