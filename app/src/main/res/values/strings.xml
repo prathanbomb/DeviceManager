@@ -26,4 +26,8 @@
     <string name="logout">Logout</string>
     <string name="available">Available</string>
     <string name="in_use">In Use</string>
+    <string name="register">Register</string>
+    <string name="title_activity_register">Register</string>
+    <string name="invitation_code">Invitation Code</string>
+    <string name="digio_email">digio.co.th</string>
 </resources>

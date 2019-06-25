@@ -6,11 +6,11 @@
     android:padding="50dp">
 
     <TextView
-        android:layout_centerHorizontal="true"
         android:id="@+id/tvLogin"
         style="@style/TextViewDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:text="@string/login"
         android:textSize="26sp" />
@@ -28,16 +28,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etLoginEmail"
+        android:layout_alignStart="@+id/etLoginEmail"
         android:layout_alignLeft="@+id/etLoginEmail"
         android:hint="@string/password"
-        android:inputType="textPassword"
-        android:layout_alignStart="@+id/etLoginEmail" />
+        android:inputType="textPassword" />
 
     <Button
-        android:layout_below="@+id/etLoginPassword"
         android:id="@+id/btnLoginSubmit"
-        android:text="@string/submit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etLoginPassword"
+        android:text="@string/submit" />
+
+    <TextView
+        style="@style/TextViewSmall"
+        android:id="@+id/tvRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnLoginSubmit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/register" />
 
 </RelativeLayout>
