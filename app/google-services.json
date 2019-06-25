@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1091103730877",
+    "firebase_url": "https://devicemanager-e58e2.firebaseio.com",
+    "project_id": "devicemanager-e58e2",
+    "storage_bucket": "devicemanager-e58e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091103730877:android:942152985dab36ec",
+        "android_client_info": {
+          "package_name": "com.example.devicemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091103730877-af4rqotvntjc144ia63qfpnhqtqbkmaj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.devicemanager",
+            "certificate_hash": "56d1f50b3800bfe413db0a53693a423254cee2d2"
+          }
+        },
+        {
+          "client_id": "1091103730877-91qfpvdeq53kos32l5mpekbg50h7af4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM9sL1NYf32Fk3ZzOQYFIfLzyJF40Faic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091103730877-91qfpvdeq53kos32l5mpekbg50h7af4s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
