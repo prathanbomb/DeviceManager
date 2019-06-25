@@ -113,14 +113,7 @@ public class MainFragment extends Fragment {
         floatingButton.setOnClickListener(onClickFABSearch);
 
         tvLogout = rootView.findViewById(R.id.tvLogout);
-        tvLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
-            }
-        });
-
+        tvLogout.setOnClickListener(onClickLogout);
     }
 
     @Override
@@ -167,7 +160,7 @@ public class MainFragment extends Fragment {
                 .translationX(-getResources().getDimension(R.dimen.transition_floating_x));
     }
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
+    private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view == btnAdd) {
@@ -184,6 +177,14 @@ public class MainFragment extends Fragment {
                 closeFABMenu();
                 startActivity(intent);
             }
+        }
+    };
+
+    private View.OnClickListener onClickLogout = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();
         }
     };
 

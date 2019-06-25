@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else {
                         getSupportFragmentManager().beginTransaction()
-                                .add(R.id.contentContainer, MainFragment.newInstance())
+                                .replace(R.id.contentContainer, MainFragment.newInstance())
                                 .commit();
                     }
                 }

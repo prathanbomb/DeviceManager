@@ -16,7 +16,7 @@ import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import java.util.ArrayList;
 
 public class SummaryFunitureFragment extends Fragment {
-    ArrayList count,type;
+    ArrayList count,type, available;
     RecyclerView recyclerView;
     RecyclerFunitureAdapter recyclerOtherAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -73,9 +73,19 @@ public class SummaryFunitureFragment extends Fragment {
         count.add(4);
         count.add(8);
 
+        available = new ArrayList<Integer>();
+        available.add(3);
+        available.add(8);
+        available.add(4);
+        available.add(13);
+        available.add(1);
+        available.add(0);
+        available.add(0);
+
         recyclerOtherAdapter = new RecyclerFunitureAdapter(getContext());
         recyclerOtherAdapter.setBrand(type);
         recyclerOtherAdapter.setCount(count);
+        recyclerOtherAdapter.setAvailable(available);
         recyclerView.setAdapter(recyclerOtherAdapter);
 
     }

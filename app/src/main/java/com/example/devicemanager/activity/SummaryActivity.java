@@ -16,12 +16,13 @@ public class SummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        initInstances();
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contentContainer, SummaryFragment.newInstance())
                     .commit();
         }
-        initInstances();
     }
 
     private void initInstances() {

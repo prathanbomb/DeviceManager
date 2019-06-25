@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +16,7 @@ import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import java.util.ArrayList;
 
 public class SummaryOtherFragment extends Fragment {
-    ArrayList count,type;
+    ArrayList count,type, available;
     RecyclerView recyclerView;
     RecyclerOtherAdapter recyclerOtherAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -69,9 +70,19 @@ public class SummaryOtherFragment extends Fragment {
         count.add(1);
         count.add(1);
 
+        available = new ArrayList<Integer>();
+        available.add(10);
+        available.add(4);
+        available.add(2);
+        available.add(10);
+        available.add(4);
+        available.add(5);
+        available.add(0);
+
         recyclerOtherAdapter = new RecyclerOtherAdapter(getContext());
         recyclerOtherAdapter.setBrand(type);
         recyclerOtherAdapter.setCount(count);
+        recyclerOtherAdapter.setAvailable(available);
         recyclerView.setAdapter(recyclerOtherAdapter);
     }
     @Override

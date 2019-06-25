@@ -13,18 +13,29 @@
 
         <TextView
             android:id="@+id/tvBrand"
+            style="@style/TextViewSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:textSize="14sp" />
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="7" />
 
         <TextView
             android:id="@+id/tvcount"
+            style="@style/TextViewSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tvAvailable"
+            style="@style/TextViewSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:gravity="center"
-            android:textSize="14sp" />
+            android:text="num" />
 
     </LinearLayout>
 

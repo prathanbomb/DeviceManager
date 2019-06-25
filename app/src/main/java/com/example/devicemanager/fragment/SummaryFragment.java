@@ -18,8 +18,6 @@ import com.example.devicemanager.view.SlidingTabLayout;
 public class SummaryFragment extends Fragment {
     ViewPager viewPager;
     SlidingTabLayout slidingTabLayout;
-    RecyclerOtherAdapter recyclerOtherAdapter;
-    RecyclerDeviceAdapter recyclerDeviceAdapter;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();

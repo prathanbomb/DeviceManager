@@ -15,7 +15,7 @@ import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
 import java.util.ArrayList;
 
 public class SummaryDeviceFragment extends Fragment {
-    ArrayList count,type;
+    ArrayList count,type, available;
     RecyclerView recyclerView;
     RecyclerDeviceAdapter recyclerDeviceAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -70,9 +70,19 @@ public class SummaryDeviceFragment extends Fragment {
         count.add(15);
         count.add(30);
 
+        available = new ArrayList<Integer>();
+        available.add(0);
+        available.add(1);
+        available.add(1);
+        available.add(5);
+        available.add(5);
+        available.add(0);
+        available.add(0);
+
         recyclerDeviceAdapter = new RecyclerDeviceAdapter(getContext());
         recyclerDeviceAdapter.setBrand(type);
         recyclerDeviceAdapter.setCount(count);
+        recyclerDeviceAdapter.setAvailable(available);
         recyclerView.setAdapter(recyclerDeviceAdapter);
 
     }
