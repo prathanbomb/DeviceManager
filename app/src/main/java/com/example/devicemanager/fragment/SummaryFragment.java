@@ -14,10 +14,11 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import com.example.devicemanager.view.SlidingTabLayout;
+import com.google.android.material.tabs.TabLayout;
 
 public class SummaryFragment extends Fragment {
     ViewPager viewPager;
-    SlidingTabLayout slidingTabLayout;
+    TabLayout tabLayout;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();
@@ -87,8 +88,8 @@ public class SummaryFragment extends Fragment {
             }
         };
         viewPager.setAdapter(viewPagerAdapter);
-        slidingTabLayout = (SlidingTabLayout) rootView.findViewById(R.id.slidingTabLayout);
-        slidingTabLayout.setViewPager(viewPager);
+        tabLayout = rootView.findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
