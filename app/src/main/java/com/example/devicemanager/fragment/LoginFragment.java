@@ -23,8 +23,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 public class LoginFragment extends Fragment {
 
     private EditText etEmail, etPassword;
@@ -84,6 +82,12 @@ public class LoginFragment extends Fragment {
 
         tvRegister = view.findViewById(R.id.tvRegister);
         tvRegister.setOnClickListener(onClickRegister);
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+            }
+        };
     }
 
     private void userLogin() {
