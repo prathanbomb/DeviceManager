@@ -26,7 +26,8 @@ import static android.app.Activity.RESULT_OK;
 public class CheckDeviceFragment extends Fragment {
 
     private Spinner spType;
-    private TextView tvSerialNumber, tvOwnerName, etDeviceDetail;
+    private TextView tvSerialNumber, tvOwnerName, tvDeviceDetail,
+            tvLastUpdate, tvAddedDate;
     private static String serial;
     private Button btnConfirm,btnEdit;
 
@@ -71,11 +72,15 @@ public class CheckDeviceFragment extends Fragment {
 
         tvSerialNumber = view.findViewById(R.id.tvSerialNumber);
         tvOwnerName = view.findViewById(R.id.tvOwnerName);
-        etDeviceDetail = view.findViewById(R.id.etDeviceDetail);
+        tvDeviceDetail = view.findViewById(R.id.tvDeviceDetail);
+        tvAddedDate = view.findViewById(R.id.tvAddedDate);
+        tvLastUpdate = view.findViewById(R.id.tvLastUpdate);
 
         tvSerialNumber.setText(serial.toString());
         tvOwnerName.setText("Mr.Natthapat Phatthana");
-        etDeviceDetail.setText("Macbook Pro 14");
+        tvDeviceDetail.setText("Macbook Pro 14");
+        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : 1 July 2018 ");
+        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : 20 June 2019 ");
 
         btnEdit = view.findViewById(R.id.btnEdit);
         btnConfirm = view.findViewById(R.id.btnConfirm);

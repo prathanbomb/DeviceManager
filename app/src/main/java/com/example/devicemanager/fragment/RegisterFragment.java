@@ -106,13 +106,15 @@ public class RegisterFragment extends Fragment {
                     }
                     else {
                         state = false;
-                        Log.d("Firebase", "Data not matched");
+                        Toast.makeText(getActivity(), "Data not matched",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Cannot connect to Firebase", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", databaseError.getMessage());
                 state = false;
             }
