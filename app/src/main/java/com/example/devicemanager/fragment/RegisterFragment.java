@@ -36,6 +36,7 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Button btnSubmit;
     private TextView tvLogin;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public RegisterFragment() {
     }
@@ -58,6 +59,20 @@ public class RegisterFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         initInstances(view);
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     private void initInstances(View view) {
