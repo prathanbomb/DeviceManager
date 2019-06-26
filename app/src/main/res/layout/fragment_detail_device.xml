@@ -77,6 +77,22 @@
                 android:freezesText="true"
                 android:text="Details..."
                 android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tvLastUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:text="@string/last_check"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tvAddedDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:text="@string/added_date"
+                android:textSize="20sp" />
 
             <TextView
 
