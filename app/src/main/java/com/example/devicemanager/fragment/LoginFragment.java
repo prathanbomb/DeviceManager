@@ -30,7 +30,6 @@ public class LoginFragment extends Fragment {
     private String strEmail, strPassword;
     private Button btnSubmit;
     private TextView tvRegister;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public static LoginFragment newInstance(){
         LoginFragment fragment = new LoginFragment();
@@ -68,12 +67,6 @@ public class LoginFragment extends Fragment {
 
         tvRegister = view.findViewById(R.id.tvRegister);
         tvRegister.setOnClickListener(onClickRegister);
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
-            }
-        };
     }
 
     private void userLogin() {

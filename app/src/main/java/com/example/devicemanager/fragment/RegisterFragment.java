@@ -22,7 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +37,6 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Button btnSubmit;
     private TextView tvLogin;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public RegisterFragment() {
     }
@@ -62,20 +61,6 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
     private void initInstances(View view) {
         etEmail = view.findViewById(R.id.etRegEmail);
         etPassword = view.findViewById(R.id.etRegPassword);
@@ -97,11 +82,16 @@ public class RegisterFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.d("createAccount", task.isSuccessful() + "");
                 if (task.isSuccessful()){
                     Toast.makeText(getActivity(), "Register Success", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
+                }
+                else {
+                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                    Log.d("isSuccessful", e.getMessage());
                 }
             }
         });
