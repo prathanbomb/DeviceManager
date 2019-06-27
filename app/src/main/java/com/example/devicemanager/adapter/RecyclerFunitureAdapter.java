@@ -17,27 +17,27 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitureAdapter.Holder> {
-    ArrayList<String> brand = new ArrayList<String>();
+    String[] brand = new String[0];
 
-    ArrayList<Integer> available = new ArrayList<>();
+    int[] available = new int[0];
     Context context;
 
     public RecyclerFunitureAdapter(Context context){
         this.context = context;
     }
-    public void setBrand(ArrayList<String> brand) {
+    public void setBrand(String[] brand) {
         this.brand = brand;
     }
 
-    public void setCount(ArrayList<Integer> count) {
+    public void setCount(int[] count) {
         this.count = count;
     }
 
-    public void setAvailable(ArrayList<Integer> available) {
+    public void setAvailable(int[] available) {
         this.available = available;
     }
 
-    ArrayList<Integer> count = new ArrayList<Integer>();
+    int[] count = new int[0];
 
     @NonNull
     @Override
@@ -54,9 +54,9 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type",brand.get(position));
-                intent.putExtra("Count",count.get(position));
-                intent.putExtra("Available", available.get(position));
+                intent.putExtra("Type",brand[position]);
+                intent.putExtra("Count",count[position]);
+                intent.putExtra("Available", available[position]);
                 context.startActivity(intent);
             }
         });
@@ -65,7 +65,7 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
 
     @Override
     public int getItemCount() {
-        return brand.size();
+        return brand.length;
     }
 
     class Holder extends RecyclerView.ViewHolder {
@@ -78,9 +78,9 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
         }
         public void setItem(int position) {
-            tvBrand.setText(brand.get(position));
-            tvCount.setText(count.get(position)+"");
-            tvAvailable.setText(available.get(position) + "");
+            tvBrand.setText(brand[position]);
+            tvCount.setText(count[position]+"");
+            tvAvailable.setText(available[position] + "");
         }
 
     }

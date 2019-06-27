@@ -87,12 +87,6 @@ public class RegisterFragment extends Fragment {
 
         btnSubmit.setOnClickListener(onClickSubmit);
         tvLogin.setOnClickListener(onClickLogin);
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
-            }
-        };
     }
 
     private void registerUser() {

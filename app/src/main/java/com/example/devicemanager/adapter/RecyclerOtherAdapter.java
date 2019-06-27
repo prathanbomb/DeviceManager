@@ -17,26 +17,26 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdapter.Holder> {
-    ArrayList<String> brand = new ArrayList<String>();
-    ArrayList<Integer> available = new ArrayList<>();
+    String[] brand = new String[0];
+    int[] available = new int[0];
     Context context;
 
     public RecyclerOtherAdapter(Context context){
         this.context = context;
     }
-    public void setBrand(ArrayList<String> brand) {
+    public void setBrand(String[] brand) {
         this.brand = brand;
     }
 
-    public void setCount(ArrayList<Integer> count) {
+    public void setCount(int[] count) {
         this.count = count;
     }
 
-    public void setAvailable(ArrayList<Integer> available) {
+    public void setAvailable(int[] available) {
         this.available = available;
     }
 
-    ArrayList<Integer> count = new ArrayList<Integer>();
+    int[] count = new int[0];
 
     @NonNull
     @Override
@@ -53,9 +53,9 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type",brand.get(position));
-                intent.putExtra("Count",count.get(position));
-                intent.putExtra("Available", available.get(position));
+                intent.putExtra("Type",brand[position]);
+                intent.putExtra("Count",count[position]);
+                intent.putExtra("Available", available[position]);
                 context.startActivity(intent);
             }
         });
@@ -64,7 +64,7 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
 
     @Override
     public int getItemCount() {
-        return brand.size();
+        return brand.length;
     }
 
     class Holder extends RecyclerView.ViewHolder {
@@ -77,9 +77,9 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
         }
         public void setItem(int position) {
-            tvBrand.setText(brand.get(position));
-            tvCount.setText(count.get(position)+"");
-            tvAvailable.setText(available.get(position) + "");
+            tvBrand.setText(brand[position]);
+            tvCount.setText(count[position]+"");
+            tvAvailable.setText(available[position] + "");
         }
 
     }

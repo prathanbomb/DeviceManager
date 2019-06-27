@@ -59,20 +59,6 @@ public class LoginFragment extends Fragment {
         etPassword.getText().clear();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
     private void initInstances(View view) {
         etEmail = view.findViewById(R.id.etLoginEmail);
         etPassword = view.findViewById(R.id.etLoginPassword);

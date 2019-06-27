@@ -16,9 +16,9 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAdapter.Holder> {
-    ArrayList<String> brand = new ArrayList<String>();
+    String[] brand = new String[0];
 
-    ArrayList<Integer> available = new ArrayList<>();
+    int[] available = new int[0];
     public RecyclerDeviceAdapter(Context context){
         this.context = context;
     }
@@ -27,27 +27,27 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
     Context context;
 
 
-    public ArrayList<String> getBrand() {
+    public String[] getBrand() {
         return brand;
     }
 
-    public void setBrand(ArrayList<String> brand) {
+    public void setBrand(String[] brand) {
         this.brand = brand;
     }
 
-    public void setAvailable(ArrayList<Integer> available) {
+    public void setAvailable(int[] available) {
         this.available = available;
     }
 
-    public ArrayList<Integer> getCount() {
+    public int[] getCount() {
         return count;
     }
 
-    public void setCount(ArrayList<Integer> count) {
+    public void setCount(int[] count) {
         this.count = count;
     }
 
-    ArrayList<Integer> count = new ArrayList<Integer>();
+    int[] count = new int[0];
 
     @NonNull
     @Override
@@ -64,9 +64,9 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type",brand.get(position));
-                intent.putExtra("Count",count.get(position));
-                intent.putExtra("Available", available.get(position));
+                intent.putExtra("Type",brand[position]);
+                intent.putExtra("Count",count[position]);
+                intent.putExtra("Available", available[position]);
                 context.startActivity(intent);
             }
         });
@@ -75,7 +75,7 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
 
     @Override
     public int getItemCount() {
-        return brand.size();
+        return brand.length;
     }
 
     class Holder extends RecyclerView.ViewHolder {
@@ -88,9 +88,9 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
         }
         public void setItem(int position) {
-            tvBrand.setText(brand.get(position));
-            tvCount.setText(count.get(position)+"");
-            tvAvailable.setText(available.get(position)+ "");
+            tvBrand.setText(brand[position]);
+            tvCount.setText(count[position]+"");
+            tvAvailable.setText(available[position]+ "");
         }
 
     }
