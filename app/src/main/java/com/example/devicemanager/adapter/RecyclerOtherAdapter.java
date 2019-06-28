@@ -17,15 +17,22 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdapter.Holder> {
-    String[] brand ;
-    int[] available ;
     Context context;
+    String[] brand ;
+    int[] available;
+    int[] count;
+    int[] total;
 
     public RecyclerOtherAdapter(Context context){
         this.context = context;
     }
+
     public void setBrand(String[] brand) {
         this.brand = brand;
+    }
+
+    public void setTotal(int[] total) {
+        this.total = total;
     }
 
     public void setCount(int[] count) {
@@ -36,7 +43,6 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
         this.available = available;
     }
 
-    int[] count ;
 
     @NonNull
     @Override
@@ -54,8 +60,6 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
                 intent.putExtra("Type",brand[position]);
-                intent.putExtra("Count",count[position]);
-                intent.putExtra("Available", available[position]);
                 context.startActivity(intent);
             }
         });
@@ -68,18 +72,20 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvBrand,tvCount, tvAvailable;
+        TextView tvBrand,tvCount, tvAvailable,tvTotal;
 
         public Holder(View itemView) {
             super(itemView);
             tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
             tvCount = (TextView) itemView.findViewById(R.id.tvcount);
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
+            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);
         }
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            tvCount.setText(count[position]+"");
-            tvAvailable.setText(available[position] + "");
+            tvCount.setText("inUSE : "+count[position]);
+            tvAvailable.setText("Available : "+available[position]);
+            tvTotal.setText("Total : "+total[position]);
         }
 
     }

@@ -22,19 +22,25 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAdapter.Holder> {
     String[] brand;
-
+    Context context;
     int[] available;
-    public RecyclerDeviceAdapter(Context context){
+    int[] count;
+    int[] total;
+
+    public RecyclerDeviceAdapter(Context context) {
         this.context = context;
     }
 
-
-    Context context;
-
-
-
     public void setBrand(String[] brand) {
         this.brand = brand;
+    }
+
+    public void setTotal(int[] total) {
+        this.total = total;
+    }
+
+    public void setCount(int[] count) {
+        this.count = count;
     }
 
     public void setAvailable(int[] available) {
@@ -42,24 +48,10 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
     }
 
 
-    public void setCount(int[] count) {
-        this.count = count;
-    }
-
-    public int[] getAvailable() {
-        return available;
-    }
-
-    public int[] getCount() {
-        return count;
-    }
-
-    int[] count;
-
     @NonNull
     @Override
     public RecyclerDeviceAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_device_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_other_item, parent, false);
         Holder holder = new Holder(view);
         return holder;
     }
@@ -71,31 +63,33 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type",brand[position]);
-                intent.putExtra("Count",count[position]);
-                intent.putExtra("Available", available[position]);
+                intent.putExtra("Type", brand[position]);
                 context.startActivity(intent);
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return brand.length;
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvBrand,tvCount, tvAvailable;
+        TextView tvBrand, tvCount, tvAvailable,tvTotal;
 
         public Holder(View itemView) {
             super(itemView);
             tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
             tvCount = (TextView) itemView.findViewById(R.id.tvcount);
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
+            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);
         }
+
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            tvCount.setText(count[position]+"");
-            tvAvailable.setText(available[position]+ "");
+            tvCount.setText("inUSE : "+count[position]);
+            tvAvailable.setText("Available : "+available[position]);
+            tvTotal.setText("Total : "+total[position]);
         }
 
     }

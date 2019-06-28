@@ -32,7 +32,7 @@ public class SummaryFunitureFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerFunitureAdapter recyclerFunitureAdapter;
     RecyclerView.LayoutManager layoutManager;
-    int[] inUse,available;
+    int[] inUse,available,total;
     String[] type;
 
 
@@ -53,6 +53,7 @@ public class SummaryFunitureFragment extends Fragment {
 
             inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
             available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
+            total = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
         if (savedInstanceState != null){
             onRestoreInstanceState(savedInstanceState);
         }
@@ -80,32 +81,37 @@ public class SummaryFunitureFragment extends Fragment {
         recyclerFunitureAdapter = new RecyclerFunitureAdapter(getContext());
         recyclerFunitureAdapter.setBrand(type);
         recyclerFunitureAdapter.setCount(inUse);
+        recyclerFunitureAdapter.setTotal(total);
         recyclerFunitureAdapter.setAvailable(available);
         recyclerView.setAdapter(recyclerFunitureAdapter);
 
     }
 
     private void DownloadData() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Summary");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
                 available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
+                total = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    String typeProduct = s.child("type").getValue(String.class).trim();
-                    String status = s.child("place").getValue(String.class).trim();
-                    for (int i = 0; i < type.length; i++) {
-                        if (type[i].matches(typeProduct)) {
-                            if (status.matches("-")) {
-                                available[i] = available[i] + 1;
-                            } else {
-                                inUse[i] = inUse[i] + 1;
-
-                            }
+                    String key = s.getKey().trim();
+                    for(int i = 0 ; i<type.length ; i++){
+                        if(key.matches(type[i])){
+                            int getTotal = s.child("Total").getValue(Integer.class);
+                            int getInuse = s.child("InUse").getValue(Integer.class);
+                            int getAvailable = s.child("Available").getValue(Integer.class);
+                            inUse[i] = getInuse;
+                            available[i] = getAvailable;
+                            total[i] = getTotal;
                         }
                     }
                 }
+                recyclerFunitureAdapter.setTotal(total);
+                recyclerFunitureAdapter.setCount(inUse);
+                recyclerFunitureAdapter.setTotal(total);
+                recyclerFunitureAdapter.setAvailable(available);
                 recyclerFunitureAdapter.notifyDataSetChanged();
             }
 
