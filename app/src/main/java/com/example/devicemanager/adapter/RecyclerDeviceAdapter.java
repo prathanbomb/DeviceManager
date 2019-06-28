@@ -2,6 +2,8 @@ package com.example.devicemanager.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,45 +16,42 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.activity.SummaryListDetailActivity;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAdapter.Holder> {
-    String[] brand = new String[0];
-
-    int[] available = new int[0];
-    public RecyclerDeviceAdapter(Context context){
-        this.context = context;
-    }
-
-
+    String[] brand;
     Context context;
+    int[] available;
+    int[] count;
+    int[] total;
 
-
-    public String[] getBrand() {
-        return brand;
+    public RecyclerDeviceAdapter(Context context) {
+        this.context = context;
     }
 
     public void setBrand(String[] brand) {
         this.brand = brand;
     }
 
-    public void setAvailable(int[] available) {
-        this.available = available;
-    }
-
-    public int[] getCount() {
-        return count;
+    public void setTotal(int[] total) {
+        this.total = total;
     }
 
     public void setCount(int[] count) {
         this.count = count;
     }
 
-    int[] count = new int[0];
+    public void setAvailable(int[] available) {
+        this.available = available;
+    }
+
 
     @NonNull
     @Override
     public RecyclerDeviceAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_device_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_other_item, parent, false);
         Holder holder = new Holder(view);
         return holder;
     }
@@ -64,14 +63,11 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type",brand[position]);
-                intent.putExtra("Count",count[position]);
-                intent.putExtra("Available", available[position]);
+                intent.putExtra("Type", brand[position]);
                 context.startActivity(intent);
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -79,19 +75,23 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvBrand,tvCount, tvAvailable;
+        TextView tvBrand, tvCount, tvAvailable,tvTotal;
 
         public Holder(View itemView) {
             super(itemView);
             tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
             tvCount = (TextView) itemView.findViewById(R.id.tvcount);
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
+            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);
         }
+
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            tvCount.setText(count[position]+"");
-            tvAvailable.setText(available[position]+ "");
+            tvCount.setText("inUSE : "+count[position]);
+            tvAvailable.setText("Available : "+available[position]);
+            tvTotal.setText("Total : "+total[position]);
         }
 
     }
+
 }

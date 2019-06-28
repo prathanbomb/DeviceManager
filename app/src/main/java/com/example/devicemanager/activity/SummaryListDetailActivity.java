@@ -18,11 +18,11 @@ public class SummaryListDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary_list_detail);
+        setTitle(getIntent().getStringExtra("Type"));
         if (savedInstanceState == null) {
             Bundle bundle = new Bundle();
 
             bundle.putString("Type", getIntent().getStringExtra("Type"));
-            bundle.putInt("Count", getIntent().getIntExtra("Count",0));
 
             SummaryListDetailFragment fragment = SummaryListDetailFragment.newInstance();
             fragment.setArguments(bundle);

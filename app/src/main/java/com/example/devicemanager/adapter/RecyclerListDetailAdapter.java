@@ -1,5 +1,6 @@
 package com.example.devicemanager.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,22 +13,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.CheckDeviceActivity;
-import com.example.devicemanager.activity.SummaryListDetailActivity;
 
-import java.util.Random;
+import java.util.ArrayList;
 
 public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerListDetailAdapter.Holder> {
     Context context;
+    ArrayList<String> brand,detail,owner,addedDate,status,key = new ArrayList<String>();
 
-    public int getCount() {
-        return count;
+    public void setBrand(ArrayList<String> brand) {
+        this.brand = brand;
+    }
+    public void setKey(ArrayList<String> key) {
+        this.key = key;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setDetail(ArrayList<String> detail) {
+        this.detail = detail;
     }
 
-    int count;
+    public void setOwner(ArrayList<String> owner) {
+        this.owner = owner;
+    }
+
+    public void setAddedDate(ArrayList<String> addedDate) {
+        this.addedDate = addedDate;
+    }
+
+    public void setStatus(ArrayList<String> status) {
+        this.status = status;
+    }
+
     public RecyclerListDetailAdapter(Context context){
         this.context = context;
     }
@@ -40,13 +55,13 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
+    public void onBindViewHolder(@NonNull Holder holder, final int position) {
         holder.setItem(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, CheckDeviceActivity.class);
-                intent.putExtra("serial","oX02ASCD023xxxxx");
+                intent.putExtra("serial",key.get(position));
                 context.startActivity(intent);
             }
         });
@@ -54,30 +69,39 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
 
     @Override
     public int getItemCount() {
-        return count;
+        if(brand == null){
+            return 0;
+        }
+        else {
+            return brand.size();
+        }
     }
-
+    TextView tvBrand,tvDetail,tvOwner,tvAddedDate,tvStatus;
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvDetail, tvLocation, tvLastUpdate,tvSerial;
 
         public Holder(View itemView) {
             super(itemView);
-            tvDetail        = (TextView) itemView.findViewById(R.id.tvDetail);
-            tvLocation      = (TextView) itemView.findViewById(R.id.tvLocation);
-            tvLastUpdate    = (TextView) itemView.findViewById(R.id.tvLastUpdate);
-            tvSerial    = (TextView) itemView.findViewById(R.id.tvSerial);
-
+            tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
+            tvDetail = (TextView) itemView.findViewById(R.id.tvDetail);
+            tvOwner = (TextView) itemView.findViewById(R.id.tvOwner);
+            tvAddedDate = (TextView) itemView.findViewById(R.id.tvAddedDate);
+            tvStatus = (TextView) itemView.findViewById(R.id.tvStatus);
         }
 
+        @SuppressLint("ResourceAsColor")
         public void setItem(int position) {
-            Random rand = new Random();
-            int n = rand.nextInt(543)+1;
-            tvDetail.setText("Detail :ITEM"+position);
-            tvLocation.setText("Location : USER"+n);
-            tvLastUpdate.setText("Update Time : 21/06/2019");
-            tvSerial.setText("Serial : oX02ASCD023"+position*n);
+            tvBrand.setText(brand.get(position));
+            tvDetail.setText(detail.get(position));
+            tvOwner.setText(owner.get(position));
+            tvAddedDate.setText(addedDate.get(position));
+            tvStatus.setText(status.get(position));
+            if(status.get(position).matches("Inuse")){
+                tvStatus.setTextColor(context.getResources().getColor(R.color.red));
+            }
+            else {
+                tvStatus.setTextColor(context.getResources().getColor(R.color.green));
+            }
         }
-
     }
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class SummaryDeviceFragment extends Fragment {
     String[] type;
-    int[] available, inUse;
+    int[] available, inUse,total;
     RecyclerView recyclerView;
     RecyclerDeviceAdapter recyclerDeviceAdapter;
     RecyclerView.LayoutManager layoutManager;
@@ -41,10 +41,10 @@ public class SummaryDeviceFragment extends Fragment {
         init(savedInstanceState);
         type = new String[]{"ACCESS POINT","BARCODE READER","CAMERA","CARD READER","CASH DRAWER","CLOTHES DRYERS","COMPUTER","DOCUMENT SHREDDER"
                 ,"DOOR ACCESS","IMAC","IPAD","IPOD","LABEL PRINTER","LAPTOP","MOBILE PHONE","MODEM ROUTER","MONITOR","NETWORK SWITCH","POCKET WIFI"
-                ,"PRINTER","ROUTER","SCANNER","SERVER","TABLET","TELEPHONE","WATCH"
-        };
-        inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                ,"PRINTER","ROUTER","SCANNER","SERVER","TABLET","TELEPHONE","WATCH"};
+        inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+        available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+        total = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
         DownloadData();
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
@@ -64,7 +64,6 @@ public class SummaryDeviceFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        // Init 'View' instance(s) with rootView.findViewById here
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvDevice);
         recyclerView.setLayoutManager(layoutManager);
@@ -73,29 +72,35 @@ public class SummaryDeviceFragment extends Fragment {
         recyclerDeviceAdapter = new RecyclerDeviceAdapter(getContext());
         recyclerDeviceAdapter.setBrand(type);
         recyclerDeviceAdapter.setCount(inUse);
+        recyclerDeviceAdapter.setTotal(total);
         recyclerDeviceAdapter.setAvailable(available);
         recyclerView.setAdapter(recyclerDeviceAdapter);
 
     }
     private void DownloadData() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Summary");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+                available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+                total = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    String typeProduct = s.child("type").getValue(String.class).trim();
-                    String status = s.child("place").getValue(String.class).trim();
-                    for (int i = 0; i < type.length; i++) {
-                        if (type[i].matches(typeProduct)) {
-                            if (status.matches("-")) {
-                                available[i] = available[i] + 1;
-                            } else {
-                                inUse[i] = inUse[i] + 1;
-
-                            }
+                    String key = s.getKey().trim();
+                    for(int i = 0 ; i<type.length ; i++){
+                        if(key.matches(type[i])){
+                            int getTotal = s.child("Total").getValue(Integer.class);
+                            int getInuse = s.child("InUse").getValue(Integer.class);
+                            int getAvailable = s.child("Available").getValue(Integer.class);
+                            inUse[i] = getInuse;
+                            available[i] = getAvailable;
+                            total[i] = getTotal;
                         }
                     }
                 }
+                recyclerDeviceAdapter.setTotal(total);
+                recyclerDeviceAdapter.setCount(inUse);
+                recyclerDeviceAdapter.setAvailable(available);
                 recyclerDeviceAdapter.notifyDataSetChanged();
             }
 

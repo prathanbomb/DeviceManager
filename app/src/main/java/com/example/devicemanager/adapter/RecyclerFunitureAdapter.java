@@ -17,16 +17,22 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitureAdapter.Holder> {
-    String[] brand = new String[0];
-
-    int[] available = new int[0];
+    String[] brand;
+    int[] available;
+    int[] count;
+    int[] total;
     Context context;
 
-    public RecyclerFunitureAdapter(Context context){
+    public RecyclerFunitureAdapter(Context context) {
         this.context = context;
     }
+
     public void setBrand(String[] brand) {
         this.brand = brand;
+    }
+
+    public void setTotal(int[] total) {
+        this.total = total;
     }
 
     public void setCount(int[] count) {
@@ -37,7 +43,6 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
         this.available = available;
     }
 
-    int[] count = new int[0];
 
     @NonNull
     @Override
@@ -54,9 +59,8 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type",brand[position]);
-                intent.putExtra("Count",count[position]);
-                intent.putExtra("Available", available[position]);
+                intent.putExtra("Type", brand[position]);
+
                 context.startActivity(intent);
             }
         });
@@ -69,18 +73,21 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvBrand,tvCount, tvAvailable;
+        TextView tvBrand, tvCount, tvAvailable,tvTotal;
 
         public Holder(View itemView) {
             super(itemView);
             tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
             tvCount = (TextView) itemView.findViewById(R.id.tvcount);
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
+            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);
         }
+
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            tvCount.setText(count[position]+"");
-            tvAvailable.setText(available[position] + "");
+            tvCount.setText("inUSE : "+count[position]);
+            tvAvailable.setText("Available : "+available[position]);
+            tvTotal.setText("Total : "+total[position]);
         }
 
     }
