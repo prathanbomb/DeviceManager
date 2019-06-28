@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             mAuth = FirebaseAuth.getInstance();
-            mAuthListener = new FirebaseAuth.AuthStateListener() {
+            mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -46,17 +46,11 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
                     }
                 }
-            };
+            });
         }
     }
 
     private void initInstances() {
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override

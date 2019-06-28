@@ -32,4 +32,23 @@
     <string name="digio_email">digio.co.th</string>
     <string name="added_date">Added Date</string>
     <string name="last_check">Last Check</string>
+    <string name="price">Price</string>
+    <string name="model">Model</string>
+    <string name="brand">Brand</string>
+    <string name="details">Details</string>
+    <string name="device_details">Device Details</string>
+    <string name="serial_number">Serial Number</string>
+    <string name="owner_name">Owner Name</string>
+    <string name="purchasedate">PurchaseDate</string>
+    <string name="choose_item_type">Choose item type</string>
+    <string name="id">ID</string>
+    <string name="name">Name</string>
+    <string name="owner">Owner</string>
+    <string name="item_details">Item Details</string>
+    <string name="item_detail">Item Detail</string>
+    <string name="note">Note</string>
+    <string name="more">More</string>
+    <string name="depreciationRate">Depreciation Rate</string>
+    <string name="accumulated_depreciation">Accumulated Depreciation</string>
+    <string name="forward_depreciation">Forward Depreciation</string>
 </resources>

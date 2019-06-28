@@ -1,16 +1,20 @@
 package com.example.devicemanager.fragment;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,18 +29,35 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.activity.CameraActivity;
 import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
+import com.example.devicemanager.model.AddedItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
-    private Spinner spType;
+    private Spinner spType, spBrand;
     private ImageView ivDevice;
-    private EditText etOwnerName, etSerialNumber, etDeviceDetail;
+    private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
+     etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote;
     private Button btnConfirm;
-    private Button btnScanBarcode;
+    private Calendar calendar;
+    private DatePickerDialog.OnDateSetListener date;
+    private String selected, lastKey;
+    private int path;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -58,6 +79,16 @@ public class AddDeviceFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 12345) {
+            if (resultCode == RESULT_OK) {
+                etSerialNumber.setText(data.getStringExtra("serial"));
+            }
+        }
+    }
+
     private void initInstances(View view, Bundle savedInstanceState) {
 
         spType = view.findViewById(R.id.spinnerDeviceType);
@@ -67,47 +98,38 @@ public class AddDeviceFragment extends Fragment {
                 R.layout.spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         spType.setAdapter(spinnerAdapter);
+        spType.setOnItemSelectedListener(onSpinnerSelect);
 
-        ivDevice = view.findViewById(R.id.ivDevice);
-        ivDevice.setOnClickListener(onClickImage);
-        etOwnerName = (EditText) view.findViewById(R.id.etOwnerName);
-        etSerialNumber = (EditText) view.findViewById(R.id.etSerialNumber);
-        etDeviceDetail = (EditText) view.findViewById(R.id.etDeviceDetail);
-        /*btnScanBarcode = (Button) view.findViewById(R.id.btnScanBarcode);
-        btnScanBarcode.setOnClickListener(onClickBtnScan);*/
-        etSerialNumber.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                final int DRAWABLE_RIGHT = 2;
+        etOwnerName = view.findViewById(R.id.etOwnerName);
+        etSerialNumber = view.findViewById(R.id.etSerialNumber);
+        etDeviceDetail = view.findViewById(R.id.etDeviceDetail);
+        etDatePicker = view.findViewById(R.id.etPurchaseDate);
+        etOwnerId = view.findViewById(R.id.etOwnerId);
+        etBrand = view.findViewById(R.id.etDeviceBrand);
+        etDeviceModel = view.findViewById(R.id.etDeviceModel);
+        etDevicePrice = view.findViewById(R.id.etDevicePrice);
+        etNote = view.findViewById(R.id.etNote);
+        etDevicePrice = view.findViewById(R.id.etDevicePrice);
 
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if(motionEvent.getX() >= (etSerialNumber.getWidth()
-                            - etSerialNumber.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
-                        startActivityForResult(intent, 12345);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        calendar = Calendar.getInstance(TimeZone.getDefault());
+        this.date = onDateSet;
+        etDatePicker.setOnClickListener(onClickDate);
 
         btnConfirm = view.findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(clickListener);
 
-        String path = getArguments().getString("Path");
-        String serial = getArguments().getString("Serial");
-
-        if (path != null) {
+        //String path = getArguments().getString("Path");
+        /*if (path != null) {
             Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
             Glide.with(Contextor.getInstance().getContext())
                     .load(uri)
                     .into(ivDevice);
-        }
+        }*/
+
+        etSerialNumber.setOnTouchListener(onTouchScan);
+        String serial = getArguments().getString("Serial");
         if (serial != null) {
             etSerialNumber.setText(serial);
-            etDeviceDetail.setText("Macbook Pro 14");
-            etOwnerName.setText("Mr.Natthapat Phatthana");
         }
     }
 
@@ -118,10 +140,7 @@ public class AddDeviceFragment extends Fragment {
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                Intent intentBack = new Intent();
-                getActivity().setResult(RESULT_OK,intentBack);
-                getActivity().finish();
+                saveData();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -133,28 +152,70 @@ public class AddDeviceFragment extends Fragment {
         dialog.show();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 12345) {
-            if (resultCode == RESULT_OK) {
-                etSerialNumber.setText(data.getStringExtra("serial"));
+    private void saveData() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference().child("Data");
+        Query query = databaseReference.orderByKey().limitToLast(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s : dataSnapshot.getChildren()){
+                    lastKey = s.getKey();
+                    path = Integer.parseInt(lastKey) + 1;
+                    lastKey = String.valueOf(path);
+                }
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // TODO: Add more item data
+        AddedItem item = new AddedItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
+                etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
+                etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
+                etNote.getText().toString());
+
+        if (lastKey != null){
+            databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
+
+                        // TODO: Add Success SuccessDialog
+                        Intent intentBack = new Intent();
+                        getActivity().setResult(RESULT_OK,intentBack);
+                        getActivity().finish();
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
-    // TODO: Save State in this condition & Fix stacked activity
-    View.OnClickListener onClickImage = new View.OnClickListener() {
+    private void updateLabel() {
+        String myFormat = "dd/MM/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CHINESE);
+        etDatePicker.setText(sdf.format(calendar.getTime()));
+    }
+
+    /*// TO DO: Save State in this condition & Fix stacked activity
+    private View.OnClickListener onClickImage = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(Contextor.getInstance().getContext(), CameraActivity.class);
             startActivity(intent);
             getActivity().finish();
         }
-    };
+    };*/
 
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
+    private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view == btnConfirm) {
@@ -163,11 +224,52 @@ public class AddDeviceFragment extends Fragment {
         }
     };
 
-    /*View.OnClickListener onClickBtnScan = new View.OnClickListener() {
+    private View.OnClickListener onClickDate = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
-            startActivityForResult(intent, 12345);
+            new DatePickerDialog(getActivity(),
+                    date, calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)).show();
         }
-    };*/
+    };
+
+    private DatePickerDialog.OnDateSetListener onDateSet = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+    };
+
+    private View.OnTouchListener onTouchScan = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            final int DRAWABLE_RIGHT = 2;
+
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                if (motionEvent.getX() >= (etSerialNumber.getWidth()
+                        - etSerialNumber.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    Intent intent = new Intent(getActivity(), ScanBarCodeAddDeviceActivity.class);
+                    startActivityForResult(intent, 12345);
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
+    private AdapterView.OnItemSelectedListener onSpinnerSelect = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            selected = adapterView.getItemAtPosition(i).toString();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+            selected = "none";
+        }
+    };
 }
