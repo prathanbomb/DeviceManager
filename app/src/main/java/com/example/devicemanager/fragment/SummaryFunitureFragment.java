@@ -1,5 +1,7 @@
 package com.example.devicemanager.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SummaryFunitureFragment extends Fragment {
     RecyclerView recyclerView;
@@ -44,13 +49,14 @@ public class SummaryFunitureFragment extends Fragment {
         init(savedInstanceState);
         type = new String[]{"AIR CONDITIONER", "CABINET", "CARPET", "CART", "CHAIR", "COFFEE MACHINE", "COUNTER", "CURTAIN", "DRAWER", "FAN", "FURNITURE"
                 , "GAS STOVE", "JUICE BLENDER", "KITCHEN", "LAMP", "LOCKER", "MIRCROWAVE", "REFRIGERATOR", "RICE COOKER", "SHELVES", "SINK"
-                , "SOFA", "STOOL", "TABLE", "TELEVISION", "WASHING MACHINE", "WATER HEATER", "SWING"};
-        inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
-        available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+                , "SOFA", "STOOL", "TABLE", "TELEVISION", "WASHING MACHINE","WATER PUMP","WATER HEATER","WHITE BOARD", "SWING"};
 
-        DownloadData();
-        if (savedInstanceState != null)
+            inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
+            available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
+        if (savedInstanceState != null){
             onRestoreInstanceState(savedInstanceState);
+        }
+        DownloadData();
     }
 
     @Override
@@ -84,6 +90,8 @@ public class SummaryFunitureFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
+                available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0};
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     String typeProduct = s.child("type").getValue(String.class).trim();
                     String status = s.child("place").getValue(String.class).trim();
@@ -111,7 +119,6 @@ public class SummaryFunitureFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Save Instance State here
     }
 
     /*
@@ -119,7 +126,5 @@ public class SummaryFunitureFragment extends Fragment {
      */
     @SuppressWarnings("UnusedParameters")
     private void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Restore Instance State here
     }
-
 }

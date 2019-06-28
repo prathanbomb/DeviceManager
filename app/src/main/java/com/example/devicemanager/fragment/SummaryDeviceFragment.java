@@ -41,10 +41,9 @@ public class SummaryDeviceFragment extends Fragment {
         init(savedInstanceState);
         type = new String[]{"ACCESS POINT","BARCODE READER","CAMERA","CARD READER","CASH DRAWER","CLOTHES DRYERS","COMPUTER","DOCUMENT SHREDDER"
                 ,"DOOR ACCESS","IMAC","IPAD","IPOD","LABEL PRINTER","LAPTOP","MOBILE PHONE","MODEM ROUTER","MONITOR","NETWORK SWITCH","POCKET WIFI"
-                ,"PRINTER","ROUTER","SCANNER","SERVER","TABLET","TELEPHONE","WATCH"
-        };
-        inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                ,"PRINTER","ROUTER","SCANNER","SERVER","TABLET","TELEPHONE","WATCH"};
+        inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+        available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
         DownloadData();
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
@@ -64,7 +63,6 @@ public class SummaryDeviceFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        // Init 'View' instance(s) with rootView.findViewById here
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvDevice);
         recyclerView.setLayoutManager(layoutManager);
@@ -82,9 +80,11 @@ public class SummaryDeviceFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+                available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    String typeProduct = s.child("type").getValue(String.class).trim();
-                    String status = s.child("place").getValue(String.class).trim();
+                    String typeProduct = s.child("type").getValue(String.class);
+                    String status = s.child("place").getValue(String.class);
                     for (int i = 0; i < type.length; i++) {
                         if (type[i].matches(typeProduct)) {
                             if (status.matches("-")) {

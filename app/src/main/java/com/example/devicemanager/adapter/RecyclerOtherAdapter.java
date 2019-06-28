@@ -17,8 +17,8 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdapter.Holder> {
-    String[] brand = new String[0];
-    int[] available = new int[0];
+    String[] brand ;
+    int[] available ;
     Context context;
 
     public RecyclerOtherAdapter(Context context){
@@ -36,7 +36,7 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
         this.available = available;
     }
 
-    int[] count = new int[0];
+    int[] count ;
 
     @NonNull
     @Override

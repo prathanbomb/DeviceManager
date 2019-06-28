@@ -39,38 +39,10 @@ public class SummaryOtherFragment extends Fragment {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
-        type = new String[]{"ขาแขวน"
-                ,"อุปกรณ์คอมพิวเตอร์"
-                ,"ADAPTER"
-                ,"APPLE CARE"
-                ,"BATTERY"
-                ,"BICYCLE"
-                ,"CAR"
-                ,"CHARGER"
-                ,"CHROMECAST"
-                ,"DEVELOPER PROGRAM"
-                ,"DISPLAY PORT"
-                ,"DONGLE"
-                ,"E-COMMERCE"
-                ,"EQUIPMENT"
-                ,"FILM"
-                ,"GAME"
-                ,"HDD"
-                ,"INTERIOR DECORATION"
-                ,"IPAD COVER"
-                ,"ITEM"
-                ,"KEYBOARD"
-                ,"MICRO SD CARD"
-                ,"MINIDRIVE"
-                ,"POWER BANK"
-                ,"POWER SUPPLIER"
-                ,"PROGRAM"
-                ,"SERVER CABINET"
-                ,"SOFTWARE"
-                ,"SOLID STATE DRIVE "
-                ,"SSD"
-                ,"USB"
-                ,"WIRELESS"
+        type = new String[]{"ขาแขวน","อุปกรณ์คอมพิวเตอร์","ADAPTER","APPLE CARE","BATTERY","BICYCLE","CAR","CHARGER","CHROMECAST","DEVELOPER PROGRAM"
+                ,"DISPLAY PORT","DONGLE","E-COMMERCE","EQUIPMENT","FILM","GAME","HDD","INTERIOR DECORATION","IPAD COVER","ITEM"
+                ,"KEYBOARD","MICRO SD CARD","MINIDRIVE","POWER BANK","POWER SUPPLIER","PROGRAM","SERVER CABINET","SOFTWARE"
+                ,"SOLID STATE DRIVE ","SSD","USB","WIRELESS"
         };
         inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -110,6 +82,8 @@ public class SummaryOtherFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+                available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     String typeProduct = s.child("type").getValue(String.class).trim();
                     String status = s.child("place").getValue(String.class).trim();

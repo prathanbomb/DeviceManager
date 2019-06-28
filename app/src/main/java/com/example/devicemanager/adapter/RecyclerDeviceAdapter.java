@@ -2,6 +2,8 @@ package com.example.devicemanager.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,14 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.activity.SummaryListDetailActivity;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAdapter.Holder> {
-    String[] brand = new String[0];
+    String[] brand;
 
-    int[] available = new int[0];
+    int[] available;
     public RecyclerDeviceAdapter(Context context){
         this.context = context;
     }
@@ -27,9 +32,6 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
     Context context;
 
 
-    public String[] getBrand() {
-        return brand;
-    }
 
     public void setBrand(String[] brand) {
         this.brand = brand;
@@ -39,15 +41,20 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
         this.available = available;
     }
 
-    public int[] getCount() {
-        return count;
-    }
 
     public void setCount(int[] count) {
         this.count = count;
     }
 
-    int[] count = new int[0];
+    public int[] getAvailable() {
+        return available;
+    }
+
+    public int[] getCount() {
+        return count;
+    }
+
+    int[] count;
 
     @NonNull
     @Override
@@ -71,8 +78,6 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
             }
         });
     }
-
-
     @Override
     public int getItemCount() {
         return brand.length;
@@ -94,4 +99,5 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
         }
 
     }
+
 }

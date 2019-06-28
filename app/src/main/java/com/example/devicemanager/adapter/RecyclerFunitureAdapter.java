@@ -17,9 +17,9 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 import java.util.ArrayList;
 
 public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitureAdapter.Holder> {
-    String[] brand = new String[0];
+    String[] brand ;
 
-    int[] available = new int[0];
+    int[] available ;
     Context context;
 
     public RecyclerFunitureAdapter(Context context){
@@ -37,7 +37,7 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
         this.available = available;
     }
 
-    int[] count = new int[0];
+    int[] count ;
 
     @NonNull
     @Override
