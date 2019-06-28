@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="num" />
+                android:text="num"
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/tvAvailable"
@@ -43,7 +44,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="num" />
+                android:text="num"
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/tvTotal"
@@ -52,7 +54,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="num" />
+                android:text="num"
+                android:textSize="12sp"/>
 
 
         </LinearLayout>

@@ -18,6 +18,7 @@ public class SummaryListDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary_list_detail);
+        setTitle(getIntent().getStringExtra("Type"));
         if (savedInstanceState == null) {
             Bundle bundle = new Bundle();
 
