@@ -1,42 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="5dp"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="5dp">
 
     <LinearLayout
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="23dp"
-        android:paddingRight="23dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="7" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:text="@string/in_use" />
+            android:layout_marginTop="8dp"
+            android:paddingLeft="23dp"
+            android:paddingRight="23dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:text="@string/available" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="7" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="@string/in_use" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="@string/available" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDevice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDevice"
+    <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#80000000"/>
 
-</LinearLayout>
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.ThreeBounce"
+        android:layout_width="200dp"
+        android:layout_height="195dp"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorAccent" />
+
+</FrameLayout>

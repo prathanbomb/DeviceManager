@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +31,8 @@ public class SummaryOtherFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerOtherAdapter recyclerOtherAdapter;
     RecyclerView.LayoutManager layoutManager;
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public static SummaryOtherFragment newInstance() {
         SummaryOtherFragment fragment = new SummaryOtherFragment();
@@ -47,7 +52,6 @@ public class SummaryOtherFragment extends Fragment {
         inUse = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         available = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         total = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        DownloadData();
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
     }
@@ -70,6 +74,11 @@ public class SummaryOtherFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvOther);
         recyclerView.setLayoutManager(layoutManager);
+
+        progressBar = (ProgressBar) rootView.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) rootView.findViewById(R.id.view);
+
+        DownloadData();
 
         recyclerOtherAdapter = new RecyclerOtherAdapter(getContext());
         recyclerOtherAdapter.setBrand(type);
@@ -104,6 +113,8 @@ public class SummaryOtherFragment extends Fragment {
                 recyclerOtherAdapter.setAvailable(available);
                 recyclerOtherAdapter.setCount(inUse);
                 recyclerOtherAdapter.notifyDataSetChanged();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override

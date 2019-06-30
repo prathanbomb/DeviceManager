@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerFunitureAdapter;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +37,8 @@ public class SummaryFunitureFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     int[] inUse,available,total;
     String[] type;
-
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public static SummaryFunitureFragment newInstance() {
         SummaryFunitureFragment fragment = new SummaryFunitureFragment();
@@ -57,7 +61,6 @@ public class SummaryFunitureFragment extends Fragment {
         if (savedInstanceState != null){
             onRestoreInstanceState(savedInstanceState);
         }
-        DownloadData();
     }
 
     @Override
@@ -77,6 +80,11 @@ public class SummaryFunitureFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvFuniture);
         recyclerView.setLayoutManager(layoutManager);
+
+         progressBar = (ProgressBar) rootView.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) rootView.findViewById(R.id.view);
+
+        DownloadData();
 
         recyclerFunitureAdapter = new RecyclerFunitureAdapter(getContext());
         recyclerFunitureAdapter.setBrand(type);
@@ -113,6 +121,8 @@ public class SummaryFunitureFragment extends Fragment {
                 recyclerFunitureAdapter.setTotal(total);
                 recyclerFunitureAdapter.setAvailable(available);
                 recyclerFunitureAdapter.notifyDataSetChanged();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override

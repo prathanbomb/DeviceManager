@@ -55,7 +55,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:textSize="10sp"
-                    android:layout_gravity="right"/>
+                    android:gravity="right"
+                    android:paddingRight="16dp"/>
             </LinearLayout>
         </LinearLayout>
 

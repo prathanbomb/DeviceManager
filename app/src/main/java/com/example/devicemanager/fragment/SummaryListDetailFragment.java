@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerFunitureAdapter;
 import com.example.devicemanager.adapter.RecyclerListDetailAdapter;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +42,8 @@ public class SummaryListDetailFragment extends Fragment {
     ArrayList<String> addedDate = new ArrayList<String>();
     ArrayList<String> status = new ArrayList<String>();
     ArrayList<String> key = new ArrayList<String>();
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     @SuppressWarnings("unused")
     public static SummaryListDetailFragment newInstance() {
@@ -53,7 +58,6 @@ public class SummaryListDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
-        DownloadData();
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
     }
@@ -71,6 +75,7 @@ public class SummaryListDetailFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
         recyclerListDetailAdapter.setBrand(brand);
@@ -78,6 +83,12 @@ public class SummaryListDetailFragment extends Fragment {
         recyclerListDetailAdapter.setOwner(owner);
         recyclerListDetailAdapter.setAddedDate(addedDate);
         recyclerListDetailAdapter.setStatus(status);
+
+        progressBar = (ProgressBar) rootView.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) rootView.findViewById(R.id.view);
+
+        DownloadData();
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerListDetailAdapter);
@@ -138,15 +149,18 @@ public class SummaryListDetailFragment extends Fragment {
                         addedDate.add(productAddedDateSubString);
                         status.add(productStatus);
                         key.add(productKey);
-                        recyclerListDetailAdapter.setBrand(brand);
-                        recyclerListDetailAdapter.setDetail(detail);
-                        recyclerListDetailAdapter.setOwner(owner);
-                        recyclerListDetailAdapter.setAddedDate(addedDate);
-                        recyclerListDetailAdapter.setStatus(status);
-                        recyclerListDetailAdapter.setKey(key);
+
                     }
                 }
+                recyclerListDetailAdapter.setBrand(brand);
+                recyclerListDetailAdapter.setDetail(detail);
+                recyclerListDetailAdapter.setOwner(owner);
+                recyclerListDetailAdapter.setAddedDate(addedDate);
+                recyclerListDetailAdapter.setStatus(status);
+                recyclerListDetailAdapter.setKey(key);
                 recyclerListDetailAdapter.notifyDataSetChanged();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
