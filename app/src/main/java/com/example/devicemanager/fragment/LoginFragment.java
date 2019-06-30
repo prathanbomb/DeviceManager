@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginFragment extends Fragment {
 
@@ -30,6 +31,7 @@ public class LoginFragment extends Fragment {
     private String strEmail, strPassword;
     private Button btnSubmit;
     private TextView tvRegister;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     public static LoginFragment newInstance(){
         LoginFragment fragment = new LoginFragment();
@@ -58,6 +60,14 @@ public class LoginFragment extends Fragment {
         etPassword.getText().clear();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
     private void initInstances(View view) {
         etEmail = view.findViewById(R.id.etLoginEmail);
         etPassword = view.findViewById(R.id.etLoginPassword);
@@ -67,6 +77,8 @@ public class LoginFragment extends Fragment {
 
         tvRegister = view.findViewById(R.id.tvRegister);
         tvRegister.setOnClickListener(onClickRegister);
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void userLogin() {
@@ -74,7 +86,6 @@ public class LoginFragment extends Fragment {
         strPassword = etPassword.getText().toString().trim();
 
         if (checkForm(strEmail, strPassword)){
-            mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword(strEmail, strPassword)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -109,7 +120,16 @@ public class LoginFragment extends Fragment {
     private View.OnClickListener onClickBtnSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            userLogin();
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if(user == null){
+                        userLogin();
+                    }
+                }
+            };
+            mAuth.addAuthStateListener(mAuthListener);
         }
     };
 

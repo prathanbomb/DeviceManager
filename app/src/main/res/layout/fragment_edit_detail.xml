@@ -224,7 +224,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:hint="@string/depreciationRate"
+                        android:hint="@string/depreciation_rate"
                         android:inputType="numberDecimal" />
                 </LinearLayout>
 

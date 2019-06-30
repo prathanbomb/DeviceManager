@@ -27,27 +27,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+
         initInstances();
 
-        if (savedInstanceState == null) {
-
-            mAuth = FirebaseAuth.getInstance();
-            mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user == null) {
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.contentContainer, MainFragment.newInstance())
-                                .commit();
-                    }
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.contentContainer, MainFragment.newInstance())
+                            .commit();
                 }
-            });
-        }
+            }
+        };
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     private void initInstances() {

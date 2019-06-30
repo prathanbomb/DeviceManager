@@ -48,7 +48,7 @@
     <string name="item_detail">Item Detail</string>
     <string name="note">Note</string>
     <string name="more">More</string>
-    <string name="depreciationRate">Depreciation Rate</string>
+    <string name="depreciation_rate">Depreciation Rate</string>
     <string name="accumulated_depreciation">Accumulated Depreciation</string>
     <string name="forward_depreciation">Forward Depreciation</string>
 </resources>

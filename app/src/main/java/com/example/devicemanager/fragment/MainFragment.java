@@ -183,6 +183,7 @@ public class MainFragment extends Fragment {
     private View.OnClickListener onClickLogout = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // TODO: Sign out and go back to sign in page
             mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();
         }
