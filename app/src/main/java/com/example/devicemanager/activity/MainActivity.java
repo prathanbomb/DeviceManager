@@ -31,22 +31,31 @@ public class MainActivity extends AppCompatActivity {
 
         initInstances();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.contentContainer, MainFragment.newInstance())
-                            .commit();
+        String logout = getIntent().getStringExtra("logout");
+
+        if (logout != null && logout.matches("true")){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.contentContainer, LoginFragment.newInstance())
+                    .commit();
+        }
+        else {
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user == null) {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.contentContainer, MainFragment.newInstance())
+                                .commit();
+                    }
                 }
-            }
-        };
-        mAuth.addAuthStateListener(mAuthListener);
+            };
+            mAuth.addAuthStateListener(mAuthListener);
+        }
     }
 
     private void initInstances() {

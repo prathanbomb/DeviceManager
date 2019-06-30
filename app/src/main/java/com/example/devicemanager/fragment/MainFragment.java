@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
+import com.example.devicemanager.activity.MainActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
@@ -183,9 +184,11 @@ public class MainFragment extends Fragment {
     private View.OnClickListener onClickLogout = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // TODO: Sign out and go back to sign in page
             mAuth = FirebaseAuth.getInstance();
             mAuth.signOut();
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra("logout","true");
+            startActivity(intent);
         }
     };
 

@@ -105,9 +105,11 @@ public class RegisterFragment extends Fragment {
                     getActivity().finish();
                 }
                 else {
-                    Toast.makeText(context, "Cannot Register", Toast.LENGTH_SHORT).show();
                     FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                    Log.d("isSuccessful", e.getMessage());
+                    if (e != null) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("isSuccessful", e.getMessage());
+                    }
                 }
             }
         });
