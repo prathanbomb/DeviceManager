@@ -11,12 +11,15 @@ public class DataItem {
     private String purchasedPrice;
     private String purchasedDate;
     private String note;
+    private String type;
+    private String unnamed2;
 
     public DataItem(){ }
 
     public DataItem(String id, String placeId, String placeName, String brand,
                     String serialNo, String model, String detail,
-                    String purchasedPrice, String purchasedDate, String note) {
+                    String purchasePrice, String purchaseDate, String note,String type,
+                    String unnamed2) {
         this.id = id;
         this.placeId = placeId;
         this.placeName = placeName;
@@ -27,6 +30,8 @@ public class DataItem {
         this.purchasedPrice = purchasedPrice;
         this.purchasedDate = purchasedDate;
         this.note = note;
+        this.type = type;
+        this.unnamed2 = unnamed2;
     }
 
     public String getId() {
@@ -90,7 +95,7 @@ public class DataItem {
     }
 
     public void setPurchasedPrice(String purchasePrice) {
-        this.purchasedPrice = purchasedPrice;
+        this.purchasedPrice = purchasePrice;
     }
 
     public String getPurchasedDate() {
@@ -98,7 +103,7 @@ public class DataItem {
     }
 
     public void setPurchasedDate(String purchaseDate) {
-        this.purchasedDate = purchasedDate;
+        this.purchasedDate = purchaseDate;
     }
 
     public String getNote() {
@@ -107,5 +112,19 @@ public class DataItem {
 
     public void setNote(String note) {
         this.note = note;
+    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    public String getUnnamed2() {
+        return unnamed2;
+    }
+
+    public void setUnnamed2(String unnamed2) {
+        this.unnamed2 = unnamed2;
     }
 }

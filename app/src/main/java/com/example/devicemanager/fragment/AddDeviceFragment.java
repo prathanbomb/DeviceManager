@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -51,13 +52,13 @@ public class AddDeviceFragment extends Fragment {
     private Spinner spType;
     private ImageView ivDevice;
     private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
-     etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote;
+            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote;
     private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
     private String selected, lastKey;
     private int path;
-    ProgressBar progressBar ;
+    ProgressBar progressBar;
     View progressDialogBackground;
     private DatabaseReference databaseReference;
 
@@ -120,7 +121,7 @@ public class AddDeviceFragment extends Fragment {
         btnConfirm = view.findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(clickListener);
 
-        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
@@ -168,14 +169,14 @@ public class AddDeviceFragment extends Fragment {
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
                 etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
-                etNote.getText().toString());
+                etNote.getText().toString(),"", "");
 
-        if (lastKey != null){
+        if (lastKey != null) {
             Log.d("test152", lastKey + "");
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
                         Log.d("test152", "Successful");
@@ -183,10 +184,9 @@ public class AddDeviceFragment extends Fragment {
                         progressDialogBackground.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         Intent intentBack = new Intent();
-                        getActivity().setResult(RESULT_OK,intentBack);
+                        getActivity().setResult(RESULT_OK, intentBack);
                         getActivity().finish();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
                         progressDialogBackground.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -202,12 +202,12 @@ public class AddDeviceFragment extends Fragment {
         etDatePicker.setText(sdf.format(calendar.getTime()));
     }
 
-    private void getPath(){
+    private void getPath() {
         Query query = databaseReference.orderByKey().limitToLast(1);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()){
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
                     lastKey = s.getKey();
                     Log.d("test152", lastKey + "");
                     path = Integer.parseInt(lastKey) + 1;
@@ -229,7 +229,43 @@ public class AddDeviceFragment extends Fragment {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    /*// TO DO: Save State in this condition & Fix stacked activity
+    private boolean checkForm() {
+        if (TextUtils.isEmpty(etDeviceDetail.getText())) {
+            etDeviceDetail.setText("-");
+        }
+        if (TextUtils.isEmpty(etOwnerName.getText())) {
+            etOwnerName.setText("-");
+        }
+        if (TextUtils.isEmpty(etDeviceDetail.getText())) {
+            etDeviceDetail.setText("-");
+        }
+        if (TextUtils.isEmpty(etSerialNumber.getText())) {
+            etSerialNumber.setText("=");
+        }
+        if (TextUtils.isEmpty(etBrand.getText())) {
+            etBrand.setText("-");
+        }
+        if (TextUtils.isEmpty(etNote.getText())) {
+            etNote.setText("-");
+        }
+        if (TextUtils.isEmpty(etOwnerId.getText())) {
+            etOwnerId.setText("-");
+        }
+        if (TextUtils.isEmpty(etDeviceModel.getText())) {
+            etDeviceModel.setText("-");
+        }
+        if (TextUtils.isEmpty(etDevicePrice.getText())) {
+            Toast.makeText(getContext(), "Please input prize per piece", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(etDatePicker.getText())) {
+            Toast.makeText(getContext(), "Please input purchased date", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+/*    // TO DO: Save State in this condition & Fix stacked activity
     private View.OnClickListener onClickImage = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
