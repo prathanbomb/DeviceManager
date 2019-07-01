@@ -114,7 +114,8 @@ public class SummaryListDetailFragment extends Fragment {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         type = getArguments().getString("Type").trim();
-        Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data").orderByChild("type").equalTo(type);
+        Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data")
+                .orderByChild("type").equalTo(type);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -127,31 +128,29 @@ public class SummaryListDetailFragment extends Fragment {
 
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     DataItem dataItem = s.getValue(DataItem.class);
-                    String productType = dataItem.getType().trim();
-                    String productBrand = dataItem.getBrand().trim();
-                    ;
-                    String productDetail = dataItem.getDetail().trim();
-                    ;
-                    String productAddedDate = dataItem.getPurchasedDate().trim();
-                    int subStringPosition = productAddedDate.indexOf("T");
-                    String productAddedDateSubString = productAddedDate.substring(0, subStringPosition);
-                    String productOwner = dataItem.getPlaceName().trim();
-                    String productStatus;
-                    if (productOwner.matches("-")) {
-                        productStatus = "Available";
-                    } else {
-                        productStatus = "Active";
+                    if (dataItem != null) {
+                        String productType = dataItem.getType().trim();
+                        String productBrand = dataItem.getBrand().trim();
+                        String productDetail = dataItem.getDetail().trim();
+                        String productAddedDate = dataItem.getPurchasedDate().trim();
+                        int subStringPosition = productAddedDate.indexOf("T");
+                        String productAddedDateSubString = productAddedDate.substring(0, subStringPosition);
+                        String productOwner = dataItem.getPlaceName().trim();
+                        String productStatus;
+                        if (productOwner.matches("-")) {
+                            productStatus = "Available";
+                        } else {
+                            productStatus = "Active";
+                        }
+                        String productKey = dataItem.getUnnamed2().trim();
+
+                        brand.add(productBrand);
+                        detail.add(productDetail);
+                        owner.add(productOwner);
+                        addedDate.add(productAddedDateSubString);
+                        status.add(productStatus);
+                        key.add(productKey);
                     }
-                    String productKey = dataItem.getUnnamed2().trim();
-
-                    brand.add(productBrand);
-                    detail.add(productDetail);
-                    owner.add(productOwner);
-                    addedDate.add(productAddedDateSubString);
-                    status.add(productStatus);
-                    key.add(productKey);
-
-
                 }
                 recyclerListDetailAdapter.setBrand(brand);
                 recyclerListDetailAdapter.setDetail(detail);
