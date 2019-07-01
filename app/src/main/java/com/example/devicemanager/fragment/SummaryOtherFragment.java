@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -89,6 +87,8 @@ public class SummaryOtherFragment extends Fragment {
     }
 
     private void DownloadData() {
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Summary");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -120,6 +120,8 @@ public class SummaryOtherFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("inLoop", databaseError.toString());
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

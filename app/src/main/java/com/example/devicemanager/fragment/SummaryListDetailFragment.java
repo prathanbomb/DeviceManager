@@ -14,10 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.adapter.RecyclerFunitureAdapter;
 import com.example.devicemanager.adapter.RecyclerListDetailAdapter;
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,9 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-/**
- * Created by nuuneoi on 11/16/2014.
- */
 @SuppressWarnings("unused")
 public class SummaryListDetailFragment extends Fragment {
     RecyclerView recyclerView;
@@ -114,6 +108,8 @@ public class SummaryListDetailFragment extends Fragment {
         // Restore Instance State here
     }
     private void DownloadData() {
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,7 +136,7 @@ public class SummaryListDetailFragment extends Fragment {
                             productStatus = "Available";
                         }
                         else {
-                            productStatus = "Inuse";
+                            productStatus = "Active";
                         }
                         String productKey = s.child("unnamed2").getValue(String.class).trim();
                         brand.add(productBrand);
@@ -166,6 +162,8 @@ public class SummaryListDetailFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("inLoop", databaseError.toString());
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

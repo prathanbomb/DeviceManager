@@ -1,7 +1,9 @@
 package com.example.devicemanager.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,8 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +46,8 @@ public class RegisterFragment extends Fragment {
     private TextView tvLogin;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public RegisterFragment() {
     }
@@ -84,6 +90,9 @@ public class RegisterFragment extends Fragment {
         btnSubmit = view.findViewById(R.id.btnRegSubmit);
         tvLogin = view.findViewById(R.id.tvRegLogin);
 
+        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) view.findViewById(R.id.view);
+
         mAuth = FirebaseAuth.getInstance();
 
         btnSubmit.setOnClickListener(onClickSubmit);
@@ -109,6 +118,8 @@ public class RegisterFragment extends Fragment {
                     if (e != null) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d("isSuccessful", e.getMessage());
+                        progressDialogBackground.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -169,9 +180,17 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    private static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private View.OnClickListener onClickSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            hideKeyboardFrom(context,view);
+            progressDialogBackground.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             registerUser();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
@@ -183,6 +202,8 @@ public class RegisterFragment extends Fragment {
                 }
             };
             mAuth.addAuthStateListener(mAuthListener);
+//            progressDialogBackground.setVisibility(View.INVISIBLE);
+//            progressBar.setVisibility(View.INVISIBLE);
         }
     };
 

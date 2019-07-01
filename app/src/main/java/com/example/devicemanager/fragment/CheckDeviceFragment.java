@@ -1,14 +1,17 @@
 package com.example.devicemanager.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +33,8 @@ public class CheckDeviceFragment extends Fragment {
             tvLastUpdate, tvAddedDate;
     private static String serial;
     private Button btnConfirm,btnEdit;
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public static CheckDeviceFragment newInstances(String barcode) {
         CheckDeviceFragment fragment = new CheckDeviceFragment();
@@ -85,6 +90,9 @@ public class CheckDeviceFragment extends Fragment {
         btnEdit = view.findViewById(R.id.btnEdit);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
+        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) view.findViewById(R.id.view);
+
         btnEdit.setOnClickListener(clickListener);
         btnConfirm.setOnClickListener(clickListener);
 
@@ -124,6 +132,12 @@ public class CheckDeviceFragment extends Fragment {
         dialog.show();
     }
 
+    private static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -133,4 +147,5 @@ public class CheckDeviceFragment extends Fragment {
             }
         }
     }
+
 }
