@@ -75,7 +75,6 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
     @Override
     public void onBindViewHolder(@NonNull Holder holder, final int position) {
         holder.setItem(position);
-        Log.d("position", position + "");
         holder.setChart(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,9 +131,9 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
             rightAxis.setEnabled(false);
 
             ArrayList<BarEntry> data = new ArrayList<>();
-            data.add(new BarEntry(0, RecyclerOtherAdapter.this.available[position]));
+            data.add(new BarEntry(2, RecyclerOtherAdapter.this.available[position]));
             data.add(new BarEntry(1, RecyclerOtherAdapter.this.count[position]));
-            data.add(new BarEntry(2, RecyclerOtherAdapter.this.total[position]));
+            data.add(new BarEntry(0, RecyclerOtherAdapter.this.total[position]));
 
             BarDataSet dataSet = new BarDataSet(data, "");
             dataSet.setValueTextSize(8);

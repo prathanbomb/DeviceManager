@@ -14,6 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.SummaryListDetailActivity;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -59,6 +67,7 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
     @Override
     public void onBindViewHolder(@NonNull Holder holder, final int position) {
         holder.setItem(position);
+        holder.setChart(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,23 +84,57 @@ public class RecyclerDeviceAdapter extends RecyclerView.Adapter<RecyclerDeviceAd
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvBrand, tvCount, tvAvailable,tvTotal;
+        TextView tvBrand;
+        HorizontalBarChart barChart;
 
         public Holder(View itemView) {
             super(itemView);
-            tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
-            /*tvCount = (TextView) itemView.findViewById(R.id.tvcount);
-            tvAvailable = itemView.findViewById(R.id.tvAvailable);
-            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);*/
+            tvBrand = itemView.findViewById(R.id.tvBrand);
+            barChart = itemView.findViewById(R.id.barChart);
         }
-
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            /*tvCount.setText("Active : "+count[position]);
-            tvAvailable.setText("Available : "+available[position]);
-            tvTotal.setText("Total : "+total[position]);*/
         }
 
-    }
+        private void setChart(final int position) {
+            barChart.getDescription().setEnabled(false);
+            barChart.setPinchZoom(false);
+            barChart.setClickable(false);
+            barChart.setTouchEnabled(false);
+            barChart.setDoubleTapToZoomEnabled(false);
+            barChart.getLegend().setEnabled(false);
+            barChart.animateXY(1000, 1000);
+            barChart.setDrawValueAboveBar(true);
 
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setDrawGridLines(false);
+            xAxis.setDrawAxisLine(false);
+            xAxis.setEnabled(false);
+
+            YAxis leftAxis = barChart.getAxisLeft();
+            leftAxis.setAxisMinimum(0);
+            leftAxis.setAxisMaximum(30);
+            leftAxis.setEnabled(false);
+
+            YAxis rightAxis = barChart.getAxisRight();
+            rightAxis.setDrawAxisLine(true);
+            rightAxis.setDrawGridLines(false);
+            rightAxis.setEnabled(false);
+
+            ArrayList<BarEntry> data = new ArrayList<>();
+            data.add(new BarEntry(2, RecyclerDeviceAdapter.this.available[position]));
+            data.add(new BarEntry(1, RecyclerDeviceAdapter.this.count[position]));
+            data.add(new BarEntry(0, RecyclerDeviceAdapter.this.total[position]));
+
+            BarDataSet dataSet = new BarDataSet(data, "");
+            dataSet.setValueTextSize(8);
+            dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(dataSet);
+
+            BarData barData = new BarData(dataSets);
+            barChart.setData(barData);
+        }
+    }
 }
