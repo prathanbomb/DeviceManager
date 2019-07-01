@@ -21,6 +21,7 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.activity.MainActivity;
 import com.example.devicemanager.manager.Contextor;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -95,40 +96,39 @@ public class RegisterFragment extends Fragment {
         strPassword = etPassword.getText().toString().trim();
 
         mAuth.createUserWithEmailAndPassword(strEmail, strPassword)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
-                else {
-                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                    if (e != null) {
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d("isSuccessful", e.getMessage());
                     }
-                }
-            }
-        });
+                })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(context, MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }
+                    }
+                });
     }
 
-    private boolean checkCode(){
+    private boolean checkCode() {
         strCode = etCode.getText().toString().trim();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                 .getReference().child("InvitationCode");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()){
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
                     String code = s.child("Code").getValue(String.class);
-                    if (code != null && strCode.matches(code)){
+                    if (code != null && strCode.matches(code)) {
                         state = true;
                         break;
-                    }
-                    else {
+                    } else {
                         state = false;
                         Toast.makeText(context, "Data not matched",
                                 Toast.LENGTH_SHORT).show();
@@ -138,7 +138,6 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, "Cannot connect to Firebase", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", databaseError.getMessage());
                 state = false;
             }
@@ -146,25 +145,22 @@ public class RegisterFragment extends Fragment {
         return state;
     }
 
-    private boolean checkForm(){
+    private boolean checkForm() {
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
         strCode = etCode.getText().toString().trim();
         String regEmail = strEmail.substring(strEmail.indexOf("@") + 1);
 
-        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)){
+        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)) {
             Toast.makeText(context, "Please insert all the fields", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))){
+        } else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))) {
             Toast.makeText(context, "Wrong E-Mail address", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (strPassword.length() < 6) {
+        } else if (strPassword.length() < 6) {
             Toast.makeText(context, "Password must contain at least 6 letters", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -172,7 +168,6 @@ public class RegisterFragment extends Fragment {
     private View.OnClickListener onClickSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            registerUser();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
