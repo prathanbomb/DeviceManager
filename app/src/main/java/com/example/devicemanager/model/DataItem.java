@@ -8,15 +8,15 @@ public class DataItem {
     private String serialNo;
     private String model;
     private String detail;
-    private String purchasePrice;
-    private String purchaseDate;
+    private String purchasedPrice;
+    private String purchasedDate;
     private String note;
 
     public DataItem(){ }
 
     public DataItem(String id, String placeId, String placeName, String brand,
                     String serialNo, String model, String detail,
-                    String purchasePrice, String purchaseDate, String note) {
+                    String purchasedPrice, String purchasedDate, String note) {
         this.id = id;
         this.placeId = placeId;
         this.placeName = placeName;
@@ -24,8 +24,8 @@ public class DataItem {
         this.serialNo = serialNo;
         this.model = model;
         this.detail = detail;
-        this.purchasePrice = purchasePrice;
-        this.purchaseDate = purchaseDate;
+        this.purchasedPrice = purchasedPrice;
+        this.purchasedDate = purchasedDate;
         this.note = note;
     }
 
@@ -85,20 +85,20 @@ public class DataItem {
         this.detail = detail;
     }
 
-    public String getPurchasePrice() {
-        return purchasePrice;
+    public String getPurchasedPrice() {
+        return purchasedPrice;
     }
 
-    public void setPurchasePrice(String purchasePrice) {
-        this.purchasePrice = purchasePrice;
+    public void setPurchasedPrice(String purchasePrice) {
+        this.purchasedPrice = purchasedPrice;
     }
 
-    public String getPurchaseDate() {
-        return purchaseDate;
+    public String getPurchasedDate() {
+        return purchasedDate;
     }
 
-    public void setPurchaseDate(String purchaseDate) {
-        this.purchaseDate = purchaseDate;
+    public void setPurchasedDate(String purchaseDate) {
+        this.purchasedDate = purchasedDate;
     }
 
     public String getNote() {
