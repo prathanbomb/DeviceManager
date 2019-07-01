@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,6 +30,8 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -90,7 +93,7 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
         return brand.length;
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    class Holder extends RecyclerView.ViewHolder{
         TextView tvBrand;
         HorizontalBarChart barChart;
 
@@ -106,6 +109,9 @@ public class RecyclerOtherAdapter extends RecyclerView.Adapter<RecyclerOtherAdap
         private void setChart(final int position) {
             barChart.getDescription().setEnabled(false);
             barChart.setPinchZoom(false);
+            barChart.setClickable(false);
+            barChart.setTouchEnabled(false);
+            barChart.setDoubleTapToZoomEnabled(false);
             barChart.getLegend().setEnabled(false);
             barChart.animateXY(1000, 1000);
             barChart.setDrawValueAboveBar(true);
