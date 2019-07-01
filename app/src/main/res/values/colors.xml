@@ -7,4 +7,5 @@
     <color name="grey">#414141</color>
     <color name="red">#FFff0000</color>
     <color name="green">#FF00ff00</color>
+    <color name="transparent_background">#80000000</color>
 </resources>
