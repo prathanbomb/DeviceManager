@@ -1,13 +1,16 @@
 package com.example.devicemanager.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,8 @@ public class LoginFragment extends Fragment {
     private Button btnSubmit;
     private TextView tvRegister;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public static LoginFragment newInstance(){
         LoginFragment fragment = new LoginFragment();
@@ -69,6 +74,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void initInstances(View view) {
+        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) view.findViewById(R.id.view);
+
         etEmail = view.findViewById(R.id.etLoginEmail);
         etPassword = view.findViewById(R.id.etLoginPassword);
         btnSubmit = view.findViewById(R.id.btnLoginSubmit);
@@ -93,6 +101,8 @@ public class LoginFragment extends Fragment {
                             if (task.isSuccessful()){
                                 Toast.makeText(Contextor.getInstance().getContext(),
                                         "Login Success", Toast.LENGTH_SHORT).show();
+                                progressDialogBackground.setVisibility(View.INVISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
@@ -100,6 +110,8 @@ public class LoginFragment extends Fragment {
                             else {
                                 Toast.makeText(Contextor.getInstance().getContext(),
                                         "Failed to Login", Toast.LENGTH_SHORT).show();
+                                progressDialogBackground.setVisibility(View.INVISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                     });
@@ -116,10 +128,17 @@ public class LoginFragment extends Fragment {
             return true;
         }
     }
+    private static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     private View.OnClickListener onClickBtnSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            hideKeyboardFrom(getContext(),view);
+            progressDialogBackground.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -127,6 +146,7 @@ public class LoginFragment extends Fragment {
                     if(user == null){
                         userLogin();
                     }
+
                 }
             };
             mAuth.addAuthStateListener(mAuthListener);

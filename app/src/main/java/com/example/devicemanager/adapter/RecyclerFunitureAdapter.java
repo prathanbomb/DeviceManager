@@ -85,7 +85,7 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
 
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            tvCount.setText("inUSE : "+count[position]);
+            tvCount.setText("Active : "+count[position]);
             tvAvailable.setText("Available : "+available[position]);
             tvTotal.setText("Total : "+total[position]);
         }

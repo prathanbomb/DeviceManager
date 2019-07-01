@@ -2,6 +2,7 @@ package com.example.devicemanager.fragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -58,6 +61,8 @@ public class AddDeviceFragment extends Fragment {
     private DatePickerDialog.OnDateSetListener date;
     private String selected, lastKey;
     private int path;
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -118,6 +123,9 @@ public class AddDeviceFragment extends Fragment {
         btnConfirm = view.findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(clickListener);
 
+        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) view.findViewById(R.id.view);
+
         //String path = getArguments().getString("Path");
         /*if (path != null) {
             Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
@@ -153,6 +161,8 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void saveData() {
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                 .getReference().child("Data");
         Query query = databaseReference.orderByKey().limitToLast(1);
@@ -169,6 +179,8 @@ public class AddDeviceFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -186,12 +198,16 @@ public class AddDeviceFragment extends Fragment {
                         Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
                         // TODO: Add Success SuccessDialog
+                        progressDialogBackground.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         Intent intentBack = new Intent();
                         getActivity().setResult(RESULT_OK,intentBack);
                         getActivity().finish();
                     }
                     else {
                         Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
+                        progressDialogBackground.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             });
@@ -202,6 +218,11 @@ public class AddDeviceFragment extends Fragment {
         String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CHINESE);
         etDatePicker.setText(sdf.format(calendar.getTime()));
+    }
+
+    private static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     /*// TO DO: Save State in this condition & Fix stacked activity
@@ -272,4 +293,5 @@ public class AddDeviceFragment extends Fragment {
             selected = "none";
         }
     };
+
 }

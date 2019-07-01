@@ -1,53 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="50dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/tvLogin"
-        style="@style/TextViewDefault"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/login"
-        android:textSize="26sp" />
-
-    <EditText
-        android:id="@+id/etLoginEmail"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvLogin"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress" />
+        android:layout_height="match_parent"
+        android:padding="50dp">
 
-    <EditText
-        android:id="@+id/etLoginPassword"
+        <TextView
+            android:id="@+id/tvLogin"
+            style="@style/TextViewDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/login"
+            android:textSize="26sp" />
+
+        <EditText
+            android:id="@+id/etLoginEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvLogin"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/etLoginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etLoginEmail"
+            android:layout_alignStart="@+id/etLoginEmail"
+            android:layout_alignLeft="@+id/etLoginEmail"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/btnLoginSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etLoginPassword"
+            android:text="@string/submit" />
+
+        <TextView
+            android:id="@+id/tvRegister"
+            style="@style/TextViewSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnLoginSubmit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/register" />
+    </RelativeLayout>
+    <View
+        android:clickable="true"
+        android:visibility="invisible"
+        android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etLoginEmail"
-        android:layout_alignStart="@+id/etLoginEmail"
-        android:layout_alignLeft="@+id/etLoginEmail"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
+        android:layout_height="match_parent"
+        android:background="#80000000"/>
 
-    <Button
-        android:id="@+id/btnLoginSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etLoginPassword"
-        android:text="@string/submit" />
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:visibility="invisible"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.ThreeBounce"
+        android:layout_width="200dp"
+        android:layout_height="195dp"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorAccent" />
 
-    <TextView
-        style="@style/TextViewSmall"
-        android:id="@+id/tvRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLoginSubmit"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/register" />
-
-</RelativeLayout>
+</FrameLayout>

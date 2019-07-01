@@ -1,7 +1,9 @@
 package com.example.devicemanager.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,8 +14,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +47,8 @@ public class RegisterFragment extends Fragment {
     private TextView tvLogin;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
+    ProgressBar progressBar ;
+    View progressDialogBackground;
 
     public RegisterFragment() {
     }
@@ -85,6 +91,9 @@ public class RegisterFragment extends Fragment {
         btnSubmit = view.findViewById(R.id.btnRegSubmit);
         tvLogin = view.findViewById(R.id.tvRegLogin);
 
+        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressDialogBackground = (View) view.findViewById(R.id.view);
+
         mAuth = FirebaseAuth.getInstance();
 
         btnSubmit.setOnClickListener(onClickSubmit);
@@ -101,34 +110,37 @@ public class RegisterFragment extends Fragment {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d("isSuccessful", e.getMessage());
+                        progressDialogBackground.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(context, MainActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
-                        }
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, MainActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+            }
+        });
     }
 
-    private boolean checkCode() {
+    private boolean checkCode(){
         strCode = etCode.getText().toString().trim();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                 .getReference().child("InvitationCode");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                for (DataSnapshot s : dataSnapshot.getChildren()){
                     String code = s.child("Code").getValue(String.class);
-                    if (code != null && strCode.matches(code)) {
+                    if (code != null && strCode.matches(code)){
                         state = true;
                         break;
-                    } else {
+                    }
+                    else {
                         state = false;
                         Toast.makeText(context, "Data not matched",
                                 Toast.LENGTH_SHORT).show();
@@ -138,6 +150,7 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Cannot connect to Firebase", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", databaseError.getMessage());
                 state = false;
             }
@@ -145,29 +158,41 @@ public class RegisterFragment extends Fragment {
         return state;
     }
 
-    private boolean checkForm() {
+    private boolean checkForm(){
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
         strCode = etCode.getText().toString().trim();
         String regEmail = strEmail.substring(strEmail.indexOf("@") + 1);
 
-        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)) {
+        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)){
             Toast.makeText(context, "Please insert all the fields", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))) {
+        }
+        else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))){
             Toast.makeText(context, "Wrong E-Mail address", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (strPassword.length() < 6) {
+        }
+        else if (strPassword.length() < 6) {
             Toast.makeText(context, "Password must contain at least 6 letters", Toast.LENGTH_SHORT).show();
             return false;
-        } else {
+        }
+        else {
             return true;
         }
+    }
+
+    private static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private View.OnClickListener onClickSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            hideKeyboardFrom(context,view);
+            progressDialogBackground.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            registerUser();
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
@@ -178,6 +203,8 @@ public class RegisterFragment extends Fragment {
                 }
             };
             mAuth.addAuthStateListener(mAuthListener);
+//            progressDialogBackground.setVisibility(View.INVISIBLE);
+//            progressBar.setVisibility(View.INVISIBLE);
         }
     };
 
