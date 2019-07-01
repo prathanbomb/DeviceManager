@@ -47,7 +47,7 @@ public class RegisterFragment extends Fragment {
     private TextView tvLogin;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
-    ProgressBar progressBar ;
+    ProgressBar progressBar;
     View progressDialogBackground;
 
     public RegisterFragment() {
@@ -91,7 +91,7 @@ public class RegisterFragment extends Fragment {
         btnSubmit = view.findViewById(R.id.btnRegSubmit);
         tvLogin = view.findViewById(R.id.tvRegLogin);
 
-        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
         mAuth = FirebaseAuth.getInstance();
@@ -104,43 +104,44 @@ public class RegisterFragment extends Fragment {
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        mAuth.createUserWithEmailAndPassword(strEmail, strPassword)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.d("isSuccessful", e.getMessage());
-                        progressDialogBackground.setVisibility(View.INVISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
-                }
-            }
-        });
+        if (checkForm() && checkCode()) {
+            mAuth.createUserWithEmailAndPassword(strEmail, strPassword)
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialogBackground.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("isSuccessful", e.getMessage());
+                        }
+                    })
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(context, MainActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                        }
+                    });
+        }
     }
 
-    private boolean checkCode(){
+    private boolean checkCode() {
         strCode = etCode.getText().toString().trim();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                 .getReference().child("InvitationCode");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()){
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
                     String code = s.child("Code").getValue(String.class);
-                    if (code != null && strCode.matches(code)){
+                    if (code != null && strCode.matches(code)) {
                         state = true;
                         break;
-                    }
-                    else {
+                    } else {
                         state = false;
                         Toast.makeText(context, "Data not matched",
                                 Toast.LENGTH_SHORT).show();
@@ -158,25 +159,25 @@ public class RegisterFragment extends Fragment {
         return state;
     }
 
-    private boolean checkForm(){
+    private boolean checkForm() {
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
         strCode = etCode.getText().toString().trim();
         String regEmail = strEmail.substring(strEmail.indexOf("@") + 1);
 
-        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)){
+        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)) {
+            closeLoadingDialog();
             Toast.makeText(context, "Please insert all the fields", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))){
+        } else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))) {
+            closeLoadingDialog();
             Toast.makeText(context, "Wrong E-Mail address", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (strPassword.length() < 6) {
+        } else if (strPassword.length() < 6) {
+            closeLoadingDialog();
             Toast.makeText(context, "Password must contain at least 6 letters", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -189,7 +190,7 @@ public class RegisterFragment extends Fragment {
     private View.OnClickListener onClickSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            hideKeyboardFrom(context,view);
+            hideKeyboardFrom(context, view);
             progressDialogBackground.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
             registerUser();
@@ -197,7 +198,7 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user == null && checkForm() && checkCode()) {
+                    if (user == null) {
                         registerUser();
                     }
                 }
@@ -216,5 +217,10 @@ public class RegisterFragment extends Fragment {
                     .commit();
         }
     };
+
+    private void closeLoadingDialog(){
+        progressDialogBackground.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 
 }
