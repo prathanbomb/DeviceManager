@@ -6,7 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerListDetailAdapter;
+import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.model.DataItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +44,7 @@ public class SummaryListDetailFragment extends Fragment {
     ArrayList<String> key = new ArrayList<String>();
     ProgressBar progressBar;
     View progressDialogBackground;
+    Spinner spFilter, spSortBy;
 
     @SuppressWarnings("unused")
     public static SummaryListDetailFragment newInstance() {
@@ -71,6 +76,23 @@ public class SummaryListDetailFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+        spFilter = rootView.findViewById(R.id.spinnerFilter);
+        ArrayAdapter<CharSequence> spinnerFilterAdapter = ArrayAdapter.createFromResource(
+                Contextor.getInstance().getContext(),
+                R.array.filter,
+                R.layout.spinner_item_list_detail);
+        spinnerFilterAdapter.setDropDownViewResource(R.layout.spinner_item_list_detail);
+        spFilter.setAdapter(spinnerFilterAdapter);
+        setSpinnerDefault(spinnerFilterAdapter,spFilter);
+
+        spSortBy = rootView.findViewById(R.id.spinnerSortBy);
+        ArrayAdapter<CharSequence> spinnerSortByAdapter = ArrayAdapter.createFromResource(
+                Contextor.getInstance().getContext(),
+                R.array.sort_by,
+                R.layout.spinner_item_list_detail);
+        spinnerSortByAdapter.setDropDownViewResource(R.layout.spinner_item_list_detail);
+        spSortBy.setAdapter(spinnerSortByAdapter);
+        setSpinnerDefault(spinnerSortByAdapter,spSortBy);
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
@@ -108,6 +130,11 @@ public class SummaryListDetailFragment extends Fragment {
     @SuppressWarnings("UnusedParameters")
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         // Restore Instance State here
+    }
+
+    private void setSpinnerDefault(ArrayAdapter<CharSequence> spinnerFilterAdapter , Spinner spinner) {
+        int spinnerPosition = spinnerFilterAdapter.getPosition("All");
+        spinner.setSelection(spinnerPosition);
     }
 
     private void DownloadData() {
@@ -171,6 +198,5 @@ public class SummaryListDetailFragment extends Fragment {
             }
         });
     }
-
 
 }

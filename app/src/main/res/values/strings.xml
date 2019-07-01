@@ -7,6 +7,18 @@
         <item>Others</item>
     </string-array>
 
+    <string-array name="filter">
+        <item>All</item>
+        <item>Available</item>
+        <item>Active</item>
+    </string-array>
+
+    <string-array name="sort_by">
+        <item>All</item>
+        <item>Purchased Date</item>
+        <item>Name</item>
+    </string-array>
+
     <string name="search">Search</string>
     <string name="summary">Summary</string>
     <string name="check">Check</string>
@@ -51,4 +63,6 @@
     <string name="depreciation_rate">Depreciation Rate</string>
     <string name="accumulated_depreciation">Accumulated Depreciation</string>
     <string name="forward_depreciation">Forward Depreciation</string>
+    <string name="filter">Filter</string>
+    <string name="sort_by">Sort By</string>
 </resources>
