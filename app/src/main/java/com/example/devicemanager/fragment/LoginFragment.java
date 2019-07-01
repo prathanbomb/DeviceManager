@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +36,10 @@ public class LoginFragment extends Fragment {
     private Button btnSubmit;
     private TextView tvRegister;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    ProgressBar progressBar ;
+    ProgressBar progressBar;
     View progressDialogBackground;
 
-    public static LoginFragment newInstance(){
+    public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -74,7 +75,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void initInstances(View view) {
-        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
         etEmail = view.findViewById(R.id.etLoginEmail);
@@ -93,12 +94,12 @@ public class LoginFragment extends Fragment {
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        if (checkForm(strEmail, strPassword)){
+        if (checkForm(strEmail, strPassword)) {
             mAuth.signInWithEmailAndPassword(strEmail, strPassword)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Toast.makeText(Contextor.getInstance().getContext(),
                                         "Login Success", Toast.LENGTH_SHORT).show();
                                 progressDialogBackground.setVisibility(View.INVISIBLE);
@@ -106,8 +107,7 @@ public class LoginFragment extends Fragment {
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(Contextor.getInstance().getContext(),
                                         "Failed to Login", Toast.LENGTH_SHORT).show();
                                 progressDialogBackground.setVisibility(View.INVISIBLE);
@@ -120,14 +120,27 @@ public class LoginFragment extends Fragment {
     }
 
     private boolean checkForm(String strEmail, String strPassword) {
-        if(TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword)){
+        if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword)) {
             Toast.makeText(getActivity(), "Please insert all the fields", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
+
+    private boolean checkEmail() {
+        String email = etEmail.getText().toString().toLowerCase();
+        String emailSubString = email.substring(email.length() - 11);
+        if (emailSubString.matches(getResources().getString(R.string.digio_email))) {
+            return true;
+        } else {
+            progressDialogBackground.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(), "Incorrect E-mail", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
     private static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -136,20 +149,21 @@ public class LoginFragment extends Fragment {
     private View.OnClickListener onClickBtnSubmit = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            hideKeyboardFrom(getContext(),view);
+            hideKeyboardFrom(getContext(), view);
             progressDialogBackground.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-            mAuthListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if(user == null){
-                        userLogin();
+            if(checkEmail()) {
+                mAuthListener = new FirebaseAuth.AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user == null) {
+                            userLogin();
+                        }
                     }
-
-                }
-            };
-            mAuth.addAuthStateListener(mAuthListener);
+                };
+                mAuth.addAuthStateListener(mAuthListener);
+            }
         }
     };
 
