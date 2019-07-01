@@ -40,7 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 public class RegisterFragment extends Fragment {
 
     private EditText etEmail, etPassword, etCode;
-    private String strEmail, strPassword, strCode;
+    private String strEmail, strPassword, strCode, code;
     private boolean state;
     private FirebaseAuth mAuth;
     private Button btnSubmit;
@@ -96,6 +96,8 @@ public class RegisterFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
+        code = getCode();
+
         btnSubmit.setOnClickListener(onClickSubmit);
         tvLogin.setOnClickListener(onClickLogin);
     }
@@ -104,48 +106,37 @@ public class RegisterFragment extends Fragment {
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        if (checkForm() && checkCode()) {
-            mAuth.createUserWithEmailAndPassword(strEmail, strPassword)
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialogBackground.setVisibility(View.INVISIBLE);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Log.d("isSuccessful", e.getMessage());
+        mAuth.createUserWithEmailAndPassword(strEmail, strPassword)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialogBackground.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("isSuccessful", e.getMessage());
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(context, MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
                         }
-                    })
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(context, MainActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                            }
-                        }
-                    });
-        }
+                    }
+                });
     }
 
-    private boolean checkCode() {
-        strCode = etCode.getText().toString().trim();
+    private String getCode() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                 .getReference().child("InvitationCode");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    String code = s.child("Code").getValue(String.class);
-                    if (code != null && strCode.matches(code)) {
-                        state = true;
-                        break;
-                    } else {
-                        state = false;
-                        Toast.makeText(context, "Data not matched",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    code = s.child("Code").getValue(String.class);
                 }
             }
 
@@ -153,13 +144,14 @@ public class RegisterFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(context, "Cannot connect to Firebase", Toast.LENGTH_SHORT).show();
                 Log.d("Firebase", databaseError.getMessage());
-                state = false;
+                code = "";
             }
         });
-        return state;
+        return code;
     }
 
     private boolean checkForm() {
+        strCode = etCode.getText().toString().trim();
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
         strCode = etCode.getText().toString().trim();
@@ -177,6 +169,14 @@ public class RegisterFragment extends Fragment {
             closeLoadingDialog();
             Toast.makeText(context, "Password must contain at least 6 letters", Toast.LENGTH_SHORT).show();
             return false;
+        } else if (code.matches("")){
+            closeLoadingDialog();
+            Toast.makeText(context, "Connection error, try again later.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (!strCode.matches(code)){
+            closeLoadingDialog();
+            Toast.makeText(context, "Incorrect Invitation Code", Toast.LENGTH_SHORT).show();
+            return false;
         } else {
             return true;
         }
@@ -193,17 +193,9 @@ public class RegisterFragment extends Fragment {
             hideKeyboardFrom(context, view);
             progressDialogBackground.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-            registerUser();
-            mAuthListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user == null) {
-                        registerUser();
-                    }
-                }
-            };
-            mAuth.addAuthStateListener(mAuthListener);
+            if (checkForm()) {
+                registerUser();
+            }
 //            progressDialogBackground.setVisibility(View.INVISIBLE);
 //            progressBar.setVisibility(View.INVISIBLE);
         }
@@ -218,7 +210,7 @@ public class RegisterFragment extends Fragment {
         }
     };
 
-    private void closeLoadingDialog(){
+    private void closeLoadingDialog() {
         progressDialogBackground.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
