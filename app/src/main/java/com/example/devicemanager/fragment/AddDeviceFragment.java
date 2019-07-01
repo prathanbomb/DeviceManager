@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,12 +26,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.CameraActivity;
 import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
-import com.example.devicemanager.model.AddedItem;
+import com.example.devicemanager.model.DataItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +39,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -52,7 +48,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
-    private Spinner spType, spBrand;
+    private Spinner spType;
     private ImageView ivDevice;
     private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
      etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote;
@@ -63,6 +59,7 @@ public class AddDeviceFragment extends Fragment {
     private int path;
     ProgressBar progressBar ;
     View progressDialogBackground;
+    private DatabaseReference databaseReference;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -126,6 +123,8 @@ public class AddDeviceFragment extends Fragment {
         progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+
         //String path = getArguments().getString("Path");
         /*if (path != null) {
             Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
@@ -139,6 +138,7 @@ public class AddDeviceFragment extends Fragment {
         if (serial != null) {
             etSerialNumber.setText(serial);
         }
+        getPath();
     }
 
     private void showAlertDialog(int msg) {
@@ -163,40 +163,22 @@ public class AddDeviceFragment extends Fragment {
     private void saveData() {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference().child("Data");
-        Query query = databaseReference.orderByKey().limitToLast(1);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()){
-                    lastKey = s.getKey();
-                    path = Integer.parseInt(lastKey) + 1;
-                    lastKey = String.valueOf(path);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
-                progressDialogBackground.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
 
         // TODO: Add more item data
-        AddedItem item = new AddedItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
+        DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
                 etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
                 etNote.getText().toString());
 
         if (lastKey != null){
+            Log.d("test152", lastKey + "");
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
+                        Log.d("test152", "Successful");
                         // TODO: Add Success SuccessDialog
                         progressDialogBackground.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -218,6 +200,28 @@ public class AddDeviceFragment extends Fragment {
         String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CHINESE);
         etDatePicker.setText(sdf.format(calendar.getTime()));
+    }
+
+    private void getPath(){
+        Query query = databaseReference.orderByKey().limitToLast(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s : dataSnapshot.getChildren()){
+                    lastKey = s.getKey();
+                    Log.d("test152", lastKey + "");
+                    path = Integer.parseInt(lastKey) + 1;
+                    lastKey = String.valueOf(path);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     private static void hideKeyboardFrom(Context context, View view) {
