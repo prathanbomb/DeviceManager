@@ -18,7 +18,7 @@ public class DataItem {
 
     public DataItem(String id, String placeId, String placeName, String brand,
                     String serialNo, String model, String detail,
-                    String purchasePrice, String purchaseDate, String note,String type,
+                    String purchasedPrice, String purchasedDate, String note,String type,
                     String unnamed2) {
         this.id = id;
         this.placeId = placeId;
