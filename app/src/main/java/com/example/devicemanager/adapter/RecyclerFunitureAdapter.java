@@ -78,16 +78,16 @@ public class RecyclerFunitureAdapter extends RecyclerView.Adapter<RecyclerFunitu
         public Holder(View itemView) {
             super(itemView);
             tvBrand = (TextView) itemView.findViewById(R.id.tvBrand);
-            tvCount = (TextView) itemView.findViewById(R.id.tvcount);
+            /*tvCount = (TextView) itemView.findViewById(R.id.tvcount);
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
-            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);
+            tvTotal = (TextView) itemView.findViewById(R.id.tvTotal);*/
         }
 
         public void setItem(int position) {
             tvBrand.setText(brand[position]);
-            tvCount.setText("Active : "+count[position]);
+            /*tvCount.setText("Active : "+count[position]);
             tvAvailable.setText("Available : "+available[position]);
-            tvTotal.setText("Total : "+total[position]);
+            tvTotal.setText("Total : "+total[position]);*/
         }
 
     }
