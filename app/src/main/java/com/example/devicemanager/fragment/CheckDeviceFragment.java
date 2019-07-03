@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,13 @@ import androidx.fragment.app.Fragment;
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
+import com.example.devicemanager.model.DataItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -33,8 +41,9 @@ public class CheckDeviceFragment extends Fragment {
             tvLastUpdate, tvAddedDate;
     private static String serial;
     private Button btnConfirm,btnEdit;
-    ProgressBar progressBar ;
-    View progressDialogBackground;
+    private ProgressBar progressBar ;
+    private View progressDialogBackground;
+    private String itemStatus ;
 
     public static CheckDeviceFragment newInstances(String barcode) {
         CheckDeviceFragment fragment = new CheckDeviceFragment();
@@ -81,11 +90,7 @@ public class CheckDeviceFragment extends Fragment {
         tvAddedDate = view.findViewById(R.id.tvAddedDate);
         tvLastUpdate = view.findViewById(R.id.tvLastUpdate);
 
-        tvSerialNumber.setText(serial.toString());
-        tvOwnerName.setText("Mr.Natthapat Phatthana");
-        tvDeviceDetail.setText("Macbook Pro 14");
-        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : 1 July 2018 ");
-        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : 20 June 2019 ");
+        tvSerialNumber.setText(serial);
 
         btnEdit = view.findViewById(R.id.btnEdit);
         btnConfirm = view.findViewById(R.id.btnConfirm);
@@ -96,9 +101,38 @@ public class CheckDeviceFragment extends Fragment {
         btnEdit.setOnClickListener(clickListener);
         btnConfirm.setOnClickListener(clickListener);
 
+        getData();
+
     }
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
+    private void getData() {
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+        Query query = databaseReference.orderByChild("serialNo").equalTo(serial);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DataItem item = dataSnapshot.getValue(DataItem.class);
+                if (item != null){
+                    hideDialog();
+                }
+                else {
+                    hideDialog();
+                    Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
+                    showAlertDialog(R.string.dialog_msg_add, "add");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                hideDialog();
+                Toast.makeText(getActivity(), "Try again later", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if(view == btnEdit) {
@@ -107,36 +141,45 @@ public class CheckDeviceFragment extends Fragment {
                 startActivityForResult(intent, 11111);
             }
             else if (view == btnConfirm) {
-                showAlertDialog(R.string.dialog_msg_confirm);
+                showAlertDialog(R.string.dialog_msg_confirm, "confirm");
             }
         }
     };
 
-    private void showAlertDialog(int msg){
+    private void hideDialog(){
+        progressDialogBackground.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void showAlertDialog(int msg, final String state){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String dialogMsg = getResources().getString(msg);
 
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                if (state.matches("confirm")) {
+                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                }
+                else if (state.matches("add")){
+                    Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
+                    intent.putExtra("Serial", serial);
+                    startActivity(intent);
+                }
                 getActivity().finish();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
+                if (state.matches("add")){
+                    getActivity().finish();
+                }
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-    private static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -147,5 +190,4 @@ public class CheckDeviceFragment extends Fragment {
             }
         }
     }
-
 }

@@ -50,13 +50,12 @@ import static android.app.Activity.RESULT_OK;
 public class AddDeviceFragment extends Fragment {
 
     private Spinner spType;
-    private ImageView ivDevice;
     private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
             etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote;
     private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
-    private String selected, lastKey;
+    private String selected, lastKey, serial, serialState;
     private int path;
     ProgressBar progressBar;
     View progressDialogBackground;
@@ -87,7 +86,8 @@ public class AddDeviceFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12345) {
             if (resultCode == RESULT_OK) {
-                etSerialNumber.setText(data.getStringExtra("serial"));
+                serial = data.getStringExtra("serial");
+                etSerialNumber.setText(serial);
             }
         }
     }
@@ -126,14 +126,6 @@ public class AddDeviceFragment extends Fragment {
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
 
-        //String path = getArguments().getString("Path");
-        /*if (path != null) {
-            Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
-            Glide.with(Contextor.getInstance().getContext())
-                    .load(uri)
-                    .into(ivDevice);
-        }*/
-
         etSerialNumber.setOnTouchListener(onTouchScan);
         String serial = getArguments().getString("Serial");
         if (serial != null) {
@@ -149,7 +141,9 @@ public class AddDeviceFragment extends Fragment {
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                saveData();
+                if (checkForm()) {
+                    saveData();
+                }
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -169,17 +163,15 @@ public class AddDeviceFragment extends Fragment {
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
                 etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
-                etNote.getText().toString(),"", "");
+                etNote.getText().toString(), "", "");
 
         if (lastKey != null) {
-            Log.d("test152", lastKey + "");
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
-                        Log.d("test152", "Successful");
                         // TODO: Add Success SuccessDialog
                         progressDialogBackground.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -209,7 +201,6 @@ public class AddDeviceFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     lastKey = s.getKey();
-                    Log.d("test152", lastKey + "");
                     path = Integer.parseInt(lastKey) + 1;
                     lastKey = String.valueOf(path);
                 }
@@ -220,6 +211,24 @@ public class AddDeviceFragment extends Fragment {
                 Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
                 progressDialogBackground.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void checkSerial(){
+        Query query = databaseReference.orderByChild("serialNo").equalTo(serial);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String s = dataSnapshot.child("serailNo").getValue(String.class);
+                if (s != null && serial.matches(s)){
+                    serialState = "matched";
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -255,31 +264,21 @@ public class AddDeviceFragment extends Fragment {
             etDeviceModel.setText("-");
         }
         if (TextUtils.isEmpty(etDevicePrice.getText())) {
-            Toast.makeText(getContext(), "Please input prize per piece", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please input price per piece", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (TextUtils.isEmpty(etDatePicker.getText())) {
+        else if (TextUtils.isEmpty(etDatePicker.getText())) {
             Toast.makeText(getContext(), "Please input purchased date", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-/*    // TO DO: Save State in this condition & Fix stacked activity
-    private View.OnClickListener onClickImage = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(Contextor.getInstance().getContext(), CameraActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-        }
-    };*/
-
-
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view == btnConfirm) {
+                hideKeyboardFrom(Contextor.getInstance().getContext(), view);
                 showAlertDialog(R.string.dialog_msg_confirm);
             }
         }

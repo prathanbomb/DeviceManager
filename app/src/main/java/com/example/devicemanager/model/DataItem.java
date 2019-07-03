@@ -14,11 +14,12 @@ public class DataItem {
     private String type;
     private String unnamed2;
 
-    public DataItem(){ }
+    public DataItem() {
+    }
 
     public DataItem(String id, String placeId, String placeName, String brand,
                     String serialNo, String model, String detail,
-                    String purchasePrice, String purchaseDate, String note,String type,
+                    String purchasedPrice, String purchasedDate, String note, String type,
                     String unnamed2) {
         this.id = id;
         this.placeId = placeId;
@@ -113,6 +114,7 @@ public class DataItem {
     public void setNote(String note) {
         this.note = note;
     }
+
     public String getType() {
         return type;
     }
@@ -120,6 +122,7 @@ public class DataItem {
     public void setType(String type) {
         this.type = type;
     }
+
     public String getUnnamed2() {
         return unnamed2;
     }
