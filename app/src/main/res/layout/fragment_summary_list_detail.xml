@@ -1,28 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvListDetail"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/filter"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerFilter"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="60dp"></androidx.appcompat.widget.AppCompatSpinner>
+            <TextView
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/sort_by"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerSortBy"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="60dp"></androidx.appcompat.widget.AppCompatSpinner>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvListDetail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <View
-        android:clickable="true"
-        android:visibility="invisible"
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_background" />
+        android:background="@color/transparent_background"
+        android:clickable="true"
+        android:visibility="invisible" />
 
     <com.github.ybq.android.spinkit.SpinKitView
-        android:visibility="invisible"
         android:id="@+id/spin_kit"
         style="@style/SpinKitView.Large.ThreeBounce"
         android:layout_width="200dp"
         android:layout_height="195dp"
         android:layout_gravity="center"
+        android:visibility="invisible"
         app:SpinKit_Color="@color/colorAccent" />
 </FrameLayout>
