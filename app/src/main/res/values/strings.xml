@@ -8,15 +8,14 @@
     </string-array>
 
     <string-array name="filter">
-        <item>All</item>
         <item>Available</item>
         <item>Active</item>
+        <item>All</item>
     </string-array>
 
     <string-array name="sort_by">
-        <item>All</item>
-        <item>Purchased Date</item>
         <item>Name</item>
+        <item>Purchased Date</item>
     </string-array>
 
     <string name="search">Search</string>
