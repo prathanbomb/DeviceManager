@@ -110,32 +110,44 @@ public class CheckDeviceFragment extends Fragment {
     }
 
     private void getData(String serialNew, String parameter) {
-        //progressDialogBackground.setVisibility(View.VISIBLE);
+        progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
         Query query = databaseReference.orderByChild(parameter).equalTo(serialNew);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    DataItem item = s.getValue(DataItem.class);
-                    if (item != null) {
-                        hideDialog();
-                        tvSerialNumber.setText(item.getUnnamed2());
-                        tvOwnerName.setText(item.getPlaceName());
-                        tvDeviceDetail.setText(item.getDetail());
-                        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
-                        String date = item.getPurchasedDate().substring(8, 10);
-                        String month = item.getPurchasedDate().substring(4, 7);
-                        String year = item.getPurchasedDate().substring(11, 15);
-                        String productAddedDateSubString = date + " " + month + " " + year;
-                        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
-//                        Log.d("date ", "" + item.getPurchasedDate());
+                if(dataSnapshot.getValue() == null){
+                    hideDialog();
+                    Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
+                    showAlertDialog(R.string.dialog_msg_add, "add");
+                }
+                else {
+                    for (DataSnapshot s : dataSnapshot.getChildren()) {
+                        DataItem item = s.getValue(DataItem.class);
+                        if (item != null) {
+                            hideDialog();
+//                            tvSerialNumber.setText(item.getUnnamed2());
+                            tvOwnerName.setText(item.getPlaceName());
+                            tvDeviceDetail.setText(item.getDetail());
+                            tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
+                            String productAddedDateSubString;
+                            if(item.getPurchasedDate().length()>=12){
+                                String date = item.getPurchasedDate().substring(8, 10);
+                                String month = item.getPurchasedDate().substring(4, 7);
+                                String year = item.getPurchasedDate().substring(11, 15);
+                                productAddedDateSubString = date + " " + month + " " + year;
+                            }
+                            else {
+                                productAddedDateSubString = item.getPurchasedDate();
+                            }
+                            tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
 
-                    } else {
-                        hideDialog();
-                        Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
-                        showAlertDialog(R.string.dialog_msg_add, "add");
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
+                            showAlertDialog(R.string.dialog_msg_add, "add");
+                        }
                     }
                 }
             }
