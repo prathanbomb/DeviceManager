@@ -99,8 +99,8 @@ public class SummaryListDetailFragment extends Fragment {
 //        spFilter.setOnItemSelectedListener(onSpinnerSelect);
 //        spSortBy.setOnItemSelectedListener(onSpinnerSelect);
 
-        setSpinnerDefault(spinnerFilterAdapter, spFilter);
-        setSpinnerDefault(spinnerSortByAdapter, spSortBy);
+//        setSpinnerDefault(spinnerFilterAdapter, spFilter);
+//        setSpinnerDefault(spinnerSortByAdapter, spSortBy);
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());

@@ -40,10 +40,10 @@ public class CheckDeviceFragment extends Fragment {
     private TextView tvSerialNumber, tvOwnerName, tvDeviceDetail,
             tvLastUpdate, tvAddedDate;
     private static String serial;
-    private Button btnConfirm,btnEdit;
-    private ProgressBar progressBar ;
+    private Button btnConfirm, btnEdit;
+    private ProgressBar progressBar;
     private View progressDialogBackground;
-    private String itemStatus ;
+    private String itemStatus;
 
     public static CheckDeviceFragment newInstances(String barcode) {
         CheckDeviceFragment fragment = new CheckDeviceFragment();
@@ -84,6 +84,7 @@ public class CheckDeviceFragment extends Fragment {
                 .load(uri)
                 .into(ivDevice);*/
 
+
         tvSerialNumber = view.findViewById(R.id.tvSerialNumber);
         tvOwnerName = view.findViewById(R.id.tvOwnerName);
         tvDeviceDetail = view.findViewById(R.id.tvDeviceDetail);
@@ -95,32 +96,47 @@ public class CheckDeviceFragment extends Fragment {
         btnEdit = view.findViewById(R.id.btnEdit);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
-        progressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
         btnEdit.setOnClickListener(clickListener);
         btnConfirm.setOnClickListener(clickListener);
 
-        getData();
-
+        if (serial.contains("DGO")) {
+            getData(serial, "unnamed2");
+        } else {
+            getData(serial, "serialNo");
+        }
     }
 
-    private void getData() {
-        progressDialogBackground.setVisibility(View.VISIBLE);
+    private void getData(String serialNew, String parameter) {
+        //progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-        Query query = databaseReference.orderByChild("serialNo").equalTo(serial);
+        Query query = databaseReference.orderByChild(parameter).equalTo(serialNew);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DataItem item = dataSnapshot.getValue(DataItem.class);
-                if (item != null){
-                    hideDialog();
-                }
-                else {
-                    hideDialog();
-                    Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
-                    showAlertDialog(R.string.dialog_msg_add, "add");
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    DataItem item = s.getValue(DataItem.class);
+                    if (item != null) {
+                        hideDialog();
+                        tvSerialNumber.setText(item.getUnnamed2());
+                        tvOwnerName.setText(item.getPlaceName());
+                        tvDeviceDetail.setText(item.getDetail());
+                        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
+                        String date = item.getPurchasedDate().substring(8, 10);
+                        String month = item.getPurchasedDate().substring(4, 7);
+                        String year = item.getPurchasedDate().substring(11, 15);
+                        String productAddedDateSubString = date + " " + month + " " + year;
+                        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
+//                        Log.d("date ", "" + item.getPurchasedDate());
+
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
+                        showAlertDialog(R.string.dialog_msg_add, "add");
+                    }
                 }
             }
 
@@ -135,23 +151,22 @@ public class CheckDeviceFragment extends Fragment {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(view == btnEdit) {
+            if (view == btnEdit) {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                 intent.putExtra("Serial", serial);
                 startActivityForResult(intent, 11111);
-            }
-            else if (view == btnConfirm) {
+            } else if (view == btnConfirm) {
                 showAlertDialog(R.string.dialog_msg_confirm, "confirm");
             }
         }
     };
 
-    private void hideDialog(){
+    private void hideDialog() {
         progressDialogBackground.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void showAlertDialog(int msg, final String state){
+    private void showAlertDialog(int msg, final String state) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String dialogMsg = getResources().getString(msg);
 
@@ -160,8 +175,7 @@ public class CheckDeviceFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 if (state.matches("confirm")) {
                     Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                }
-                else if (state.matches("add")){
+                } else if (state.matches("add")) {
                     Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                     intent.putExtra("Serial", serial);
                     startActivity(intent);
@@ -172,7 +186,7 @@ public class CheckDeviceFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-                if (state.matches("add")){
+                if (state.matches("add")) {
                     getActivity().finish();
                 }
             }
