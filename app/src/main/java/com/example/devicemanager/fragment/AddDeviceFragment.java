@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
+import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.model.DataItem;
@@ -87,6 +88,8 @@ public class AddDeviceFragment extends Fragment {
         if (requestCode == 12345) {
             if (resultCode == RESULT_OK) {
                 serial = data.getStringExtra("serial");
+                checkSerial();
+                Log.d("serial537", serial);
                 etSerialNumber.setText(serial);
             }
         }
@@ -131,18 +134,28 @@ public class AddDeviceFragment extends Fragment {
         if (serial != null) {
             etSerialNumber.setText(serial);
         }
-        getPath();
     }
 
-    private void showAlertDialog(int msg) {
+    private void showAlertDialog(final String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String dialogMsg = getResources().getString(msg);
+        int dialogMsg = 0;
+        switch(type){
+            case "save": dialogMsg = R.string.dialog_msg_confirm; break;
+            case "serial": dialogMsg = R.string.dialog_msg_check_serial;
+                builder.setTitle(R.string.dialog_msg_head_check_serial); break;
+        }
 
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (checkForm()) {
+                if (type.matches("save") && checkForm()) {
                     saveData();
+                }
+                else if (type.matches("serial") ) {
+                    Toast.makeText(getActivity(), "Intent to Detail", Toast.LENGTH_SHORT).show();
+                    /*Intent intent = new Intent(getContext(), CheckDeviceActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();*/
                 }
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -220,9 +233,8 @@ public class AddDeviceFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String s = dataSnapshot.child("serailNo").getValue(String.class);
-                if (s != null && serial.matches(s)){
-                    serialState = "matched";
+                if (dataSnapshot.getValue() != null){
+                    showAlertDialog("serial");
                 }
             }
 
@@ -278,8 +290,9 @@ public class AddDeviceFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if (view == btnConfirm) {
+                getPath();
                 hideKeyboardFrom(Contextor.getInstance().getContext(), view);
-                showAlertDialog(R.string.dialog_msg_confirm);
+                showAlertDialog("save");
             }
         }
     };

@@ -31,6 +31,8 @@
     <string name="dialog_msg_confirm">Save the Data?</string>
     <string name="dialog_msg_cancel">Discard data?</string>
     <string name="dialog_msg_add">Do you want to add this Device?</string>
+    <string name="dialog_msg_head_check_serial">This serial already exist.</string>
+    <string name="dialog_msg_check_serial">Go to the Detail Page?</string>
     <string name="email">E-Mail</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
