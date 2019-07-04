@@ -56,7 +56,7 @@ public class AddDeviceFragment extends Fragment {
     private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
-    private String selected, lastKey, serial, serialState,abbreviation;
+    private String selected, lastKey, serial, serialState,abbreviation,type;
     //TODO:this is mock order
     private int path,category,branch,order =100;
     private ProgressBar progressBar;
@@ -199,7 +199,7 @@ public class AddDeviceFragment extends Fragment {
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
                 etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
-                etNote.getText().toString(), "", getUnnamed2());
+                etNote.getText().toString(), type, getUnnamed2());
 
         if (lastKey != null) {
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -227,7 +227,6 @@ public class AddDeviceFragment extends Fragment {
     private String getUnnamed2() {
         String date = etDatePicker.getText().toString();
         String YY = date.substring(13);
-        Log.d("getUnnamed2",""+branch+"-----"+category);
         String unnnamed2 = "DGO"+YY+branch+category+"-"+abbreviation+order;
         return unnnamed2;
     }
@@ -292,7 +291,7 @@ public class AddDeviceFragment extends Fragment {
             etDeviceDetail.setText("-");
         }
         if (TextUtils.isEmpty(etSerialNumber.getText())) {
-            etSerialNumber.setText("=");
+            etSerialNumber.setText("-");
         }
         if (TextUtils.isEmpty(etBrand.getText())) {
             etBrand.setText("-");
@@ -391,6 +390,7 @@ public class AddDeviceFragment extends Fragment {
             else if (adapterView == spTypeList) {
                 selected = adapterView.getItemAtPosition(i).toString();
                 abbreviation = selected.toUpperCase().substring(0,3);
+                type = selected.toUpperCase();
             }
             else if(adapterView == spBranch){
                 switch (i) {
