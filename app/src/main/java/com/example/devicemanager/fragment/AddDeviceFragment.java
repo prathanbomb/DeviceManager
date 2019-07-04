@@ -50,16 +50,17 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
-    private Spinner spType;
+    private Spinner spType, spTypeList,spBranch;
     private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
-            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote;
+            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote,etQuantity;
     private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
-    private String selected, lastKey, serial, serialState;
-    private int path;
-    ProgressBar progressBar;
-    View progressDialogBackground;
+    private String selected, lastKey, serial, serialState,abbreviation;
+    //TODO:this is mock order
+    private int path,category,branch,order =100;
+    private ProgressBar progressBar;
+    private View progressDialogBackground;
     private DatabaseReference databaseReference;
 
     public static AddDeviceFragment newInstances() {
@@ -96,15 +97,16 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void initInstances(View view, Bundle savedInstanceState) {
-
+        spBranch = view.findViewById(R.id.spinnerBranch);
         spType = view.findViewById(R.id.spinnerDeviceType);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-                Contextor.getInstance().getContext(),
-                R.array.device_types,
-                R.layout.spinner_item);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spType.setAdapter(spinnerAdapter);
+        spTypeList = view.findViewById(R.id.spinnerDeviceTypeList);
+
+        setSpinner(R.array.device_types, spType);
+        setSpinner(R.array.branch, spBranch);
+
+        spBranch.setOnItemSelectedListener(onSpinnerSelect);
         spType.setOnItemSelectedListener(onSpinnerSelect);
+        spTypeList.setOnItemSelectedListener(onSpinnerSelect);
 
         etOwnerName = view.findViewById(R.id.etOwnerName);
         etSerialNumber = view.findViewById(R.id.etSerialNumber);
@@ -116,6 +118,7 @@ public class AddDeviceFragment extends Fragment {
         etDevicePrice = view.findViewById(R.id.etDevicePrice);
         etNote = view.findViewById(R.id.etNote);
         etDevicePrice = view.findViewById(R.id.etDevicePrice);
+        etQuantity= view.findViewById(R.id.etQuantity);
 
         calendar = Calendar.getInstance(TimeZone.getDefault());
         this.date = onDateSet;
@@ -134,24 +137,42 @@ public class AddDeviceFragment extends Fragment {
         if (serial != null) {
             etSerialNumber.setText(serial);
         }
+        getPath();
+    }
+
+    private void setSpinner(int spinnerlist, Spinner spinner) {
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                Contextor.getInstance().getContext(),
+                spinnerlist,
+                R.layout.spinner_item);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerAdapter);
     }
 
     private void showAlertDialog(final String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         int dialogMsg = 0;
-        switch(type){
-            case "save": dialogMsg = R.string.dialog_msg_confirm; break;
-            case "serial": dialogMsg = R.string.dialog_msg_check_serial;
-                builder.setTitle(R.string.dialog_msg_head_check_serial); break;
+        switch (type) {
+            case "save":
+                dialogMsg = R.string.dialog_msg_confirm;
+                break;
+            case "serial":
+                dialogMsg = R.string.dialog_msg_check_serial;
+                builder.setTitle(R.string.dialog_msg_head_check_serial);
+                break;
         }
 
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (type.matches("save") && checkForm()) {
-                    saveData();
-                }
-                else if (type.matches("serial") ) {
+                    for(int i = 0 ; i < Integer.parseInt(etQuantity.getText().toString()) ; i++) {
+                        saveData();
+                        int key = Integer.parseInt(lastKey)+1;
+                        lastKey = key+"";
+                        order++;
+                    }
+                } else if (type.matches("serial")) {
                     Toast.makeText(getActivity(), "Intent to Detail", Toast.LENGTH_SHORT).show();
                     /*Intent intent = new Intent(getContext(), CheckDeviceActivity.class);
                     startActivity(intent);
@@ -161,6 +182,8 @@ public class AddDeviceFragment extends Fragment {
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                getUnnamed2();
                 Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
             }
         });
@@ -176,7 +199,7 @@ public class AddDeviceFragment extends Fragment {
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
                 etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
-                etNote.getText().toString(), "", "");
+                etNote.getText().toString(), "", getUnnamed2());
 
         if (lastKey != null) {
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -201,9 +224,17 @@ public class AddDeviceFragment extends Fragment {
         }
     }
 
+    private String getUnnamed2() {
+        String date = etDatePicker.getText().toString();
+        String YY = date.substring(13);
+        Log.d("getUnnamed2",""+branch+"-----"+category);
+        String unnnamed2 = "DGO"+YY+branch+category+"-"+abbreviation+order;
+        return unnnamed2;
+    }
+
     private void updateLabel() {
-        String myFormat = "dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CHINESE);
+        String myFormat = "E MMM dd yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
         etDatePicker.setText(sdf.format(calendar.getTime()));
     }
 
@@ -228,12 +259,12 @@ public class AddDeviceFragment extends Fragment {
         });
     }
 
-    private void checkSerial(){
+    private void checkSerial() {
         Query query = databaseReference.orderByChild("serialNo").equalTo(serial);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null){
+                if (dataSnapshot.getValue() != null) {
                     showAlertDialog("serial");
                 }
             }
@@ -278,8 +309,7 @@ public class AddDeviceFragment extends Fragment {
         if (TextUtils.isEmpty(etDevicePrice.getText())) {
             Toast.makeText(getContext(), "Please input price per piece", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (TextUtils.isEmpty(etDatePicker.getText())) {
+        } else if (TextUtils.isEmpty(etDatePicker.getText())) {
             Toast.makeText(getContext(), "Please input purchased date", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -337,7 +367,44 @@ public class AddDeviceFragment extends Fragment {
     private AdapterView.OnItemSelectedListener onSpinnerSelect = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            selected = adapterView.getItemAtPosition(i).toString();
+            if (adapterView == spType) {
+                selected = adapterView.getItemAtPosition(i).toString();
+                switch (i) {
+                    case 0:
+                        setSpinner(R.array.building, spTypeList);
+                        category = 1;
+                        break;
+                    case 1:
+                        setSpinner(R.array.device_and_accessory, spTypeList);
+                        category = 2;
+                        break;
+                    case 2:
+                        setSpinner(R.array.furniture, spTypeList);
+                        category = 3;
+                        break;
+                    case 3:
+                        setSpinner(R.array.other, spTypeList);
+                        category = 4;
+                        break;
+                }
+            }
+            else if (adapterView == spTypeList) {
+                selected = adapterView.getItemAtPosition(i).toString();
+                abbreviation = selected.toUpperCase().substring(0,3);
+            }
+            else if(adapterView == spBranch){
+                switch (i) {
+                    case 0:
+                        branch = 1;
+                        break;
+                    case 1:
+                        branch = 2;
+                        break;
+                    case 2:
+                        branch = 3;
+                        break;
+                }
+            }
         }
 
         @Override
