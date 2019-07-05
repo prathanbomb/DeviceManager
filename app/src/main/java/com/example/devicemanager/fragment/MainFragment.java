@@ -31,6 +31,7 @@ import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
 import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.manager.DataManager;
+import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.AppDatabase;
 import com.example.devicemanager.room.ItemEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -182,18 +183,21 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
 
     private void loadData(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-        Query query = databaseReference.orderByChild("id").limitToLast(1);
+        Query query = databaseReference.orderByChild("id").limitToLast(5);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                loadData = new LoadData(getContext());
+                loadData.deleteTable();
+                Log.d("deleteData",""+loadData.getItem().toString());
+                int JJ=0;
                 for (DataSnapshot s : dataSnapshot.getChildren()){
                     ItemEntity item = s.getValue(ItemEntity.class);
-                    loadData = new LoadData(getContext());
                     loadData.insert(item);
-
                     // Load All Item
                     List<ItemEntity> i = loadData.getItem();
+                    Log.d("deleteData",""+i.get(JJ).getPlaceName());
+                    JJ++;
                 }
 
             }

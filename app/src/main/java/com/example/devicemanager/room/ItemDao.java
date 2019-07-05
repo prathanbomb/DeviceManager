@@ -15,9 +15,12 @@ public interface ItemDao {
     @Query("SELECT * FROM ItemEntity")
     List<ItemEntity> getAll();
 
+    @Query("SELECT * FROM ItemEntity WHERE item_id = :id")
+    List<ItemEntity> getProduct(int id);
+
     @Insert
     void insertAll(ItemEntity item);
 
-    @Delete
-    void delete(ItemEntity item);
+    @Query("DELETE FROM ItemEntity")
+    void delete();
 }

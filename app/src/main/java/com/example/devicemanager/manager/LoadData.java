@@ -1,4 +1,4 @@
-package com.example.devicemanager.fragment;
+package com.example.devicemanager.manager;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -32,6 +32,9 @@ public class LoadData {
 
     public void insert(ItemEntity itemEntity){
         new InsertAsyncTask(itemDao).execute(itemEntity);
+    }
+    public void deleteTable(){
+        new DeleteAsyncTask(itemDao).execute();
     }
 
     public List<ItemEntity> getItem(){
@@ -72,6 +75,20 @@ public class LoadData {
         @Override
         protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
             return itemDao.getAll();
+        }
+    }
+
+    private class DeleteAsyncTask extends AsyncTask <ItemEntity, Void, List<ItemEntity>>{
+        private ItemDao itemDao;
+        public DeleteAsyncTask(ItemDao itemDao) {
+            this.itemDao = itemDao;
+        }
+
+
+        @Override
+        protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
+            itemDao.delete();
+            return null;
         }
     }
 }

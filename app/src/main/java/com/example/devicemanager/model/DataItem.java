@@ -1,5 +1,8 @@
 package com.example.devicemanager.model;
 
+import androidx.room.Entity;
+
+@Entity
 public class DataItem {
     private String id;
     private String placeId;
