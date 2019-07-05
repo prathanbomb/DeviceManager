@@ -36,6 +36,7 @@ public class ScanBarcodeActivity extends AppCompatActivity {
     final int RequestCameraPermissionID = 1001;
     final Handler handler = new Handler();
     Boolean doing = true;
+    private String serial;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -162,39 +163,42 @@ public class ScanBarcodeActivity extends AppCompatActivity {
 
             final SparseArray<TextBlock> items = detections.getDetectedItems();
             if (items.size() != 0) {
-                textView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int i = 0; i < items.size(); ++i) {
-                            TextBlock item = items.valueAt(i);
-                            stringBuilder.append(item.getValue());
-                            stringBuilder.append("\n");
-                        }
-                        String[] split = stringBuilder.toString().split("\\s+");
-                        String text = "";
-                        for (int i = 0; i < split.length; i++) {
-                            text = text + split[i];
-                        }
-                        textView.setText(text);
-                        if (text.contains("DGO") && text.trim().length() == 14) {
-                            if (doing) {
+                if (doing) {
+                    textView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            for (int i = 0; i < items.size(); ++i) {
+                                TextBlock item = items.valueAt(i);
+                                stringBuilder.append(item.getValue());
+                                stringBuilder.append("\n");
+                            }
+                            String[] split = stringBuilder.toString().split("\\s+");
+                            String text = "";
+                            for (int i = 0; i < split.length; i++) {
+                                text = text + split[i];
+                            }
+                            textView.setText(text);
+                            if (text.contains("DGO") && text.trim().length() == 14) {
+                                serial = text;
                                 doing = false;
                                 showAlertDialog(text);
+
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     };
+
     private void showAlertDialog(final String text) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Serial No : " + text).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(ScanBarcodeActivity.this, CheckDeviceActivity.class);
-                intent.putExtra("serial", textView.getText().toString());
+                intent.putExtra("serial", serial);
                 startActivity(intent);
                 finish();
             }
@@ -202,7 +206,7 @@ public class ScanBarcodeActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(ScanBarcodeActivity.this, "Scan Again", Toast.LENGTH_SHORT).show();
-                doing=true;
+                doing = true;
             }
         });
         AlertDialog dialog = builder.create();
