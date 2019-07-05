@@ -43,6 +43,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -190,6 +191,9 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
                     ItemEntity item = s.getValue(ItemEntity.class);
                     loadData = new LoadData(getContext());
                     loadData.insert(item);
+
+                    // Load All Item
+                    List<ItemEntity> i = loadData.getItem();
                 }
 
             }

@@ -12,11 +12,8 @@ import java.util.List;
 @Dao
 public interface ItemDao {
 
-    @Insert
-    Long insertTask(ItemEntity itemEntity);
-
-    @Query("SELECT * FROM ItemEntity WHERE autoId =:id")
-    List<ItemEntity> getAll(int id);
+    @Query("SELECT * FROM ItemEntity")
+    List<ItemEntity> getAll();
 
     @Insert
     void insertAll(ItemEntity item);
