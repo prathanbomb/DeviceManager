@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,6 +44,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -50,18 +53,19 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceFragment extends Fragment {
 
-    private Spinner spType, spTypeList,spBranch;
+    private Spinner spType, spTypeList, spBranch;
     private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
-            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote,etQuantity;
+            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote, etQuantity;
     private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
-    private String selected, lastKey, serial, serialState,abbreviation,type;
+    private String selected, lastKey, serial, serialState, abbreviation, type, unnamed2;
     //TODO:this is mock order
-    private int path,category,branch,order =100;
+    private int path, category, branch, order = 100;
     private ProgressBar progressBar;
     private View progressDialogBackground;
     private DatabaseReference databaseReference;
+    private TextView tvItemId, tvQuantity;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -108,6 +112,7 @@ public class AddDeviceFragment extends Fragment {
         spType.setOnItemSelectedListener(onSpinnerSelect);
         spTypeList.setOnItemSelectedListener(onSpinnerSelect);
 
+        tvItemId = view.findViewById(R.id.tvItemId);
         etOwnerName = view.findViewById(R.id.etOwnerName);
         etSerialNumber = view.findViewById(R.id.etSerialNumber);
         etDeviceDetail = view.findViewById(R.id.etDeviceDetail);
@@ -118,7 +123,8 @@ public class AddDeviceFragment extends Fragment {
         etDevicePrice = view.findViewById(R.id.etDevicePrice);
         etNote = view.findViewById(R.id.etNote);
         etDevicePrice = view.findViewById(R.id.etDevicePrice);
-        etQuantity= view.findViewById(R.id.etQuantity);
+        etQuantity = view.findViewById(R.id.etQuantity);
+        tvQuantity = view.findViewById(R.id.tvQuantity);
 
         calendar = Calendar.getInstance(TimeZone.getDefault());
         this.date = onDateSet;
@@ -133,11 +139,63 @@ public class AddDeviceFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
 
         etSerialNumber.setOnTouchListener(onTouchScan);
-        String serial = getArguments().getString("Serial");
+        serial = getArguments().getString("Serial");
         if (serial != null) {
-            etSerialNumber.setText(serial);
+            tvQuantity.setText(getResources().getString(R.string.quantity) + " :  1");
+            etQuantity.setVisibility(View.INVISIBLE);
+            setData();
+        } else {
+            getPath();
         }
-        getPath();
+    }
+
+    private void setData() {
+        Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data")
+                .orderByChild("unnamed2").equalTo(serial);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    DataItem dataItem = s.getValue(DataItem.class);
+                    lastKey = s.getKey();
+                    if (dataItem != null) {
+                        String spinnerName = dataItem.getType();
+                        switch (Integer.parseInt(serial.substring(6, 7))) {
+                            case 1:
+                                setSpinnerPosition(R.array.building, spTypeList, -1, spinnerName);
+                                break;
+                            case 2:
+                                setSpinnerPosition(R.array.device_and_accessory, spTypeList, -1, spinnerName);
+                                break;
+                            case 3:
+                                setSpinnerPosition(R.array.furniture, spTypeList, -1, spinnerName);
+                                break;
+                            case 4:
+                                setSpinnerPosition(R.array.other, spTypeList, -1, spinnerName);
+                                break;
+                        }
+                        etOwnerId.setText(dataItem.getPlaceId());
+                        etOwnerName.setText(dataItem.getPlaceName());
+                        etBrand.setText(dataItem.getBrand());
+                        etSerialNumber.setText(dataItem.getSerialNo());
+                        etDeviceDetail.setText(dataItem.getDetail());
+                        etDeviceModel.setText(dataItem.getModel());
+                        etDevicePrice.setText(dataItem.getPurchasedPrice());
+                        etDatePicker.setText(dataItem.getPurchasedDate().substring(0,16));
+                        etNote.setText(dataItem.getNote());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        tvItemId.setText(serial);
+        setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(serial.substring(5, 6)), null);
+        setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(serial.substring(6, 7)), null);
     }
 
     private void setSpinner(int spinnerlist, Spinner spinner) {
@@ -147,6 +205,20 @@ public class AddDeviceFragment extends Fragment {
                 R.layout.spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(spinnerAdapter);
+    }
+
+    private void setSpinnerPosition(int spinnerlist, Spinner spinner, int position, String spinerName) {
+        if (position == -1) {
+            ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                    Contextor.getInstance().getContext(),
+                    spinnerlist,
+                    R.layout.spinner_item);
+            int spinnerPosition = spinnerAdapter.getPosition(spinerName);
+            spinner.setSelection(spinnerPosition);
+
+        } else {
+            spinner.setSelection(position - 1);
+        }
     }
 
     private void showAlertDialog(final String type) {
@@ -166,10 +238,10 @@ public class AddDeviceFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (type.matches("save") && checkForm()) {
-                    for(int i = 0 ; i < Integer.parseInt(etQuantity.getText().toString()) ; i++) {
+                    for (int i = 0; i < Integer.parseInt(etQuantity.getText().toString()); i++) {
                         saveData();
-                        int key = Integer.parseInt(lastKey)+1;
-                        lastKey = key+"";
+                        int key = Integer.parseInt(lastKey) + 1;
+                        lastKey = key + "";
                         order++;
                     }
                 } else if (type.matches("serial")) {
@@ -225,10 +297,13 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private String getUnnamed2() {
-        String date = etDatePicker.getText().toString();
-        String YY = date.substring(13);
-        String unnnamed2 = "DGO"+YY+branch+category+"-"+abbreviation+order;
-        return unnnamed2;
+        if (unnamed2 == null) {
+            String date = etDatePicker.getText().toString();
+            String YY = date.substring(13);
+            String generateSerial = "DGO" + YY + branch + category + "-" + abbreviation + order;
+            return generateSerial;
+        }
+        return unnamed2;
     }
 
     private void updateLabel() {
@@ -319,7 +394,9 @@ public class AddDeviceFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if (view == btnConfirm) {
-                getPath();
+                if (lastKey == null) {
+                    getPath();
+                }
                 hideKeyboardFrom(Contextor.getInstance().getContext(), view);
                 showAlertDialog("save");
             }
@@ -386,13 +463,11 @@ public class AddDeviceFragment extends Fragment {
                         category = 4;
                         break;
                 }
-            }
-            else if (adapterView == spTypeList) {
+            } else if (adapterView == spTypeList) {
                 selected = adapterView.getItemAtPosition(i).toString();
-                abbreviation = selected.toUpperCase().substring(0,3);
+                abbreviation = selected.toUpperCase().substring(0, 3);
                 type = selected.toUpperCase();
-            }
-            else if(adapterView == spBranch){
+            } else if (adapterView == spBranch) {
                 switch (i) {
                     case 0:
                         branch = 1;

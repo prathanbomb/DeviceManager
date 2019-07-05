@@ -175,4 +175,5 @@
     <string name="sort_by">Sort By</string>
     <string name="number_1">1</string>
     <string name="quantity">Quantity</string>
+    <string name="text">TEXT</string>
 </resources>
