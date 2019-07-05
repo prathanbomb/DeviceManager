@@ -176,4 +176,5 @@
     <string name="number_1">1</string>
     <string name="quantity">Quantity</string>
     <string name="text">TEXT</string>
+    <string name="barcode">barcode</string>
 </resources>

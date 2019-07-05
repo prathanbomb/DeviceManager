@@ -1,14 +1,27 @@
 package com.example.devicemanager.fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
@@ -16,22 +29,39 @@ import com.example.devicemanager.activity.MainActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.activity.SearchActivity;
 import com.example.devicemanager.activity.SummaryActivity;
+import com.example.devicemanager.adapter.ItemListAdapter;
+import com.example.devicemanager.manager.DataManager;
+import com.example.devicemanager.room.AppDatabase;
+import com.example.devicemanager.room.ItemEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
 
 
 /**
  * Created by nuuneoi on 11/16/2014.
  */
 @SuppressWarnings("unused")
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements ItemListAdapter.Holder.ItemClickListener {
 
     private Button btnAdd, btnCheck, btnSummary;
-    private FloatingActionButton floatingButton, floatingButton2, floatingButton3;
+    private FloatingActionButton floatingButton;
     private android.widget.SearchView searchView;
     private boolean isFABOpen = false;
     private TextView tvLogout;
     private FirebaseAuth mAuth;
+    private RecyclerView recyclerView;
+    private DataManager dataManager;
+    private ItemListAdapter adapter;
+    private LinearLayoutManager layoutManager;
+    private LoadData loadData;
 
     public MainFragment() {
         super();
@@ -49,7 +79,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
@@ -63,35 +93,38 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchManager searchManager = (SearchManager) getActivity()
-                .getSystemService(Context.SEARCH_SERVICE);
-
-        if (searchItem != null) {
-            searchView = (android.widget.SearchView) searchItem.getActionView();
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-            searchView.setOnQueryTextListener(queryTextListener);
-        }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        menuItem.expandActionView();
+
+        final SearchView searchViewActionBar = (SearchView) menuItem.getActionView();
+        searchViewActionBar.clearFocus();
+        searchViewActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                adapter.getFilter().filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                // Not implemented here
-                return false;
-            default:
-                break;
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_scan){
+            Intent intent = new Intent(getActivity(), ScanBarcodeActivity.class);
+            startActivity(intent);
         }
-        searchView.setOnQueryTextListener(queryTextListener);
-        return super.onOptionsItemSelected(item);
-    }*/
+        return true;
+    }
 
     private void init(Bundle savedInstanceState) {
         // Init Fragment level's variable(s) here
@@ -99,22 +132,19 @@ public class MainFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        btnAdd = (Button) rootView.findViewById(R.id.btnAdd);
-        btnCheck = (Button) rootView.findViewById(R.id.btnCheck);
-        btnSummary = (Button) rootView.findViewById(R.id.btnSummary);
 
-        btnAdd.setOnClickListener(clickListener);
-        btnCheck.setOnClickListener(clickListener);
-        btnSummary.setOnClickListener(clickListener);
+        floatingButton = rootView.findViewById(R.id.fabAdd);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
 
-        floatingButton = rootView.findViewById(R.id.fabSearch);
-        floatingButton2 = rootView.findViewById(R.id.fabTag);
-        floatingButton3 = rootView.findViewById(R.id.fabName);
-        floatingButton3.setOnClickListener(onClickFABName);
-        floatingButton.setOnClickListener(onClickFABSearch);
+        dataManager = new DataManager();
 
-        tvLogout = rootView.findViewById(R.id.tvLogout);
-        tvLogout.setOnClickListener(onClickLogout);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new ItemListAdapter(getContext());
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
+        loadData();
     }
 
     @Override
@@ -144,71 +174,31 @@ public class MainFragment extends Fragment {
         // Restore Instance State here
     }
 
-    private void closeFABMenu() {
-        isFABOpen = false;
-        floatingButton2.animate().translationY(0);
-        floatingButton3.animate().translationY(0).translationX(0);
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
     }
 
-    private void showFABMenu() {
-        isFABOpen = true;
-        floatingButton2.setVisibility(View.VISIBLE);
-        floatingButton3.setVisibility(View.VISIBLE);
-        floatingButton2.animate()
-                .translationY(-getResources().getDimension(R.dimen.transition_floating_y));
-        floatingButton3.animate()
-                .translationY(-getResources().getDimension(R.dimen.transition_floating_y))
-                .translationX(-getResources().getDimension(R.dimen.transition_floating_x));
+    private void loadData(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+        Query query = databaseReference.orderByChild("id").limitToLast(1);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot s : dataSnapshot.getChildren()){
+                    ItemEntity item = s.getValue(ItemEntity.class);
+                    loadData = new LoadData(getContext());
+                    loadData.insert(item);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (view == btnAdd) {
-                Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
-                closeFABMenu();
-                intent.putExtra("serial","null");
-                startActivity(intent);
-            } else if (view == btnCheck) {
-                Intent intent = new Intent(getActivity(), ScanBarcodeActivity.class);
-                closeFABMenu();
-                startActivity(intent);
-            } else if (view == btnSummary) {
-                Intent intent = new Intent(getActivity(), SummaryActivity.class);
-                closeFABMenu();
-                startActivity(intent);
-            }
-        }
-    };
-
-    private View.OnClickListener onClickLogout = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            mAuth = FirebaseAuth.getInstance();
-            mAuth.signOut();
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra("logout","true");
-            startActivity(intent);
-        }
-    };
-
-    private View.OnClickListener onClickFABSearch = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (!isFABOpen) {
-                showFABMenu();
-            } else {
-                closeFABMenu();
-            }
-        }
-    };
-
-    private View.OnClickListener onClickFABName = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
-            closeFABMenu();
-            startActivity(intent);
-        }
-    };
 }

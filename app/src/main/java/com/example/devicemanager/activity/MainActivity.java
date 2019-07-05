@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initInstances() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
     }
 
     @Override

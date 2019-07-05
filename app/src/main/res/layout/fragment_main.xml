@@ -6,55 +6,13 @@
     android:padding="16dp"
     tools:context=".activity.MainActivity">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/TextViewDefault"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome..." />
-
-        <Button
-            android:id="@+id/btnAdd"
-            style="@style/AppTheme.RoundedCornerMaterialButton"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/add" />
-
-        <Button
-            android:id="@+id/btnCheck"
-            style="@style/AppTheme.RoundedCornerMaterialButton"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/check" />
-
-        <Button
-            android:id="@+id/btnSummary"
-            style="@style/AppTheme.RoundedCornerMaterialButton"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/summary" />
-
-        <TextView
-            android:id="@+id/tvLogout"
-            style="@style/TextViewSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/logout" />
-
-    </LinearLayout>
-
-    <!--<ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/icon_search" />-->
+        android:layout_height="wrap_content" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabTag"
+        android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -63,33 +21,7 @@
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_tag"
-        tools:targetApi="lollipop" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_person"
-        tools:targetApi="lollipop" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_search"
+        android:src="@drawable/ic_add"
         tools:targetApi="lollipop" />
 
 </RelativeLayout>
