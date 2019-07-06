@@ -108,10 +108,6 @@ public class AddDeviceFragment extends Fragment {
         setSpinner(R.array.device_types, spType);
         setSpinner(R.array.branch, spBranch);
 
-        spBranch.setOnItemSelectedListener(onSpinnerSelect);
-        spType.setOnItemSelectedListener(onSpinnerSelect);
-        spTypeList.setOnItemSelectedListener(onSpinnerSelect);
-
         tvItemId = view.findViewById(R.id.tvItemId);
         etOwnerName = view.findViewById(R.id.etOwnerName);
         etSerialNumber = view.findViewById(R.id.etSerialNumber);
@@ -141,15 +137,22 @@ public class AddDeviceFragment extends Fragment {
         etSerialNumber.setOnTouchListener(onTouchScan);
         serial = getArguments().getString("Serial");
         if (serial != null) {
-            tvQuantity.setText(getResources().getString(R.string.quantity) + " :  1");
+            tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
             etQuantity.setVisibility(View.INVISIBLE);
             setData();
         } else {
             getPath();
         }
+        spBranch.setOnItemSelectedListener(onSpinnerSelect);
+        spType.setOnItemSelectedListener(onSpinnerSelect);
+        spTypeList.setOnItemSelectedListener(onSpinnerSelect);
     }
 
     private void setData() {
+        tvItemId.setText(serial);
+        setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(serial.substring(5, 6)), null);
+        setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(serial.substring(6, 7)), null);
+
         Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data")
                 .orderByChild("unnamed2").equalTo(serial);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -159,19 +162,24 @@ public class AddDeviceFragment extends Fragment {
                     DataItem dataItem = s.getValue(DataItem.class);
                     lastKey = s.getKey();
                     if (dataItem != null) {
-                        String spinnerName = dataItem.getType();
+                        String spinnerName = dataItem.getType().toUpperCase();
+                        Log.d("spinnerName",spinnerName);
                         switch (Integer.parseInt(serial.substring(6, 7))) {
                             case 1:
                                 setSpinnerPosition(R.array.building, spTypeList, -1, spinnerName);
+                                Log.d("spinnerName","case1");
                                 break;
                             case 2:
                                 setSpinnerPosition(R.array.device_and_accessory, spTypeList, -1, spinnerName);
+                                Log.d("spinnerName","case2");
                                 break;
                             case 3:
                                 setSpinnerPosition(R.array.furniture, spTypeList, -1, spinnerName);
+                                Log.d("spinnerName","case3");
                                 break;
                             case 4:
                                 setSpinnerPosition(R.array.other, spTypeList, -1, spinnerName);
+                                Log.d("spinnerName","case4");
                                 break;
                         }
                         etOwnerId.setText(dataItem.getPlaceId());
@@ -193,9 +201,6 @@ public class AddDeviceFragment extends Fragment {
             }
         });
 
-        tvItemId.setText(serial);
-        setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(serial.substring(5, 6)), null);
-        setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(serial.substring(6, 7)), null);
     }
 
     private void setSpinner(int spinnerlist, Spinner spinner) {
@@ -207,14 +212,15 @@ public class AddDeviceFragment extends Fragment {
         spinner.setAdapter(spinnerAdapter);
     }
 
-    private void setSpinnerPosition(int spinnerlist, Spinner spinner, int position, String spinerName) {
+    private void setSpinnerPosition(int spinerlist, Spinner spinner, int position, String spinerName) {
         if (position == -1) {
             ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                     Contextor.getInstance().getContext(),
-                    spinnerlist,
+                    spinerlist,
                     R.layout.spinner_item);
             int spinnerPosition = spinnerAdapter.getPosition(spinerName);
             spinner.setSelection(spinnerPosition);
+            Log.d("spinnerPosition",spinnerPosition+"");
 
         } else {
             spinner.setSelection(position - 1);

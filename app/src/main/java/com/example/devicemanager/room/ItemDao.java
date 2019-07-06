@@ -1,9 +1,6 @@
 package com.example.devicemanager.room;
 
-import android.util.Log;
-
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -16,7 +13,7 @@ public interface ItemDao {
     List<ItemEntity> getAll();
 
     @Query("SELECT * FROM ItemEntity WHERE item_id = :id")
-    List<ItemEntity> getProduct(int id);
+    ItemEntity getProduct(String id);
 
     @Insert
     void insertAll(ItemEntity item);

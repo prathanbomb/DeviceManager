@@ -3,6 +3,7 @@ package com.example.devicemanager.fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
@@ -64,6 +69,12 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     private ItemListAdapter adapter;
     private LinearLayoutManager layoutManager;
     private LoadData loadData;
+    private Boolean downloadStatus;
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
+    private View view;
+    private ProgressBar progressBar;
+    AppDatabase database;
 
     public MainFragment() {
         super();
@@ -134,6 +145,8 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+        sp = getContext().getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
+        editor = sp.edit();
 
         floatingButton = rootView.findViewById(R.id.fabAdd);
         recyclerView = rootView.findViewById(R.id.recyclerView);
@@ -146,7 +159,21 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         adapter = new ItemListAdapter(getContext());
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        loadData();
+        view = rootView.findViewById(R.id.view);
+        progressBar = rootView.findViewById(R.id.spin_kit);
+        view.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        loadData = new LoadData(getContext());
+
+        downloadStatus = sp.getBoolean("downloadStatus",true);
+        if(downloadStatus){
+            loadData();
+        }
+        else {
+            Log.d("downloadStatus",""+sp.getBoolean("downloadStatus",true));
+            view.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -157,6 +184,8 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     @Override
     public void onStop() {
         super.onStop();
+        editor.clear();
+        editor.commit();
     }
 
     /*
@@ -183,23 +212,24 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
 
     private void loadData(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-        Query query = databaseReference.orderByChild("id").limitToLast(5);
+        Query query = databaseReference.orderByChild("id");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loadData = new LoadData(getContext());
                 loadData.deleteTable();
-                Log.d("deleteData",""+loadData.getItem().toString());
-                int JJ=0;
+                List<ItemEntity> i;
+                int sss=1;
                 for (DataSnapshot s : dataSnapshot.getChildren()){
                     ItemEntity item = s.getValue(ItemEntity.class);
                     loadData.insert(item);
-                    // Load All Item
-                    List<ItemEntity> i = loadData.getItem();
-                    Log.d("deleteData",""+i.get(JJ).getPlaceName());
-                    JJ++;
+                    Log.d("loadData","insert"+sss);
+                    sss++;
                 }
-
+                Log.d("loadData",""+loadData.selectData("DGO1813-CHA136").getType());
+                view.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                editor.putBoolean("downloadStatus", false);
+                editor.commit();
             }
 
             @Override
@@ -209,4 +239,9 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
 }

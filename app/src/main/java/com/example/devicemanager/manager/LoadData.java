@@ -25,19 +25,32 @@ public class LoadData {
     private ItemDao itemDao;
     private AppDatabase db;
 
-    public LoadData(Context context){
+    public LoadData(Context context) {
         db = Room.databaseBuilder(context, AppDatabase.class, "app_database").build();
         itemDao = db.itemDao();
     }
 
-    public void insert(ItemEntity itemEntity){
+    public void insert(ItemEntity itemEntity) {
         new InsertAsyncTask(itemDao).execute(itemEntity);
     }
-    public void deleteTable(){
+
+    public void deleteTable() {
         new DeleteAsyncTask(itemDao).execute();
     }
 
-    public List<ItemEntity> getItem(){
+    public ItemEntity selectData(String id) {
+        ItemEntity itemEntities = null;
+        try {
+            itemEntities = new SelectAsyncTask(itemDao,id).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return itemEntities;
+    }
+
+    public List<ItemEntity> getItem() {
         List<ItemEntity> itemEntities = new ArrayList<>();
         try {
             itemEntities = new GetItemAsyncTask(itemDao).execute().get();
@@ -49,11 +62,11 @@ public class LoadData {
         return itemEntities;
     }
 
-    private static class InsertAsyncTask extends AsyncTask<ItemEntity, Void, Integer>{
+    private static class InsertAsyncTask extends AsyncTask<ItemEntity, Void, Integer> {
 
         private ItemDao itemDao;
 
-        InsertAsyncTask(ItemDao itemDao){
+        InsertAsyncTask(ItemDao itemDao) {
             this.itemDao = itemDao;
         }
 
@@ -64,11 +77,11 @@ public class LoadData {
         }
     }
 
-    private static class GetItemAsyncTask extends AsyncTask<ItemEntity, Void, List<ItemEntity>>{
+    private static class GetItemAsyncTask extends AsyncTask<ItemEntity, Void, List<ItemEntity>> {
 
         private ItemDao itemDao;
 
-        GetItemAsyncTask(ItemDao itemDao){
+        GetItemAsyncTask(ItemDao itemDao) {
             this.itemDao = itemDao;
         }
 
@@ -78,17 +91,31 @@ public class LoadData {
         }
     }
 
-    private class DeleteAsyncTask extends AsyncTask <ItemEntity, Void, List<ItemEntity>>{
+    private static class DeleteAsyncTask extends AsyncTask<ItemEntity, Void, Void> {
         private ItemDao itemDao;
+
         public DeleteAsyncTask(ItemDao itemDao) {
             this.itemDao = itemDao;
         }
 
-
         @Override
-        protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
+        protected Void doInBackground(ItemEntity... itemEntities) {
             itemDao.delete();
             return null;
+        }
+    }
+
+    private class SelectAsyncTask extends AsyncTask<ItemEntity, Void, ItemEntity>{
+        private ItemDao itemDao;
+        String id;
+        public SelectAsyncTask(ItemDao itemDao , String id) {
+            this.itemDao = itemDao;
+            this.id = id;
+        }
+
+        @Override
+        protected ItemEntity doInBackground(ItemEntity... itemEntities) {
+            return itemDao.getProduct(id);
         }
     }
 }
