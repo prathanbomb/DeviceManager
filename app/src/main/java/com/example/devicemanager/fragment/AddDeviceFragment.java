@@ -43,8 +43,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -66,6 +68,7 @@ public class AddDeviceFragment extends Fragment {
     private View progressDialogBackground;
     private DatabaseReference databaseReference;
     private TextView tvItemId, tvQuantity;
+    private ArrayAdapter<CharSequence> spinnerAdapter;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -105,8 +108,8 @@ public class AddDeviceFragment extends Fragment {
         spType = view.findViewById(R.id.spinnerDeviceType);
         spTypeList = view.findViewById(R.id.spinnerDeviceTypeList);
 
-        setSpinner(R.array.device_types, spType);
-        setSpinner(R.array.branch, spBranch);
+        /*setSpinner(R.array.device_types, spType);
+        setSpinner(R.array.branch, spBranch);*/
 
         tvItemId = view.findViewById(R.id.tvItemId);
         etOwnerName = view.findViewById(R.id.etOwnerName);
@@ -152,6 +155,7 @@ public class AddDeviceFragment extends Fragment {
         tvItemId.setText(serial);
         setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(serial.substring(5, 6)), null);
         setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(serial.substring(6, 7)), null);
+        //setSpinnerPosition(R.array.device_and_accessory, spTypeList, , null);
 
         Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data")
                 .orderByChild("unnamed2").equalTo(serial);
@@ -204,7 +208,7 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void setSpinner(int spinnerlist, Spinner spinner) {
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+        spinnerAdapter = ArrayAdapter.createFromResource(
                 Contextor.getInstance().getContext(),
                 spinnerlist,
                 R.layout.spinner_item);
@@ -213,14 +217,17 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void setSpinnerPosition(int spinerlist, Spinner spinner, int position, String spinerName) {
-        if (position == -1) {
-            ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                     Contextor.getInstance().getContext(),
                     spinerlist,
                     R.layout.spinner_item);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerAdapter);
+        if (position == -1) {
+            //String[] array = getResources().getStringArray(spinerlist);
             int spinnerPosition = spinnerAdapter.getPosition(spinerName);
-            spinner.setSelection(spinnerPosition);
-            Log.d("spinnerPosition",spinnerPosition+"");
+            spinner.setSelection(spinnerPosition, true);
+            //Log.d("spinnerPosition",Arrays.asList(array).indexOf(spinerName)+" ");
 
         } else {
             spinner.setSelection(position - 1);
