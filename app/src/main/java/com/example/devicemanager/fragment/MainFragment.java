@@ -118,7 +118,11 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         searchViewActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                view.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 adapter.getFilter().filter(query);
+                view.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
                 return true;
             }
 
@@ -132,7 +136,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_scan){
+        if (item.getItemId() == R.id.action_scan) {
             Intent intent = new Intent(getActivity(), ScanBarcodeActivity.class);
             startActivity(intent);
         }
@@ -161,19 +165,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         recyclerView.setAdapter(adapter);
         view = rootView.findViewById(R.id.view);
         progressBar = rootView.findViewById(R.id.spin_kit);
-        view.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        loadData = new LoadData(getContext());
 
-        downloadStatus = sp.getBoolean("downloadStatus",true);
-        if(downloadStatus){
-            loadData();
-        }
-        else {
-            Log.d("downloadStatus",""+sp.getBoolean("downloadStatus",true));
-            view.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
@@ -184,8 +176,6 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     @Override
     public void onStop() {
         super.onStop();
-        editor.clear();
-        editor.commit();
     }
 
     /*
@@ -208,35 +198,6 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
-    }
-
-    private void loadData(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-        Query query = databaseReference.orderByChild("id");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loadData.deleteTable();
-                List<ItemEntity> i;
-                int sss=1;
-                for (DataSnapshot s : dataSnapshot.getChildren()){
-                    ItemEntity item = s.getValue(ItemEntity.class);
-                    loadData.insert(item);
-                    Log.d("loadData","insert"+sss);
-                    sss++;
-                }
-                Log.d("loadData",""+loadData.selectData("DGO1813-CHA136").getType());
-                view.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-                editor.putBoolean("downloadStatus", false);
-                editor.commit();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override

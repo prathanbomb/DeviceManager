@@ -13,22 +13,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.manager.Contextor;
-import com.example.devicemanager.manager.DataManager;
+import com.example.devicemanager.manager.LoadData;
+import com.example.devicemanager.room.ItemEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder> {
 
-    private List<String> name, list;
+    private ArrayList<ItemEntity> source;
+    private static List<ItemEntity> list;
     private Context context;
-    private static DataManager data = new DataManager();
     private Holder.ItemClickListener mClickListener;
+    private LoadData loadData;
+    private List<ItemEntity> filteredList = new ArrayList<>();
 
     public ItemListAdapter(Context context) {
         this.context = context;
-        list = data.getOwner();
-        name = new ArrayList<>(list);
+        loadData = new LoadData(context);
+        list = loadData.getItem();
+        source = new ArrayList<>(list);
     }
 
     @NonNull
@@ -64,20 +68,35 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<String> filteredList = new ArrayList<>();
+            filteredList.clear();
+            boolean checkData = false;
             if (charSequence == null || charSequence.length() == 0) {
-                filteredList.addAll(name);
+                filteredList.addAll(loadData.getItem());
             } else {
-                String filterPattern = charSequence.toString().toLowerCase().trim();
-                for (int i = 0; i < name.size(); i++) {
-                    Log.d("innerrrr", name.get(i));
-                    if (name.get(i).toLowerCase().contains(filterPattern)) {
-                        Log.d("inner", name.get(i));
-                        filteredList.add(name.get(i));
+                String[] filterPattern = charSequence.toString().toLowerCase().trim().split("\\s+");
+
+                for (int i = 0; i < source.size(); i++) {
+                    String brand = source.get(i).getBrand();
+                    String type = source.get(i).getType();
+                    String detail = source.get(i).getDetail();
+                    String date = source.get(i).getPurchasedDate();
+                    String place = source.get(i).getPlaceName();
+
+                    String data = (brand+type+detail+date+place);
+
+                    for (String s : filterPattern) {
+                        checkData = data.toLowerCase().trim().contains(s);
+                        if(!checkData){
+                            break;
+                        }
+                    }
+                    if (checkData){
+                        filteredList.add(source.get(i));
                     }
                 }
             }
             FilterResults results = new FilterResults();
+            Log.d("check3", "000" + filteredList);
             results.values = filteredList;
             return results;
         }
@@ -85,7 +104,12 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             list.clear();
-            list.addAll((List<String>) filterResults.values);
+            List<ItemEntity> posts;
+            posts = (List<ItemEntity>) filterResults.values;
+            if (posts != null) {
+                list.addAll(posts);
+            }
+//            list = (List<ItemEntity>) filterResults.values;
             notifyDataSetChanged();
         }
     };
@@ -107,13 +131,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
 
         public void setText(int position) {
             // TODO: Change 'Brand' to 'Type' and may be remove Serial No.
-            tvSearchItem.setText(data.getBrand().get(position));
-            tvSearchDetail.setText(data.getDetail().get(position));
-            tvSearchName.setText(data.getOwner().get(position));
+            tvSearchItem.setText(list.get(position).getBrand());
+            tvSearchDetail.setText(list.get(position).getDetail());
+            tvSearchName.setText(list.get(position).getPlaceName());
             //tvSearchSerial.setText(data.getSerialNo().get(position));
         }
 
-        public interface ItemClickListener{
+        public interface ItemClickListener {
             void onItemClick(View view, int position);
         }
     }

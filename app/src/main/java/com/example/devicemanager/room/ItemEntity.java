@@ -2,6 +2,7 @@ package com.example.devicemanager.room;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -41,9 +42,12 @@ public class ItemEntity {
     private String brand;
     private String shortCode;
     private String order;
+    @Ignore
     private String groupByFIXGL;
+    @Ignore
     private String ad;
     private String unnamed1;
+    @Ignore
     private String sticker;
     private String forwardedBudget;
     private String accumulatedDepreciation;
