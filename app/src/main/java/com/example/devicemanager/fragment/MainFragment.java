@@ -158,6 +158,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         editor = sp.edit();
 
         floatingButton = rootView.findViewById(R.id.fabAdd);
+        floatingButton.setOnClickListener(onClickFab);
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
         dataManager = new DataManager();
