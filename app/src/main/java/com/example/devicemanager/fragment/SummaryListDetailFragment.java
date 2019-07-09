@@ -33,20 +33,19 @@ import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class SummaryListDetailFragment extends Fragment {
-    RecyclerView recyclerView;
-    RecyclerListDetailAdapter recyclerListDetailAdapter;
-    RecyclerView.LayoutManager layoutManager;
-    String type;
-    ArrayList<String> brand = new ArrayList<String>();
-    ArrayList<String> detail = new ArrayList<String>();
-    ArrayList<String> owner = new ArrayList<String>();
-    ArrayList<String> addedDate = new ArrayList<String>();
-    ArrayList<String> status = new ArrayList<String>();
-    ArrayList<String> key = new ArrayList<String>();
-    ProgressBar progressBar;
-    View progressDialogBackground;
-    Spinner spFilter, spSortBy;
-    ArrayList<String> filterStatus, filterBrand, filterDetail, filterOwner, filterAddedDate, filterKey;
+    private RecyclerView recyclerView;
+    private RecyclerListDetailAdapter recyclerListDetailAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private String type;
+    private ArrayList<String> brand = new ArrayList<String>();
+    private ArrayList<String> detail = new ArrayList<String>();
+    private ArrayList<String> owner = new ArrayList<String>();
+    private ArrayList<String> addedDate = new ArrayList<String>();
+    private ArrayList<String> status = new ArrayList<String>();
+    private ArrayList<String> key = new ArrayList<String>();
+    private ProgressBar progressBar;
+    private View progressDialogBackground;
+    private Spinner spFilter, spSortBy;
 
 
     @SuppressWarnings("unused")
@@ -262,12 +261,13 @@ public class SummaryListDetailFragment extends Fragment {
     };
 
     private void spinnerSetRecyclerview(String spinnerStatus) {
-        filterStatus = new ArrayList<String>();
-        filterBrand = new ArrayList<String>();
-        filterDetail = new ArrayList<String>();
-        filterOwner = new ArrayList<String>();
-        filterAddedDate = new ArrayList<String>();
-        filterKey = new ArrayList<String>();
+
+        ArrayList<String> filterStatus = new ArrayList<String>();
+        ArrayList<String> filterBrand = new ArrayList<String>();
+        ArrayList<String> filterDetail = new ArrayList<String>();
+        ArrayList<String> filterOwner = new ArrayList<String>();
+        ArrayList<String> filterAddedDate = new ArrayList<String>();
+        ArrayList<String> filterKey = new ArrayList<String>();
 
         for (int position = 0; position < status.size(); position++) {
             if (status.get(position).matches(spinnerStatus)) {

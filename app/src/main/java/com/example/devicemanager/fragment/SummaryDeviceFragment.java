@@ -23,13 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class SummaryDeviceFragment extends Fragment {
-    String[] type;
-    int[] available, inUse,total;
-    RecyclerView recyclerView;
-    RecyclerDeviceAdapter recyclerDeviceAdapter;
-    RecyclerView.LayoutManager layoutManager;
-    ProgressBar progressBar ;
-    View progressDialogBackground;
+    private String[] type;
+    private int[] available, inUse,total;
+    private RecyclerView recyclerView;
+    private RecyclerDeviceAdapter recyclerDeviceAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ProgressBar progressBar ;
+    private View progressDialogBackground;
 
     public static SummaryDeviceFragment newInstance() {
         SummaryDeviceFragment fragment = new SummaryDeviceFragment();

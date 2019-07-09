@@ -31,13 +31,13 @@ import java.util.StringTokenizer;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SummaryFunitureFragment extends Fragment {
-    RecyclerView recyclerView;
-    RecyclerFunitureAdapter recyclerFunitureAdapter;
-    RecyclerView.LayoutManager layoutManager;
-    int[] inUse,available,total;
-    String[] type;
-    ProgressBar progressBar ;
-    View progressDialogBackground;
+    private RecyclerView recyclerView;
+    private RecyclerFunitureAdapter recyclerFunitureAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private int[] inUse,available,total;
+    private String[] type;
+    private ProgressBar progressBar ;
+    private View progressDialogBackground;
 
     public static SummaryFunitureFragment newInstance() {
         SummaryFunitureFragment fragment = new SummaryFunitureFragment();
@@ -77,7 +77,7 @@ public class SummaryFunitureFragment extends Fragment {
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvFuniture);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvFurniture);
         recyclerView.setLayoutManager(layoutManager);
 
          progressBar = (ProgressBar) rootView.findViewById(R.id.spin_kit);

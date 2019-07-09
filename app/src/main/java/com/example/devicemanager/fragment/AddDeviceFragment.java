@@ -121,7 +121,6 @@ public class AddDeviceFragment extends Fragment {
 
         setSpinner(R.array.branch, spBranch);
         setSpinner(R.array.device_types, spType);
-        setSpinner(R.array.device_and_accessory, spTypeList);
 
         tvItemId = view.findViewById(R.id.tvItemId);
         etOwnerName = view.findViewById(R.id.etOwnerName);
@@ -159,35 +158,32 @@ public class AddDeviceFragment extends Fragment {
             getLastKey();
         }
 
-        spBranch.setOnItemSelectedListener(onSpinnerSelect);
-        spType.setOnItemSelectedListener(onSpinnerSelect);
-        spTypeList.setOnItemSelectedListener(onSpinnerSelect);
+
     }
 
     private void setData() {
         tvItemId.setText(serial);
         setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(serial.substring(5, 6)), null);
         setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(serial.substring(6, 7)), null);
-
-        List<ItemEntity> itemEntity = loadData.selectData(serial);
-        String spinnerName = itemEntity.get(0).getType().toUpperCase();
+        String spinnerName;
+        spinnerName = serial.substring(8, 11);
         switch (Integer.parseInt(serial.substring(6, 7))) {
             case 1:
                 setSpinnerPosition(R.array.building, spTypeList, -1, spinnerName);
-                Log.d("spinnerName", "case1");
                 break;
             case 2:
                 setSpinnerPosition(R.array.device_and_accessory, spTypeList, -1, spinnerName);
-                Log.d("spinnerName", "case2");
                 break;
             case 3:
                 setSpinnerPosition(R.array.furniture, spTypeList, -1, spinnerName);
-                Log.d("spinnerName", "case3");
                 break;
             case 4:
                 setSpinnerPosition(R.array.other, spTypeList, -1, spinnerName);
-                Log.d("spinnerName", "case4");
                 break;
+        }
+        List<ItemEntity> itemEntity = loadData.selectData(serial);
+        if (itemEntity.size() == 0) {
+            return;
         }
         etOwnerId.setText(itemEntity.get(0).getPlaceId());
         etOwnerName.setText(itemEntity.get(0).getPlaceName());
@@ -196,7 +192,7 @@ public class AddDeviceFragment extends Fragment {
         etDeviceDetail.setText(itemEntity.get(0).getDetail());
         etDeviceModel.setText(itemEntity.get(0).getModel());
         etDevicePrice.setText(itemEntity.get(0).getPurchasedPrice());
-        etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 16));
+        etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 15));
         etNote.setText(itemEntity.get(0).getNote());
     }
 
@@ -207,20 +203,18 @@ public class AddDeviceFragment extends Fragment {
                 R.layout.spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(onSpinnerSelect);
     }
 
     private void setSpinnerPosition(int spinerlist, Spinner spinner, int position, String spinerName) {
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-                Contextor.getInstance().getContext(),
-                spinerlist,
-                R.layout.spinner_item);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(spinnerAdapter);
         if (position == -1) {
-            //String[] array = getResources().getStringArray(spinerlist);
+            spinnerAdapter = ArrayAdapter.createFromResource(
+                    Contextor.getInstance().getContext(),
+                    spinerlist,
+                    R.layout.spinner_item);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
             int spinnerPosition = spinnerAdapter.getPosition(spinerName);
             spinner.setSelection(spinnerPosition, true);
-            //Log.d("spinnerPosition",Arrays.asList(array).indexOf(spinerName)+" ");
 
         } else {
             spinner.setSelection(position - 1);
@@ -246,7 +240,7 @@ public class AddDeviceFragment extends Fragment {
                 if (type.matches("save") && checkForm()) {
                     if (tvItemId.getText().toString().matches("Item Id")) {
                         String YY = etDatePicker.getText().toString().substring(13);
-                        List<ItemEntity> itemEntity = (List<ItemEntity>) loadData.selectData("DGO"+YY + branch + category);
+                        List<ItemEntity> itemEntity = (List<ItemEntity>) loadData.selectData("DGO" + YY + branch + category);
                         order = itemEntity.size();
                     } else {
                         order = Integer.valueOf(tvItemId.getText().toString().substring(12));
@@ -312,19 +306,16 @@ public class AddDeviceFragment extends Fragment {
     private String getUnnamed2() {
         String date = etDatePicker.getText().toString();
         String YY = date.substring(13);
-        String num ;
-        if(order <1){
+        String num;
+        if (order < 1) {
             num = "001";
             order++;
-        }
-        else if(order <10){
-            num = "00"+String.valueOf(order);
-        }
-        else if(order < 100) {
-            num = "0"+String.valueOf(order);
-        }
-        else {
-            num = ""+order;
+        } else if (order < 10) {
+            num = "00" + String.valueOf(order);
+        } else if (order < 100) {
+            num = "0" + String.valueOf(order);
+        } else {
+            num = "" + order;
         }
         String generateSerial = "DGO" + YY + branch + category + "-" + abbreviation + num;
         return generateSerial;

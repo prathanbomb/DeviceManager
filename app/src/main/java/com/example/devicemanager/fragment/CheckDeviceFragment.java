@@ -40,9 +40,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class CheckDeviceFragment extends Fragment {
 
-    private Spinner spType;
     private TextView tvSerialNumber, tvOwnerName, tvDeviceDetail,
-            tvLastUpdate, tvAddedDate;
+            tvLastUpdate, tvAddedDate,tvType;
     private static String serial;
     private Button btnConfirm, btnEdit;
     private ProgressBar progressBar;
@@ -74,15 +73,6 @@ public class CheckDeviceFragment extends Fragment {
 
     private void initInstances(View view) {
 
-        spType = view.findViewById(R.id.spinnerDeviceType);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-                Contextor.getInstance().getContext(),
-                R.array.device_types,
-                R.layout.spinner_item);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-        spType.setAdapter(spinnerAdapter);
-        spType.setSelection(0);
-
         /*ivDevice = view.findViewById(R.id.ivDevice);
         Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
 
@@ -96,6 +86,7 @@ public class CheckDeviceFragment extends Fragment {
         tvDeviceDetail = view.findViewById(R.id.tvDeviceDetail);
         tvAddedDate = view.findViewById(R.id.tvAddedDate);
         tvLastUpdate = view.findViewById(R.id.tvLastUpdate);
+        tvType = view.findViewById(R.id.tvType);
 
         tvSerialNumber.setText(serial);
 
@@ -116,6 +107,11 @@ public class CheckDeviceFragment extends Fragment {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         List<ItemEntity> itemEntity = loadData.selectData(serialNew);
+        if(itemEntity.size() == 0){
+            hideDialog();
+            showAlertDialog(R.string.dialog_msg_confirm, "add");
+            return;
+        }
         tvSerialNumber.setText(itemEntity.get(0).getUnnamed2());
         tvOwnerName.setText(itemEntity.get(0).getPlaceName());
         tvDeviceDetail.setText(itemEntity.get(0).getDetail());
@@ -130,6 +126,7 @@ public class CheckDeviceFragment extends Fragment {
             productAddedDateSubString = itemEntity.get(0).getPurchasedDate();
         }
         tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
+        tvType.setText("Type : "+itemEntity.get(0).getType());
         hideDialog();
     }
 

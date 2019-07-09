@@ -169,7 +169,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddDeviceActivity.class);
+                Intent intent = new Intent(getContext(), SummaryActivity.class);
                 startActivity(intent);
             }
         });
