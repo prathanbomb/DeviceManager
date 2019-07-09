@@ -30,10 +30,6 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init(savedInstanceState);
-
-        if (savedInstanceState != null)
-            onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -44,13 +40,8 @@ public class SummaryFragment extends Fragment {
         return rootView;
     }
 
-    private void init(Bundle savedInstanceState) {
-        // Init Fragment level's variable(s) here
-    }
-
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        // Init 'View' instance(s) with rootView.findViewById here
         viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         FragmentStatePagerAdapter viewPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
@@ -90,19 +81,5 @@ public class SummaryFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout = rootView.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save Instance State here
-    }
-
-    /*
-     * Restore Instance State Here
-     */
-    @SuppressWarnings("UnusedParameters")
-    private void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Restore Instance State here
     }
 }

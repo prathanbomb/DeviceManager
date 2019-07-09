@@ -5,8 +5,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.io.Serializable;
-
 @Entity
 public class ItemEntity {
 
@@ -60,7 +58,14 @@ public class ItemEntity {
     public ItemEntity(){
 
     }
-    public ItemEntity(int autoId, String unnamed2, String type, String detail, String serialNo, String placeName, String purchasedDate, String note, String departmentCode, String placeId, String assetId, String price, String model, String depreciationRate, String id, String brand, String shortCode, String order, String groupByFIXGL, String ad, String unnamed1, String sticker, String forwardedBudget, String accumulatedDepreciation, String warrantyDate, String depreciationYear, String branchCode, String assetTypeCode, String purchasedPrice) {
+    public ItemEntity(int autoId, String unnamed2, String type, String detail, String serialNo,
+                      String placeName, String purchasedDate, String note, String departmentCode,
+                      String placeId, String assetId, String price, String model,
+                      String depreciationRate, String id, String brand, String shortCode,
+                      String order, String groupByFIXGL, String ad, String unnamed1, String sticker,
+                      String forwardedBudget, String accumulatedDepreciation, String warrantyDate,
+                      String depreciationYear, String branchCode, String assetTypeCode,
+                      String purchasedPrice) {
         this.autoId = autoId;
         this.unnamed2 = unnamed2;
         this.type = type;

@@ -36,7 +36,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
     public ItemListAdapter(Context context) {
         this.context = context;
         loadData = new LoadData(context);
-        list = loadData.getItem();
+        list = loadData.getOrderedItem();
         source = new ArrayList<>(list);
     }
 
@@ -137,7 +137,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
             String brand = list.get(position).getBrand().trim();
             String detail = list.get(position).getDetail().trim();
 
-            if (!checkBrand(detail, brand)){
+            if (!brand.matches("-") && !checkBrand(detail, brand)){
                 tvSearchDetail.setText("(" + brand + ") " + detail);
             }
             else {
@@ -157,11 +157,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
         }
 
         private String setDate(String inputDate){
-            inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
-            String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
+
+            String inputFormat = "yyyy-MM-dd";
             SimpleDateFormat inputDateFormat = new SimpleDateFormat(
                     inputFormat, Locale.ENGLISH);
-            String outputFormat = "dd/MM/yy";
+            String outputFormat = "dd/MM/yyyy";
             SimpleDateFormat outputDateFormat = new SimpleDateFormat(
                     outputFormat, Locale.ENGLISH);
 

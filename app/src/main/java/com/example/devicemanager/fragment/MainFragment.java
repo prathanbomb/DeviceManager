@@ -20,36 +20,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.MainActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
-import com.example.devicemanager.activity.SearchActivity;
-import com.example.devicemanager.activity.SummaryActivity;
 import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.manager.DataManager;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.AppDatabase;
-import com.example.devicemanager.room.ItemEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Calendar;
-import java.util.List;
 
 
 /**

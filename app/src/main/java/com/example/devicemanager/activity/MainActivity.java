@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.example.devicemanager.R;
@@ -25,6 +27,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -36,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     private View view;
     private ProgressBar progressBar;
+    private Button btnSummary;
+    private String tempDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +84,15 @@ public class MainActivity extends AppCompatActivity {
     private void initInstances() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
+
+        btnSummary = findViewById(R.id.btnSummary);
+        btnSummary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         sp = this.getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
         editor = sp.edit();
@@ -127,9 +145,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        tempDetail = "";
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
         Query query = databaseReference.orderByChild("id");
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 view.setVisibility(View.VISIBLE);
@@ -137,7 +156,18 @@ public class MainActivity extends AppCompatActivity {
                 loadData.deleteTable();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
+
+                    Log.d("test0907", tempDetail);
+
+                    if (!item.getPurchasedDate().matches("") &&
+                            !item.getPurchasedDate().matches("-")){
+                        item.setPurchasedDate(setDate(item.getPurchasedDate()));
+                    }
+                    if (item.getPurchasedDate().matches("-")){
+                        item.setPurchasedDate(tempDetail);
+                    }
                     loadData.insert(item);
+                    tempDetail = item.getDetail();
                 }
                 editor.putBoolean("downloadStatus", false);
                 editor.commit();
@@ -150,5 +180,30 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String setDate(String inputDate){
+        if (inputDate.contains("GMT")){
+            inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
+        }
+        String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat(
+                inputFormat, Locale.ENGLISH);
+        String outputFormat = "yyyy-MM-dd";
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+                outputFormat, Locale.ENGLISH);
+
+        Date date;
+        String str = inputDate;
+
+        try {
+            date = inputDateFormat.parse(inputDate);
+            str = outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return str;
+
     }
 }

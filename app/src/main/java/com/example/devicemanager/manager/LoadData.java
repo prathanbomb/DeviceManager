@@ -2,6 +2,7 @@ package com.example.devicemanager.manager;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.room.Room;
 
@@ -12,6 +13,8 @@ import com.example.devicemanager.room.ItemEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class LoadData {
     private ItemDao itemDao;
@@ -33,7 +36,7 @@ public class LoadData {
     public List<ItemEntity> selectData(String id) {
         List<ItemEntity> itemEntities = null;
         try {
-            itemEntities = new SelectAsyncTask(itemDao,id).execute().get();
+            itemEntities = new SelectAsyncTask(itemDao, id).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -46,6 +49,18 @@ public class LoadData {
         List<ItemEntity> itemEntities = new ArrayList<>();
         try {
             itemEntities = new GetItemAsyncTask(itemDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return itemEntities;
+    }
+
+    public List<ItemEntity> getOrderedItem() {
+        List<ItemEntity> itemEntities = new ArrayList<>();
+        try {
+            itemEntities = new GetOrderedItemAsyncTask(itemDao).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -83,10 +98,24 @@ public class LoadData {
         }
     }
 
+    private static class GetOrderedItemAsyncTask extends AsyncTask<ItemEntity, Void, List<ItemEntity>> {
+
+        private ItemDao itemDao;
+
+        GetOrderedItemAsyncTask(ItemDao itemDao) {
+            this.itemDao = itemDao;
+        }
+
+        @Override
+        protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
+            return itemDao.getAllOrderByDate();
+        }
+    }
+
     private static class DeleteAsyncTask extends AsyncTask<ItemEntity, Void, Void> {
         private ItemDao itemDao;
 
-        public DeleteAsyncTask(ItemDao itemDao) {
+        DeleteAsyncTask(ItemDao itemDao) {
             this.itemDao = itemDao;
         }
 
@@ -97,16 +126,17 @@ public class LoadData {
         }
     }
 
-    private class SelectAsyncTask extends AsyncTask<List<ItemEntity>, Void, List<ItemEntity>>{
+    private static class SelectAsyncTask extends AsyncTask<ItemEntity, Void, List<ItemEntity>> {
         private ItemDao itemDao;
-        String id;
-        public SelectAsyncTask(ItemDao itemDao , String id) {
+        private String id;
+
+        SelectAsyncTask(ItemDao itemDao, String id) {
             this.itemDao = itemDao;
             this.id = id;
         }
 
         @Override
-        protected List<ItemEntity> doInBackground(List<ItemEntity>... itemEntities) {
+        protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
             return itemDao.getProduct(id);
         }
     }
