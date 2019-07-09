@@ -82,21 +82,20 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
                     String date = source.get(i).getPurchasedDate();
                     String place = source.get(i).getPlaceName();
 
-                    String data = (brand+type+detail+date+place);
+                    String data = (brand + type + detail + date + place);
 
                     for (String s : filterPattern) {
                         checkData = data.toLowerCase().trim().contains(s);
-                        if(!checkData){
+                        if (!checkData) {
                             break;
                         }
                     }
-                    if (checkData){
+                    if (checkData) {
                         filteredList.add(source.get(i));
                     }
                 }
             }
             FilterResults results = new FilterResults();
-            Log.d("check3", "000" + filteredList);
             results.values = filteredList;
             return results;
         }
@@ -109,7 +108,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
             if (posts != null) {
                 list.addAll(posts);
             }
-//            list = (List<ItemEntity>) filterResults.values;
             notifyDataSetChanged();
         }
     };
