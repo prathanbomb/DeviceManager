@@ -1,5 +1,6 @@
 package com.example.devicemanager.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +17,12 @@ import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.ItemEntity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder> {
 
@@ -117,26 +122,61 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
     }
 
     public static class Holder extends RecyclerView.ViewHolder {
-        private TextView tvSearchItem, tvSearchDetail, tvSearchName, tvSearchSerial;
+        private TextView tvSearchType, tvSearchDetail, tvSearchName, tvSearchPurchasedDate;
 
-        public Holder(@NonNull View itemView) {
+        Holder(@NonNull View itemView) {
             super(itemView);
-            tvSearchItem = itemView.findViewById(R.id.tvSearchItem);
+            tvSearchType = itemView.findViewById(R.id.tvSearchType);
             tvSearchDetail = itemView.findViewById(R.id.tvSearchDetail);
             tvSearchName = itemView.findViewById(R.id.tvSearchName);
-            //tvSearchSerial = itemView.findViewById(R.id.tvSearchSerial);
+            tvSearchPurchasedDate = itemView.findViewById(R.id.tvSearchPurchasedDate);
         }
 
+        @SuppressLint("SetTextI18n")
         public void setText(int position) {
-            // TODO: Change 'Brand' to 'Type' and may be remove Serial No.
-            tvSearchItem.setText(list.get(position).getBrand());
-            tvSearchDetail.setText(list.get(position).getDetail());
-            tvSearchName.setText(list.get(position).getPlaceName());
-            //tvSearchSerial.setText(data.getSerialNo().get(position));
+            String brand = list.get(position).getBrand().trim();
+            String detail = list.get(position).getDetail().trim();
+
+            if (!checkBrand(detail, brand)){
+                tvSearchDetail.setText("(" + brand + ") " + detail);
+            }
+            else {
+                tvSearchDetail.setText(detail);
+            }
+            tvSearchName.setText(list.get(position).getPlaceName().trim());
+            tvSearchType.setText(list.get(position).getType().trim());
+            tvSearchPurchasedDate.setText(setDate(list.get(position).getPurchasedDate().trim()));
         }
 
         public interface ItemClickListener {
             void onItemClick(View view, int position);
+        }
+
+        private boolean checkBrand(String detail, String brand){
+            return detail.contains(brand);
+        }
+
+        private String setDate(String inputDate){
+            inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
+            String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat(
+                    inputFormat, Locale.ENGLISH);
+            String outputFormat = "dd/MM/yy";
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+                    outputFormat, Locale.ENGLISH);
+
+            Date date;
+            String str = inputDate;
+
+            try {
+                date = inputDateFormat.parse(inputDate);
+                str = outputDateFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return str;
+
         }
     }
 }

@@ -1,23 +1,18 @@
 package com.example.devicemanager.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.fragment.LoginFragment;
 import com.example.devicemanager.fragment.MainFragment;
-import com.example.devicemanager.fragment.SearchFragment;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.AppDatabase;
 import com.example.devicemanager.room.ItemEntity;
@@ -30,9 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
-
-
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -44,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     private View view;
     private ProgressBar progressBar;
-    AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loadData.deleteTable();
-                List<ItemEntity> i;
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
                     loadData.insert(item);

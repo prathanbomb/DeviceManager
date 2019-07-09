@@ -93,9 +93,6 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
         setHasOptionsMenu(true);
-
-        if (savedInstanceState != null)
-            onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -120,7 +117,10 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
             public boolean onQueryTextSubmit(String query) {
                 view.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
+
                 adapter.getFilter().filter(query);
+
+                searchViewActionBar.clearFocus();
                 view.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
                 return true;
@@ -143,6 +143,11 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         return true;
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
+    }
+
     private void init(Bundle savedInstanceState) {
         // Init Fragment level's variable(s) here
     }
@@ -153,6 +158,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         editor = sp.edit();
 
         floatingButton = rootView.findViewById(R.id.fabAdd);
+        floatingButton.setOnClickListener(onClickFab);
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
         dataManager = new DataManager();
@@ -166,51 +172,13 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         view = rootView.findViewById(R.id.view);
         progressBar = rootView.findViewById(R.id.spin_kit);
 
-        floatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddDeviceActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    /*
-     * Save Instance State Here
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save Instance State here
-    }
-
-    /*
-     * Restore Instance State Here
-     */
-    @SuppressWarnings("UnusedParameters")
-    private void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Restore Instance State here
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
+    private View.OnClickListener onClickFab = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(getContext(), AddDeviceActivity.class);
+            startActivity(intent);
+        }
+    };
 }
