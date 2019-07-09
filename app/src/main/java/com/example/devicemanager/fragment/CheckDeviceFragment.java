@@ -106,77 +106,25 @@ public class CheckDeviceFragment extends Fragment {
         btnEdit.setOnClickListener(clickListener);
         btnConfirm.setOnClickListener(clickListener);
 
-        if (serial.contains("DGO")) {
-            getData(serial, "unnamed2");
-        } else {
-            getData(serial, "serialNo");
-        }
+        getData(serial);
+
     }
 
-    private void getData(String serialNew, String parameter) {
+    private void getData(String serialNew) {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-//        Query query = databaseReference.orderByChild(parameter).equalTo(serialNew);
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.getValue() == null){
-//                    hideDialog();
-//                    Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
-//                    showAlertDialog(R.string.dialog_msg_add, "add");
-//                }
-//                else {
-//                    for (DataSnapshot s : dataSnapshot.getChildren()) {
-//                        DataItem item = s.getValue(DataItem.class);
-//                        if (item != null) {
-
-////                            tvSerialNumber.setText(item.getUnnamed2());
-//                            tvOwnerName.setText(item.getPlaceName());
-//                            tvDeviceDetail.setText(item.getDetail());
-//                            tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
-//                            String productAddedDateSubString;
-//                            if(item.getPurchasedDate().length()>=12){
-//                                String date = item.getPurchasedDate().substring(8, 10);
-//                                String month = item.getPurchasedDate().substring(4, 7);
-//                                String year = item.getPurchasedDate().substring(11, 15);
-//                                productAddedDateSubString = date + " " + month + " " + year;
-//                            }
-//                            else {
-//                                productAddedDateSubString = item.getPurchasedDate();
-//                            }
-//                            tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
-//
-//                        } else {
-//                            hideDialog();
-//                            Toast.makeText(getActivity(), "Cannot find this item on Database.", Toast.LENGTH_SHORT).show();
-//                            showAlertDialog(R.string.dialog_msg_add, "add");
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                hideDialog();
-//                Toast.makeText(getActivity(), "Try again later", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        hideDialog();
-        ItemEntity itemEntity = loadData.selectData("DGO1813-CHA136");
+        ItemEntity itemEntity = loadData.selectData(serialNew);
         tvSerialNumber.setText(itemEntity.getUnnamed2());
         tvOwnerName.setText(itemEntity.getPlaceName());
         tvDeviceDetail.setText(itemEntity.getDetail());
         tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
         String productAddedDateSubString;
-        if(itemEntity.getPurchasedDate().length()>=12){
+        if (itemEntity.getPurchasedDate().length() >= 15) {
             String date = itemEntity.getPurchasedDate().substring(8, 10);
             String month = itemEntity.getPurchasedDate().substring(4, 7);
             String year = itemEntity.getPurchasedDate().substring(11, 15);
             productAddedDateSubString = date + " " + month + " " + year;
-        }
-        else {
+        } else {
             productAddedDateSubString = itemEntity.getPurchasedDate();
         }
         tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
