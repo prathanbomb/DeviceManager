@@ -104,6 +104,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        downloadStatus = sp.getBoolean("downloadStatus", true);
+        if (downloadStatus) {
+            loadData();
+        } else {
+            view.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
@@ -130,8 +147,6 @@ public class MainActivity extends AppCompatActivity {
                     ItemEntity item = s.getValue(ItemEntity.class);
                     loadData.insert(item);
                 }
-                view.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
                 editor.putBoolean("downloadStatus", false);
                 editor.commit();
                 view.setVisibility(View.INVISIBLE);

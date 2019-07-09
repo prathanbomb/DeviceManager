@@ -13,7 +13,7 @@ public interface ItemDao {
     List<ItemEntity> getAll();
 
     @Query("SELECT * FROM ItemEntity WHERE item_id = :id")
-    ItemEntity getProduct(String id);
+    List<ItemEntity> getProduct(String id);
 
     @Insert
     void insertAll(ItemEntity item);

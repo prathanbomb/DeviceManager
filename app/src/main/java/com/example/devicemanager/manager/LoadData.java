@@ -30,8 +30,8 @@ public class LoadData {
         new DeleteAsyncTask(itemDao).execute();
     }
 
-    public ItemEntity selectData(String id) {
-        ItemEntity itemEntities = null;
+    public List<ItemEntity> selectData(String id) {
+        List<ItemEntity> itemEntities = null;
         try {
             itemEntities = new SelectAsyncTask(itemDao,id).execute().get();
         } catch (ExecutionException e) {
@@ -97,7 +97,7 @@ public class LoadData {
         }
     }
 
-    private class SelectAsyncTask extends AsyncTask<ItemEntity, Void, ItemEntity>{
+    private class SelectAsyncTask extends AsyncTask<List<ItemEntity>, Void, List<ItemEntity>>{
         private ItemDao itemDao;
         String id;
         public SelectAsyncTask(ItemDao itemDao , String id) {
@@ -106,7 +106,7 @@ public class LoadData {
         }
 
         @Override
-        protected ItemEntity doInBackground(ItemEntity... itemEntities) {
+        protected List<ItemEntity> doInBackground(List<ItemEntity>... itemEntities) {
             return itemDao.getProduct(id);
         }
     }

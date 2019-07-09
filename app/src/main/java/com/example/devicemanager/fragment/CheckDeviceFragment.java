@@ -34,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+
 import static android.app.Activity.RESULT_OK;
 
 public class CheckDeviceFragment extends Fragment {
@@ -113,19 +115,19 @@ public class CheckDeviceFragment extends Fragment {
     private void getData(String serialNew) {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        ItemEntity itemEntity = loadData.selectData(serialNew);
-        tvSerialNumber.setText(itemEntity.getUnnamed2());
-        tvOwnerName.setText(itemEntity.getPlaceName());
-        tvDeviceDetail.setText(itemEntity.getDetail());
+        List<ItemEntity> itemEntity = loadData.selectData(serialNew);
+        tvSerialNumber.setText(itemEntity.get(0).getUnnamed2());
+        tvOwnerName.setText(itemEntity.get(0).getPlaceName());
+        tvDeviceDetail.setText(itemEntity.get(0).getDetail());
         tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
         String productAddedDateSubString;
-        if (itemEntity.getPurchasedDate().length() >= 15) {
-            String date = itemEntity.getPurchasedDate().substring(8, 10);
-            String month = itemEntity.getPurchasedDate().substring(4, 7);
-            String year = itemEntity.getPurchasedDate().substring(11, 15);
+        if (itemEntity.get(0).getPurchasedDate().length() >= 15) {
+            String date = itemEntity.get(0).getPurchasedDate().substring(8, 10);
+            String month = itemEntity.get(0).getPurchasedDate().substring(4, 7);
+            String year = itemEntity.get(0).getPurchasedDate().substring(11, 15);
             productAddedDateSubString = date + " " + month + " " + year;
         } else {
-            productAddedDateSubString = itemEntity.getPurchasedDate();
+            productAddedDateSubString = itemEntity.get(0).getPurchasedDate();
         }
         tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
         hideDialog();
