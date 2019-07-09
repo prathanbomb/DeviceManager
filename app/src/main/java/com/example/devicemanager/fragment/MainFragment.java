@@ -166,6 +166,14 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         view = rootView.findViewById(R.id.view);
         progressBar = rootView.findViewById(R.id.spin_kit);
 
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddDeviceActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
