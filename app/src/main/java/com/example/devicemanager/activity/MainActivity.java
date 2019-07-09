@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                view.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 loadData.deleteTable();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);

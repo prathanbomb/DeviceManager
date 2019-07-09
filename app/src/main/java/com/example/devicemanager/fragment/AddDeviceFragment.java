@@ -240,10 +240,16 @@ public class AddDeviceFragment extends Fragment {
                 if (type.matches("save") && checkForm()) {
                     if (tvItemId.getText().toString().matches("Item Id")) {
                         String YY = etDatePicker.getText().toString().substring(13);
-                        List<ItemEntity> itemEntity = (List<ItemEntity>) loadData.selectData("DGO" + YY + branch + category);
-                        order = itemEntity.size();
+                        order = 0;
+                        String form = "DGO" + YY + branch + category;
+
+                        List<ItemEntity> itemEntity = loadData.getItem();
+                        for (int i = 0; i < itemEntity.size(); i++) {
+                            if (itemEntity.get(i).getUnnamed2().toString().contains(form))
+                                order++;
+                        }
                     } else {
-                        order = Integer.valueOf(tvItemId.getText().toString().substring(12));
+                        order = Integer.valueOf(tvItemId.getText().toString().substring(11));
                     }
                     for (int i = 0; i < Integer.parseInt(etQuantity.getText().toString()); i++) {
                         saveData();
