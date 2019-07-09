@@ -76,6 +76,12 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
             return brand.size();
         }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     TextView tvBrand,tvDetail,tvOwner,tvAddedDate,tvStatus;
 
     class Holder extends RecyclerView.ViewHolder {

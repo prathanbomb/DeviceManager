@@ -156,7 +156,7 @@ public class SummaryListDetailFragment extends Fragment {
         type = getArguments().getString("Type").trim();
         Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data")
                 .orderByChild("type").equalTo(type);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 brand = new ArrayList<String>();
