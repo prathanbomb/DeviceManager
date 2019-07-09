@@ -154,7 +154,7 @@ public class AddDeviceFragment extends Fragment {
         if (serial != null) {
             tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
             etQuantity.setVisibility(View.INVISIBLE);
-            setData();
+                setData();
             getLastKey();
         }
 
@@ -192,7 +192,7 @@ public class AddDeviceFragment extends Fragment {
         etDeviceDetail.setText(itemEntity.get(0).getDetail());
         etDeviceModel.setText(itemEntity.get(0).getModel());
         etDevicePrice.setText(itemEntity.get(0).getPurchasedPrice());
-        etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 15));
+        //etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 15));
         etNote.setText(itemEntity.get(0).getNote());
     }
 
@@ -213,10 +213,19 @@ public class AddDeviceFragment extends Fragment {
                     spinerlist,
                     R.layout.spinner_item);
             spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-            int spinnerPosition = spinnerAdapter.getPosition(spinerName);
-            spinner.setSelection(spinnerPosition, true);
+            spinner.setAdapter(spinnerAdapter);
+            String[] array = getResources().getStringArray(spinerlist);
+            List<String> list = Arrays.asList(array);
+            int spinnerPosition = 0;
 
-        } else {
+            for (String str : list){
+                if (str.contains(spinerName)){
+                    spinnerPosition = list.indexOf(str);
+                }
+            }
+            spinner.setSelection(spinnerPosition, true);
+        }
+        else {
             spinner.setSelection(position - 1);
         }
     }
@@ -450,7 +459,7 @@ public class AddDeviceFragment extends Fragment {
     private AdapterView.OnItemSelectedListener onSpinnerSelect = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            if (adapterView == spType) {
+            if (adapterView == spType && serial == null) {
                 selected = adapterView.getItemAtPosition(i).toString();
                 switch (i) {
                     case 0:

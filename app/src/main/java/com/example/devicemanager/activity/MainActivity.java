@@ -16,7 +16,6 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.fragment.LoginFragment;
 import com.example.devicemanager.fragment.MainFragment;
 import com.example.devicemanager.manager.LoadData;
-import com.example.devicemanager.room.AppDatabase;
 import com.example.devicemanager.room.ItemEntity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -145,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        tempDetail = "";
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
         Query query = databaseReference.orderByChild("id");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -157,17 +155,11 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
 
-                    Log.d("test0907", tempDetail);
-
                     if (!item.getPurchasedDate().matches("") &&
                             !item.getPurchasedDate().matches("-")){
                         item.setPurchasedDate(setDate(item.getPurchasedDate()));
                     }
-                    if (item.getPurchasedDate().matches("-")){
-                        item.setPurchasedDate(tempDetail);
-                    }
                     loadData.insert(item);
-                    tempDetail = item.getDetail();
                 }
                 editor.putBoolean("downloadStatus", false);
                 editor.commit();
