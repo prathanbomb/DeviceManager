@@ -69,10 +69,10 @@ public class LoadData {
         return itemEntities;
     }
 
-    public List<ItemEntity> selectProductByType(String type,String order) {
+    public List<ItemEntity> selectProductByType(String type, String order) {
         List<ItemEntity> itemEntities = new ArrayList<>();
         try {
-            itemEntities = new getAllProductByType(itemDao, type,order).execute().get();
+            itemEntities = new getAllProductByType(itemDao, type, order).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -158,7 +158,7 @@ public class LoadData {
         private String type;
         private String order;
 
-        getAllProductByType(ItemDao itemDao, String type,String order) {
+        getAllProductByType(ItemDao itemDao, String type, String order) {
             this.itemDao = itemDao;
             this.type = type;
             this.order = order;
@@ -167,18 +167,14 @@ public class LoadData {
         @Override
         protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
             if (order.matches("DateAsc")) {
-                return itemDao.getAllProductByTypeOrderAsc(type,"purchased_date");
-            }
-            else if (order.matches("DateDesc")) {
-                return itemDao.getAllProductByTypeOrderDesc(type,"purchased_date");
-            }
-            else if (order.matches("BrandAsc")) {
-                return itemDao.getAllProductByTypeOrderAsc(type,"Brand");
-            }
-            else if (order.matches("BrandDesc")) {
-                return itemDao.getAllProductByTypeOrderDesc(type,"Brand");
-            }
-            else {
+                return itemDao.getAllProductByTypeOrderDateAsc(type);
+            } else if (order.matches("DateDesc")) {
+                return itemDao.getAllProductByTypeOrderDateDesc(type);
+            } else if (order.matches("BrandAsc")) {
+                return itemDao.getAllProductByTypeOrderBrandAsc(type);
+            } else if (order.matches("BrandDesc")) {
+                return itemDao.getAllProductByTypeOrderBrandDesc(type);
+            } else {
                 return null;
             }
         }

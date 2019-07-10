@@ -19,11 +19,17 @@ public interface ItemDao {
     @Query("SELECT * FROM ItemEntity WHERE item_id = :id ")
     List<ItemEntity> getProduct(String id);
 
-    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY :order ASC")
-    List<ItemEntity> getAllProductByTypeOrderAsc(String type,String order);
+    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY purchased_date ASC")
+    List<ItemEntity> getAllProductByTypeOrderDateAsc(String type);
 
-    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY :order DESC")
-    List<ItemEntity> getAllProductByTypeOrderDesc(String type,String order);
+    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY purchased_date DESC")
+    List<ItemEntity> getAllProductByTypeOrderDateDesc(String type);
+
+    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY brand ASC")
+    List<ItemEntity> getAllProductByTypeOrderBrandAsc(String type);
+
+    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY brand DESC")
+    List<ItemEntity> getAllProductByTypeOrderBrandDesc(String type);
 
     @Insert
     void insertAll(ItemEntity item);

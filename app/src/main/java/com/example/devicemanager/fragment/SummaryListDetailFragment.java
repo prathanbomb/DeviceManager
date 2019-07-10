@@ -104,7 +104,6 @@ public class SummaryListDetailFragment extends Fragment {
         spSortBy.setOnItemSelectedListener(onSpinnerSelect);
 
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) rootView.findViewById(R.id.view);
@@ -112,11 +111,12 @@ public class SummaryListDetailFragment extends Fragment {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-        DownloadData("DateAsc");
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerListDetailAdapter);
+
+        DownloadData("DateAsc");
+
     }
 
     @Override
@@ -158,10 +158,10 @@ public class SummaryListDetailFragment extends Fragment {
         key.clear();
         status.clear();
 
-        type = getArguments().getString("Type").trim();
-        List<ItemEntity> itemEntities = new ArrayList<>();
-        itemEntities = loadData.selectProductByType(type,order);
+        recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
 
+        type = getArguments().getString("Type").trim();
+        List<ItemEntity> itemEntities = loadData.selectProductByType(type,order);
         if (itemEntities != null) {
             for (int i = 0; i < itemEntities.size(); i++) {
                 String productType = itemEntities.get(i).getType().trim();
@@ -176,7 +176,7 @@ public class SummaryListDetailFragment extends Fragment {
                     productStatus = "Active";
                 }
                 String productKey = itemEntities.get(i).getUnnamed2().trim();
-
+                Log.d("date",""+productAddedDate);
                 brand.add(productBrand);
                 detail.add(productDetail);
                 owner.add(productOwner);
@@ -249,6 +249,7 @@ public class SummaryListDetailFragment extends Fragment {
         if (!filter.matches("All")) {
             spinnerSetRecyclerview(filter);
         } else {
+            recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(recyclerListDetailAdapter);
         }
     }
