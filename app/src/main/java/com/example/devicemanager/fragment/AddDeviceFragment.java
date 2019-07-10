@@ -43,9 +43,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -186,7 +188,7 @@ public class AddDeviceFragment extends Fragment {
         etSerialNumber.setText(itemEntity.get(0).getSerialNo());
         etDeviceDetail.setText(itemEntity.get(0).getDetail());
         etDeviceModel.setText(itemEntity.get(0).getModel());
-        etDevicePrice.setText(itemEntity.get(0).getPurchasedPrice());
+        etDevicePrice.setText(itemEntity.get(0).getPrice());
         etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 10));
         etNote.setText(itemEntity.get(0).getNote());
     }
@@ -243,14 +245,13 @@ public class AddDeviceFragment extends Fragment {
                 if (type.matches("save") && checkForm()) {
                     if (tvItemId.getText().toString().matches("Item Id")) {
                         String YY = etDatePicker.getText().toString().substring(13);
-                        order = 0;
+                        order = 1;
                         String form = "DGO" + YY + branch + category;
 
                         List<ItemEntity> itemEntity = loadData.getItem();
                         for (int i = 0; i < itemEntity.size(); i++) {
                             if (itemEntity.get(i).getUnnamed2().toString().contains(form))
                                 order++;
-
                         }
                         int count = Integer.parseInt(etQuantity.getText().toString());
 
@@ -267,6 +268,33 @@ public class AddDeviceFragment extends Fragment {
                         lastKey = "" + loadData.selectData(serial).get(0).getAutoId();
                         Log.d("lastKey", "" + lastKey);
                         databaseReference.child(lastKey).child("placeName").setValue(etOwnerName.getText().toString());
+                        databaseReference.child(lastKey).child("detail").setValue(etDeviceDetail.getText().toString());
+                        databaseReference.child(lastKey).child("serialNo").setValue(etSerialNumber.getText().toString());
+                        databaseReference.child(lastKey).child("placeId").setValue(etOwnerId.getText().toString());
+                        databaseReference.child(lastKey).child("price").setValue(etDevicePrice.getText().toString());
+                        databaseReference.child(lastKey).child("unnamed2").setValue(tvItemId.getText().toString());
+                        databaseReference.child(lastKey).child("note").setValue(etNote.getText().toString());
+                        databaseReference.child(lastKey).child("model").setValue(etDeviceModel.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    editor.putBoolean("downloadStatus", true);
+                                    editor.commit();
+                                    Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
+
+                                    // TODO: Add Success SuccessDialog
+                                    progressDialogBackground.setVisibility(View.INVISIBLE);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Intent intentBack = new Intent();
+                                    getActivity().setResult(RESULT_OK, intentBack);
+                                    getActivity().finish();
+                                } else {
+                                    Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
+                                    progressDialogBackground.setVisibility(View.INVISIBLE);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        });
                     }
 
                 } else if (type.matches("serial")) {
@@ -289,7 +317,8 @@ public class AddDeviceFragment extends Fragment {
     private void saveData() {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-
+        loadData();
+        getLastKey();
         // TODO: Add more item data
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
@@ -301,8 +330,6 @@ public class AddDeviceFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        editor.putBoolean("downloadStatus", true);
-                        editor.commit();
                         Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
                         // TODO: Add Success SuccessDialog
@@ -319,6 +346,59 @@ public class AddDeviceFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void loadData() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                loadData.deleteTable();
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    ItemEntity item = s.getValue(ItemEntity.class);
+
+                    if (!item.getPurchasedDate().matches("") &&
+                            !item.getPurchasedDate().matches("-")) {
+                        item.setPurchasedDate(setDate(item.getPurchasedDate()));
+                    }
+                    item.setAutoId(Integer.parseInt(s.getKey()));
+                    loadData.insert(item);
+                }
+                editor.putBoolean("downloadStatus", false);
+                editor.commit();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private String setDate(String inputDate) {
+        if (inputDate.contains("GMT")) {
+            inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
+        }
+        String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat(
+                inputFormat, Locale.ENGLISH);
+        String outputFormat = "yyyy-MM-dd";
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+                outputFormat, Locale.ENGLISH);
+
+        Date date;
+        String str = inputDate;
+
+        try {
+            date = inputDateFormat.parse(inputDate);
+            str = outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return str;
+
     }
 
     private String getUnnamed2() {
