@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.CheckDeviceActivity;
+import com.example.devicemanager.activity.DeviceDetailActivity;
 
 import java.util.ArrayList;
 
@@ -69,7 +69,7 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, CheckDeviceActivity.class);
+                Intent intent = new Intent(context, DeviceDetailActivity.class);
                 intent.putExtra("serial",key.get(position));
                 context.startActivity(intent);
             }

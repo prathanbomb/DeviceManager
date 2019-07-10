@@ -5,131 +5,149 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvItemId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/serial_number"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvDeviceDetail"
+                style="@style/TextViewForDetailDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_detail"
+                android:drawableLeft="@drawable/ic_detail"
+                android:drawablePadding="10dp"
+                android:text="@string/details" />
+
+            <TextView
+                android:id="@+id/tvOwnerName"
+                style="@style/TextViewForDetailDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:drawableStart="@drawable/ic_person"
+                android:drawableLeft="@drawable/ic_person"
+                android:drawablePadding="10dp"
+                android:text="@string/name" />
+
+            <View style="@style/Divider" />
+
+            <TextView
+                android:id="@+id/tvType"
+                style="@style/TextViewForDetailDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/device_detail" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvOwnerName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="@string/name"
-                    android:textSize="@dimen/text_20_sp" />
+                    android:id="@+id/tvBrand"
+                    style="@style/TextViewForDetailDevice"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvSerialNumber"
-                    android:layout_width="match_parent"
+                    style="@style/TextViewForDetailDevice"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="@string/serial_number"
-                    android:textSize="@dimen/text_20_sp" />
+                    android:layout_weight="2" />
 
-                <TextView
-                    android:id="@+id/tvType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/device_detail"
-                    android:textSize="@dimen/text_20_sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/device_detail"
-                    android:textSize="@dimen/text_20_sp" />
-
-                <TextView
-                    android:id="@+id/tvDeviceDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:freezesText="true"
-                    android:text="@string/details"
-                    android:textSize="@dimen/text_20_sp" />
-
-                <TextView
-                    android:id="@+id/tvLastUpdate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:freezesText="true"
-                    android:text="@string/last_check"
-                    android:textSize="@dimen/text_20_sp" />
-
-                <TextView
-                    android:id="@+id/tvAddedDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:freezesText="true"
-                    android:text="@string/added_date"
-                    android:textSize="@dimen/text_20_sp" />
-
-                <TextView
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tvModel"
+                style="@style/TextViewForDetailDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvLastUpdate"
+                style="@style/TextViewForDetailDevice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal">
+                android:text="@string/last_check" />
 
-                <Button
-                    android:id="@+id/btnEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="@string/edit" />
+            <TextView
+                android:id="@+id/tvAddedDate"
+                style="@style/TextViewForDetailDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/added_date" />
 
-                <Button
-                    android:id="@+id/btnConfirm"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="@string/confirm" />
-            </LinearLayout>
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <View
-                android:id="@+id/view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent_background"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="invisible" />
-
-            <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/spin_kit"
-                style="@style/SpinKitView.Large.ThreeBounce"
-                android:layout_width="200dp"
-                android:layout_height="195dp"
-                android:layout_gravity="center"
-                android:visibility="invisible"
-                app:SpinKit_Color="@color/colorAccent" />
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
 
-        </RelativeLayout>
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="@string/edit" />
+
+            <Button
+                android:id="@+id/btnCheck"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="@string/check" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="invisible" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.ThreeBounce"
+            android:layout_width="200dp"
+            android:layout_height="195dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            app:SpinKit_Color="@color/colorAccent" />
+
+    </RelativeLayout>
 
 </ScrollView>

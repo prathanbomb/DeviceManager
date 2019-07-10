@@ -157,7 +157,7 @@ public class ScanBarcodeActivity extends AppCompatActivity {
         builder.setMessage("Serial No : " + text).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(ScanBarcodeActivity.this, CheckDeviceActivity.class);
+                Intent intent = new Intent(ScanBarcodeActivity.this, DeviceDetailActivity.class);
                 intent.putExtra("serial", text);
                 startActivity(intent);
                 finish();

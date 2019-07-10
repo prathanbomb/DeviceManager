@@ -19,10 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +29,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
 import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.LoadData;
@@ -46,9 +43,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -268,7 +263,7 @@ public class AddDeviceFragment extends Fragment {
                     }
                 } else if (type.matches("serial")) {
                     Toast.makeText(getActivity(), "Intent to Detail", Toast.LENGTH_SHORT).show();
-                    /*Intent intent = new Intent(getContext(), CheckDeviceActivity.class);
+                    /*Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
                     startActivity(intent);
                     getActivity().finish();*/
                 }

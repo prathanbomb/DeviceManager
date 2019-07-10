@@ -1,11 +1,9 @@
 package com.example.devicemanager.fragment;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -26,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.activity.CheckDeviceActivity;
+import com.example.devicemanager.activity.DeviceDetailActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.manager.DataManager;
@@ -129,7 +125,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
 
     @Override
     public void onItemClick(View view, int position, String serial) {
-        Intent intent = new Intent(getActivity(), CheckDeviceActivity.class);
+        Intent intent = new Intent(getActivity(), DeviceDetailActivity.class);
         intent.putExtra("serial", serial);
         startActivity(intent);
     }
