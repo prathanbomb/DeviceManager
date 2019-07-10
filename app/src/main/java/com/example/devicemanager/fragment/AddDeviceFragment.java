@@ -154,10 +154,10 @@ public class AddDeviceFragment extends Fragment {
         if (serial != null) {
             tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
             etQuantity.setVisibility(View.INVISIBLE);
-                setData();
+            setData();
+        } else {
             getLastKey();
         }
-
 
     }
 
@@ -192,7 +192,7 @@ public class AddDeviceFragment extends Fragment {
         etDeviceDetail.setText(itemEntity.get(0).getDetail());
         etDeviceModel.setText(itemEntity.get(0).getModel());
         etDevicePrice.setText(itemEntity.get(0).getPurchasedPrice());
-        //etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 15));
+        etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 10));
         etNote.setText(itemEntity.get(0).getNote());
     }
 
@@ -218,14 +218,13 @@ public class AddDeviceFragment extends Fragment {
             List<String> list = Arrays.asList(array);
             int spinnerPosition = 0;
 
-            for (String str : list){
-                if (str.contains(spinerName)){
+            for (String str : list) {
+                if (str.contains(spinerName)) {
                     spinnerPosition = list.indexOf(str);
                 }
             }
             spinner.setSelection(spinnerPosition, true);
-        }
-        else {
+        } else {
             spinner.setSelection(position - 1);
         }
     }
@@ -256,16 +255,25 @@ public class AddDeviceFragment extends Fragment {
                         for (int i = 0; i < itemEntity.size(); i++) {
                             if (itemEntity.get(i).getUnnamed2().toString().contains(form))
                                 order++;
+
+                        }
+                        int count = Integer.parseInt(etQuantity.getText().toString());
+
+                        for (int i = 0; i < count; i++) {
+                            saveData();
+                            if (count >= 2) {
+                                int key = Integer.parseInt(lastKey) + 1;
+                                lastKey = key + "";
+                                order++;
+                            }
                         }
                     } else {
-                        order = Integer.valueOf(tvItemId.getText().toString().substring(11));
+                        unnamed2 = tvItemId.getText().toString();
+                        lastKey = "" + loadData.selectData(serial).get(0).getAutoId();
+                        Log.d("lastKey", "" + lastKey);
+                        databaseReference.child(lastKey).child("placeName").setValue(etOwnerName.getText().toString());
                     }
-                    for (int i = 0; i < Integer.parseInt(etQuantity.getText().toString()); i++) {
-                        saveData();
-                        int key = Integer.parseInt(lastKey) + 1;
-                        lastKey = key + "";
-                        order++;
-                    }
+
                 } else if (type.matches("serial")) {
                     Toast.makeText(getActivity(), "Intent to Detail", Toast.LENGTH_SHORT).show();
                     /*Intent intent = new Intent(getContext(), CheckDeviceActivity.class);
@@ -319,21 +327,24 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private String getUnnamed2() {
-        String date = etDatePicker.getText().toString();
-        String YY = date.substring(13);
-        String num;
-        if (order < 1) {
-            num = "001";
-            order++;
-        } else if (order < 10) {
-            num = "00" + String.valueOf(order);
-        } else if (order < 100) {
-            num = "0" + String.valueOf(order);
-        } else {
-            num = "" + order;
+        if (unnamed2 == null) {
+            String date = etDatePicker.getText().toString();
+            String YY = date.substring(13);
+            String num;
+            if (order < 1) {
+                num = "001";
+                order++;
+            } else if (order < 10) {
+                num = "00" + String.valueOf(order);
+            } else if (order < 100) {
+                num = "0" + String.valueOf(order);
+            } else {
+                num = "" + order;
+            }
+            String generateSerial = "DGO" + YY + branch + category + "-" + abbreviation + num;
+            return generateSerial;
         }
-        String generateSerial = "DGO" + YY + branch + category + "-" + abbreviation + num;
-        return generateSerial;
+        return unnamed2;
     }
 
     private void updateLabel() {
@@ -346,7 +357,6 @@ public class AddDeviceFragment extends Fragment {
         lastKey = String.valueOf(loadData.getItem().size());
         progressDialogBackground.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
-
     }
 
     private void checkSerial() {

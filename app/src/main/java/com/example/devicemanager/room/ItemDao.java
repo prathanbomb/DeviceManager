@@ -16,16 +16,16 @@ public interface ItemDao {
     @Query("SELECT * FROM ItemEntity ORDER BY purchased_date ASC, item_detail DESC")
     List<ItemEntity> getAllOrderByDate();
 
-    @Query("SELECT * FROM ItemEntity ORDER BY :column ASC")
-    List<ItemEntity> getItemAsc(String column);
-
-    @Query("SELECT * FROM ItemEntity ORDER BY :column DESC")
-    List<ItemEntity> getItemDesc(String column);
-
-    @Query("SELECT * FROM ItemEntity WHERE item_id = :id")
+    @Query("SELECT * FROM ItemEntity WHERE item_id = :id ")
     List<ItemEntity> getProduct(String id);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY :order ASC")
+    List<ItemEntity> getAllProductByTypeOrderAsc(String type,String order);
+
+    @Query("SELECT * FROM ItemEntity WHERE item_type = :type ORDER BY :order DESC")
+    List<ItemEntity> getAllProductByTypeOrderDesc(String type,String order);
+
+    @Insert
     void insertAll(ItemEntity item);
 
     @Query("DELETE FROM ItemEntity")

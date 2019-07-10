@@ -18,20 +18,12 @@ import java.util.ArrayList;
 
 public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerListDetailAdapter.Holder> {
     Context context;
-    ArrayList<String> brand,detail,owner,addedDate,status,key = new ArrayList<String>();
-
-    public void clearArrayList(){
-        brand.clear();
-        detail.clear();
-        owner.clear();
-        addedDate.clear();
-        status.clear();
-        key.clear();
-    }
+    ArrayList<String> brand, detail, owner, addedDate, status, key;
 
     public void setBrand(ArrayList<String> brand) {
         this.brand = brand;
     }
+
     public void setKey(ArrayList<String> key) {
         this.key = key;
     }
@@ -52,9 +44,10 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
         this.status = status;
     }
 
-    public RecyclerListDetailAdapter(Context context){
+    public RecyclerListDetailAdapter(Context context) {
         this.context = context;
     }
+
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,18 +63,18 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, CheckDeviceActivity.class);
-                intent.putExtra("serial",key.get(position));
+                intent.putExtra("serial", key.get(position));
                 context.startActivity(intent);
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        if(brand == null){
+        if (brand == null) {
             return 0;
-        }
-        else {
+        } else {
             return brand.size();
         }
     }
@@ -91,7 +84,7 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
         return position;
     }
 
-    TextView tvBrand,tvDetail,tvOwner,tvAddedDate,tvStatus;
+    TextView tvBrand, tvDetail, tvOwner, tvAddedDate, tvStatus;
 
     class Holder extends RecyclerView.ViewHolder {
 
@@ -111,12 +104,13 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
             tvOwner.setText(owner.get(position));
             tvAddedDate.setText(addedDate.get(position));
             tvStatus.setText(status.get(position));
-            if(status.get(position).matches("Active")){
+            if (status.get(position).matches("Active")) {
                 tvStatus.setTextColor(context.getResources().getColor(R.color.red));
-            }
-            else {
+            } else {
                 tvStatus.setTextColor(context.getResources().getColor(R.color.green));
             }
         }
+
     }
+
 }
