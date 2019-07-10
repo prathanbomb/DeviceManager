@@ -26,12 +26,22 @@ import java.util.Locale;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder> {
 
-    private ArrayList<ItemEntity> source;
+    private static ArrayList<ItemEntity> source;
     private static List<ItemEntity> list;
     private Context context;
     private Holder.ItemClickListener mClickListener;
     private LoadData loadData;
     private List<ItemEntity> filteredList = new ArrayList<>();
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    private String itemId;
 
     public ItemListAdapter(Context context) {
         this.context = context;
@@ -56,7 +66,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mClickListener != null) mClickListener.onItemClick(v, position);
+                if (mClickListener != null) {
+                    mClickListener.onItemClick(v, position, list.get(position).getUnnamed2());
+                }
             }
         });
     }
@@ -76,7 +88,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
             filteredList.clear();
             boolean checkData = false;
             if (charSequence == null || charSequence.length() == 0) {
-                filteredList.addAll(loadData.getItem());
+                filteredList.addAll(loadData.getOrderedItem());
             } else {
                 String[] filterPattern = charSequence.toString().toLowerCase().trim().split("\\s+");
 
@@ -149,11 +161,11 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
         }
 
         public interface ItemClickListener {
-            void onItemClick(View view, int position);
+            void onItemClick(View view, int position, String serial);
         }
 
         private boolean checkBrand(String detail, String brand){
-            return detail.contains(brand);
+            return detail.toLowerCase().contains(brand.toLowerCase());
         }
 
         private String setDate(String inputDate){

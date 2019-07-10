@@ -73,12 +73,6 @@ public class CheckDeviceFragment extends Fragment {
 
     private void initInstances(View view) {
 
-        /*ivDevice = view.findViewById(R.id.ivDevice);
-        Uri uri = Uri.fromFile(new File(getArguments().getString("Path")));
-
-        Glide.with(Contextor.getInstance().getContext())
-                .load(uri)
-                .into(ivDevice);*/
         loadData = new LoadData(getContext());
 
         tvSerialNumber = view.findViewById(R.id.tvSerialNumber);

@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private View view;
     private ProgressBar progressBar;
     private Button btnSummary;
-    private String tempDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-        Query query = databaseReference.orderByChild("id");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 view.setVisibility(View.VISIBLE);
@@ -159,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             !item.getPurchasedDate().matches("-")){
                         item.setPurchasedDate(setDate(item.getPurchasedDate()));
                     }
+                    item.setAutoId(Integer.parseInt(s.getKey()));
                     loadData.insert(item);
                 }
                 editor.putBoolean("downloadStatus", false);

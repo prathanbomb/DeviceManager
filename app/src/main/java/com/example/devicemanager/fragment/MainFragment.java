@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
+import com.example.devicemanager.activity.CheckDeviceActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.manager.DataManager;
@@ -127,8 +128,10 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
+    public void onItemClick(View view, int position, String serial) {
+        Intent intent = new Intent(getActivity(), CheckDeviceActivity.class);
+        intent.putExtra("serial", serial);
+        startActivity(intent);
     }
 
     private void init(Bundle savedInstanceState) {
