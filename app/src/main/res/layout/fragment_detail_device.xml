@@ -109,26 +109,27 @@
                     android:layout_weight="1"
                     android:text="@string/confirm" />
             </LinearLayout>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="invisible" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Large.ThreeBounce"
+                android:layout_width="200dp"
+                android:layout_height="195dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:SpinKit_Color="@color/colorAccent" />
+
+
         </RelativeLayout>
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="invisible" />
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.ThreeBounce"
-            android:layout_width="200dp"
-            android:layout_height="195dp"
-            android:layout_gravity="center"
-            android:visibility="invisible"
-            app:SpinKit_Color="@color/colorAccent" />
     </FrameLayout>
-
 
 </ScrollView>

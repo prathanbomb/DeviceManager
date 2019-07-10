@@ -13,8 +13,14 @@ public interface ItemDao {
     @Query("SELECT * FROM ItemEntity")
     List<ItemEntity> getAll();
 
-    @Query("SELECT * FROM ItemEntity ORDER BY purchased_date")
+    @Query("SELECT * FROM ItemEntity ORDER BY purchased_date ASC, item_detail DESC")
     List<ItemEntity> getAllOrderByDate();
+
+    @Query("SELECT * FROM ItemEntity ORDER BY :column ASC")
+    List<ItemEntity> getItemAsc(String column);
+
+    @Query("SELECT * FROM ItemEntity ORDER BY :column DESC")
+    List<ItemEntity> getItemDesc(String column);
 
     @Query("SELECT * FROM ItemEntity WHERE item_id = :id")
     List<ItemEntity> getProduct(String id);
