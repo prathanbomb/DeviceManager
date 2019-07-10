@@ -53,6 +53,7 @@ public class ItemEntity {
     private String depreciationYear;
     private String branchCode;
     private String assetTypeCode;
+    private String lastCheckedDate;
     private String purchasedPrice;
 
     public ItemEntity(){
@@ -65,7 +66,7 @@ public class ItemEntity {
                       String order, String groupByFIXGL, String ad, String unnamed1, String sticker,
                       String forwardedBudget, String accumulatedDepreciation, String warrantyDate,
                       String depreciationYear, String branchCode, String assetTypeCode,
-                      String purchasedPrice) {
+                      String purchasedPrice/*, String lastCheckedDate*/) {
         this.autoId = autoId;
         this.unnamed2 = unnamed2;
         this.type = type;
@@ -95,6 +96,7 @@ public class ItemEntity {
         this.branchCode = branchCode;
         this.assetTypeCode = assetTypeCode;
         this.purchasedPrice = purchasedPrice;
+        //this.lastCheckedDate = lastCheckedDate;
     }
 
     public String getUnnamed2() {
@@ -326,6 +328,15 @@ public class ItemEntity {
 
     public void setPurchasedPrice(String purchasedPrice) {
         this.purchasedPrice = purchasedPrice;
+    }
+
+
+    public String getLastCheckedDate() {
+        return lastCheckedDate;
+    }
+
+    public void setLastCheckedDate(String lastCheckedDate) {
+        this.lastCheckedDate = lastCheckedDate;
     }
 
 }

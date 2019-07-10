@@ -67,7 +67,7 @@
             android:name=".activity.CameraActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CheckDeviceActivity"
+            android:name=".activity.DeviceDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.LoginActivity" />
         <meta-data

@@ -38,6 +38,25 @@
         <item name="android:color">@color/grey</item>
     </style>
 
+    <style name="TextViewListItem">
+        <item name="android:textSize">12sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="TextViewForDetailDevice">
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

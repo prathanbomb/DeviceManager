@@ -8,21 +8,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.fragment.CheckDeviceFragment;
+import com.example.devicemanager.fragment.DeviceDetailFragment;
 
-public class CheckDeviceActivity extends AppCompatActivity {
+public class DeviceDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_device);
+        setContentView(R.layout.activity_detail_device);
         String serial = getIntent().getStringExtra("serial");
 
         initInstances();
 
         if (savedInstanceState == null){
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contentContainer, CheckDeviceFragment.newInstances(serial))
+                    .add(R.id.contentContainer, DeviceDetailFragment.newInstances(serial))
                     .commit();
         }
     }

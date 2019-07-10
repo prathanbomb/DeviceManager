@@ -1,7 +1,7 @@
 package com.example.devicemanager.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,11 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +20,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
-import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.LoadData;
-import com.example.devicemanager.model.DataItem;
 import com.example.devicemanager.room.ItemEntity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,24 +32,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CheckDeviceFragment extends Fragment {
+public class DeviceDetailFragment extends Fragment {
 
     private TextView tvSerialNumber, tvOwnerName, tvDeviceDetail,
-            tvLastUpdate, tvAddedDate,tvType;
+            tvLastUpdate, tvAddedDate, tvType, tvItemId, tvBrand, tvModel;
     private static String serial;
-    private Button btnConfirm, btnEdit;
+    private Button btnCheck, btnEdit;
     private ProgressBar progressBar;
     private View progressDialogBackground;
     private String itemStatus;
     private LoadData loadData;
 
 
-    public static CheckDeviceFragment newInstances(String barcode) {
-        CheckDeviceFragment fragment = new CheckDeviceFragment();
+    public static DeviceDetailFragment newInstances(String barcode) {
+        DeviceDetailFragment fragment = new DeviceDetailFragment();
         serial = barcode;
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -71,6 +73,16 @@ public class CheckDeviceFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 11111) {
+            if (resultCode == RESULT_OK) {
+                getActivity().finish();
+            }
+        }
+    }
+
     private void initInstances(View view) {
 
         loadData = new LoadData(getContext());
@@ -81,46 +93,44 @@ public class CheckDeviceFragment extends Fragment {
         tvAddedDate = view.findViewById(R.id.tvAddedDate);
         tvLastUpdate = view.findViewById(R.id.tvLastUpdate);
         tvType = view.findViewById(R.id.tvType);
-
-        tvSerialNumber.setText(serial);
+        tvItemId = view.findViewById(R.id.tvItemId);
+        tvBrand = view.findViewById(R.id.tvBrand);
+        tvModel = view.findViewById(R.id.tvModel);
 
         btnEdit = view.findViewById(R.id.btnEdit);
-        btnConfirm = view.findViewById(R.id.btnConfirm);
+        btnCheck = view.findViewById(R.id.btnCheck);
+        btnEdit.setOnClickListener(clickListener);
+        btnCheck.setOnClickListener(clickListener);
 
         progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
-
-        btnEdit.setOnClickListener(clickListener);
-        btnConfirm.setOnClickListener(clickListener);
 
         getData(serial);
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void getData(String serialNew) {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+
         List<ItemEntity> itemEntity = loadData.selectData(serialNew);
+
         if(itemEntity.size() == 0){
             hideDialog();
             showAlertDialog(R.string.dialog_msg_confirm, "add");
             return;
         }
-        tvSerialNumber.setText(itemEntity.get(0).getUnnamed2());
+
+        tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
         tvOwnerName.setText(itemEntity.get(0).getPlaceName());
         tvDeviceDetail.setText(itemEntity.get(0).getDetail());
+        tvModel.setText(itemEntity.get(0).getModel());
+        tvBrand.setText(itemEntity.get(0).getBrand());
+
         tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
-        String productAddedDateSubString;
-        if (itemEntity.get(0).getPurchasedDate().length() >= 15) {
-            String date = itemEntity.get(0).getPurchasedDate().substring(8, 10);
-            String month = itemEntity.get(0).getPurchasedDate().substring(4, 7);
-            String year = itemEntity.get(0).getPurchasedDate().substring(11, 15);
-            productAddedDateSubString = date + " " + month + " " + year;
-        } else {
-            productAddedDateSubString = itemEntity.get(0).getPurchasedDate();
-        }
-        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + productAddedDateSubString);
-        tvType.setText("Type : "+itemEntity.get(0).getType());
+        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + setDate(itemEntity.get(0).getPurchasedDate()));
+        tvType.setText("Type : " + itemEntity.get(0).getType());
         hideDialog();
     }
 
@@ -131,7 +141,7 @@ public class CheckDeviceFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                 intent.putExtra("Serial", serial);
                 startActivityForResult(intent, 11111);
-            } else if (view == btnConfirm) {
+            } else if (view == btnCheck) {
                 showAlertDialog(R.string.dialog_msg_confirm, "confirm");
             }
         }
@@ -150,13 +160,13 @@ public class CheckDeviceFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (state.matches("confirm")) {
-                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                    checkedDevice();
                 } else if (state.matches("add")) {
                     Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                     intent.putExtra("Serial", serial);
                     startActivity(intent);
+                    getActivity().finish();
                 }
-                getActivity().finish();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -171,13 +181,48 @@ public class CheckDeviceFragment extends Fragment {
         dialog.show();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 11111) {
-            if (resultCode == RESULT_OK) {
-                getActivity().finish();
+    private void checkedDevice() {
+        final String idKey = loadData.selectData(serial).get(0).getAutoId() + "";
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("Data").child(idKey).child("lastCheckedDate");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        final Date date = new Date();
+        databaseReference.setValue(dateFormat.format(date))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    tvLastUpdate.setText("Last Check : " + dateFormat.format(date));
+                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                }
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("checkedDevice", e.toString());
+            }
+        });
+    }
+
+    private String setDate(String inputDate){
+        String inputFormat = "yyyy-MM-dd";
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat(
+                inputFormat, Locale.ENGLISH);
+        String outputFormat = "dd/MM/yyyy";
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+                outputFormat, Locale.ENGLISH);
+
+        Date date;
+        String str = inputDate;
+
+        try {
+            date = inputDateFormat.parse(inputDate);
+            str = outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        return str;
+
     }
 }
