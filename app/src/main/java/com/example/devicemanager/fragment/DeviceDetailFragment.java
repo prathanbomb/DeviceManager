@@ -123,15 +123,27 @@ public class DeviceDetailFragment extends Fragment {
         }
 
         tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
-        tvOwnerName.setText(itemEntity.get(0).getPlaceName());
-        tvDeviceDetail.setText(itemEntity.get(0).getDetail());
-        tvModel.setText(itemEntity.get(0).getModel());
-        tvBrand.setText(itemEntity.get(0).getBrand());
+        tvOwnerName.setText(checkNoneData(itemEntity.get(0).getPlaceName(), "No Owner"));
+        tvDeviceDetail.setText(checkNoneData(itemEntity.get(0).getDetail(), "N/A"));
+        tvBrand.setText(checkNoneData(itemEntity.get(0).getBrand(), "N/A"));
+        tvType.setText(itemEntity.get(0).getType());
+        tvModel.setText("Model : " + checkNoneData(itemEntity.get(0).getModel(), "N/A"));
+        tvSerialNumber.setText("S/N : " + checkNoneData(itemEntity.get(0).getSerialNo(), "No Serial"));
 
         tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
         tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + setDate(itemEntity.get(0).getPurchasedDate()));
-        tvType.setText("Type : " + itemEntity.get(0).getType());
         hideDialog();
+    }
+
+    private String checkNoneData(String data, String text) {
+
+        if (data.trim().matches("-")){
+            return text;
+        }
+        else {
+            return data;
+        }
+
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -142,7 +154,7 @@ public class DeviceDetailFragment extends Fragment {
                 intent.putExtra("Serial", serial);
                 startActivityForResult(intent, 11111);
             } else if (view == btnCheck) {
-                showAlertDialog(R.string.dialog_msg_confirm, "confirm");
+                showAlertDialog(R.string.dialog_msg_checked, "check");
             }
         }
     };
@@ -159,7 +171,7 @@ public class DeviceDetailFragment extends Fragment {
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (state.matches("confirm")) {
+                if (state.matches("check")) {
                     checkedDevice();
                 } else if (state.matches("add")) {
                     Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
