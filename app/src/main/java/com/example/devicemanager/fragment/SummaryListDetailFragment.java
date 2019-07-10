@@ -95,7 +95,7 @@ public class SummaryListDetailFragment extends Fragment {
         spFilter.setAdapter(spinnerFilterAdapter);
         spSortBy.setAdapter(spinnerSortByAdapter);
 
-//        spFilter.setOnItemSelectedListener(onSpinnerSelect);
+        spFilter.setOnItemSelectedListener(onSpinnerSelect);
 //        spSortBy.setOnItemSelectedListener(onSpinnerSelect);
 
 //        setSpinnerDefault(spinnerFilterAdapter, spFilter);

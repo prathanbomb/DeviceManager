@@ -20,6 +20,15 @@ public class RecyclerListDetailAdapter extends RecyclerView.Adapter<RecyclerList
     Context context;
     ArrayList<String> brand,detail,owner,addedDate,status,key = new ArrayList<String>();
 
+    public void clearArrayList(){
+        brand.clear();
+        detail.clear();
+        owner.clear();
+        addedDate.clear();
+        status.clear();
+        key.clear();
+    }
+
     public void setBrand(ArrayList<String> brand) {
         this.brand = brand;
     }
