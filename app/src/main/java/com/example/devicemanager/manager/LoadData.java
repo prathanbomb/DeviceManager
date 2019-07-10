@@ -69,6 +69,18 @@ public class LoadData {
         return itemEntities;
     }
 
+    public List<ItemEntity> selectProductByType(String type, String order) {
+        List<ItemEntity> itemEntities = new ArrayList<>();
+        try {
+            itemEntities = new getAllProductByType(itemDao, type, order).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return itemEntities;
+    }
+
     private static class InsertAsyncTask extends AsyncTask<ItemEntity, Void, Integer> {
 
         private ItemDao itemDao;
@@ -138,6 +150,33 @@ public class LoadData {
         @Override
         protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
             return itemDao.getProduct(id);
+        }
+    }
+
+    private static class getAllProductByType extends AsyncTask<ItemEntity, Void, List<ItemEntity>> {
+        private ItemDao itemDao;
+        private String type;
+        private String order;
+
+        getAllProductByType(ItemDao itemDao, String type, String order) {
+            this.itemDao = itemDao;
+            this.type = type;
+            this.order = order;
+        }
+
+        @Override
+        protected List<ItemEntity> doInBackground(ItemEntity... itemEntities) {
+            if (order.matches("DateAsc")) {
+                return itemDao.getAllProductByTypeOrderDateAsc(type);
+            } else if (order.matches("DateDesc")) {
+                return itemDao.getAllProductByTypeOrderDateDesc(type);
+            } else if (order.matches("BrandAsc")) {
+                return itemDao.getAllProductByTypeOrderBrandAsc(type);
+            } else if (order.matches("BrandDesc")) {
+                return itemDao.getAllProductByTypeOrderBrandDesc(type);
+            } else {
+                return null;
+            }
         }
     }
 }

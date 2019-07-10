@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerListDetailAdapter;
 import com.example.devicemanager.manager.Contextor;
+import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.model.DataItem;
+import com.example.devicemanager.room.ItemEntity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,12 +31,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @SuppressWarnings("unused")
 public class SummaryListDetailFragment extends Fragment {
     private RecyclerView recyclerView;
-    private RecyclerListDetailAdapter recyclerListDetailAdapter;
+    private RecyclerListDetailAdapter recyclerListDetailAdapter, newRecyclerListDetailAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private String type;
     private ArrayList<String> brand = new ArrayList<String>();
@@ -46,6 +49,7 @@ public class SummaryListDetailFragment extends Fragment {
     private ProgressBar progressBar;
     private View progressDialogBackground;
     private Spinner spFilter, spSortBy;
+    private LoadData loadData;
 
 
     @SuppressWarnings("unused")
@@ -77,6 +81,7 @@ public class SummaryListDetailFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+        loadData = new LoadData(getContext());
         spFilter = rootView.findViewById(R.id.spinnerFilter);
         spSortBy = rootView.findViewById(R.id.spinnerSortBy);
 
@@ -96,27 +101,22 @@ public class SummaryListDetailFragment extends Fragment {
         spSortBy.setAdapter(spinnerSortByAdapter);
 
         spFilter.setOnItemSelectedListener(onSpinnerSelect);
-//        spSortBy.setOnItemSelectedListener(onSpinnerSelect);
-
-//        setSpinnerDefault(spinnerFilterAdapter, spFilter);
-//        setSpinnerDefault(spinnerSortByAdapter, spSortBy);
+        spSortBy.setOnItemSelectedListener(onSpinnerSelect);
 
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
-        recyclerListDetailAdapter.setBrand(brand);
-        recyclerListDetailAdapter.setDetail(detail);
-        recyclerListDetailAdapter.setOwner(owner);
-        recyclerListDetailAdapter.setAddedDate(addedDate);
-        recyclerListDetailAdapter.setStatus(status);
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) rootView.findViewById(R.id.view);
 
-        DownloadData();
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerListDetailAdapter);
+
+        DownloadData("DateAsc");
+
     }
 
     @Override
@@ -143,76 +143,58 @@ public class SummaryListDetailFragment extends Fragment {
         if (spinner == spFilter) {
             int spinnerPosition = spinnerFilterAdapter.getPosition("All");
             spinner.setSelection(spinnerPosition);
-        }
-        else if (spinner == spSortBy) {
+        } else if (spinner == spSortBy) {
             int spinnerPosition = spinnerFilterAdapter.getPosition("Purchased Date");
             spinner.setSelection(spinnerPosition);
         }
     }
 
-    private void DownloadData() {
-        progressDialogBackground.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+    private void DownloadData(String order) {
+        brand.clear();
+        detail.clear();
+        owner.clear();
+        addedDate.clear();
+        brand.clear();
+        key.clear();
+        status.clear();
+
+        recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
+
         type = getArguments().getString("Type").trim();
-        Query databaseReference = FirebaseDatabase.getInstance().getReference().child("Data")
-                .orderByChild("type").equalTo(type);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                brand = new ArrayList<String>();
-                detail = new ArrayList<String>();
-                owner = new ArrayList<String>();
-                addedDate = new ArrayList<String>();
-                status = new ArrayList<String>();
-                key = new ArrayList<String>();
-
-                for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    DataItem dataItem = s.getValue(DataItem.class);
-                    if (dataItem != null) {
-                        String productType = dataItem.getType().trim();
-                        String productBrand = dataItem.getBrand().trim();
-                        String productDetail = dataItem.getDetail().trim();
-                        String productAddedDate = dataItem.getPurchasedDate().trim();
-                        String date = productAddedDate.substring(8, 10);
-                        String month = productAddedDate.substring(4, 7);
-                        String year = productAddedDate.substring(11, 15);
-                        String productAddedDateSubString = date+" "+month+" "+year;
-
-                        String productOwner = dataItem.getPlaceName().trim();
-                        String productStatus;
-                        if (productOwner.matches("-")) {
-                            productStatus = "Available";
-                        } else {
-                            productStatus = "Active";
-                        }
-                        String productKey = dataItem.getUnnamed2().trim();
-
-                        brand.add(productBrand);
-                        detail.add(productDetail);
-                        owner.add(productOwner);
-                        addedDate.add(productAddedDateSubString);
-                        status.add(productStatus);
-                        key.add(productKey);
-                    }
+        List<ItemEntity> itemEntities = loadData.selectProductByType(type,order);
+        if (itemEntities != null) {
+            for (int i = 0; i < itemEntities.size(); i++) {
+                String productType = itemEntities.get(i).getType().trim();
+                String productBrand = itemEntities.get(i).getBrand().trim();
+                String productDetail = itemEntities.get(i).getDetail().trim();
+                String productAddedDate = itemEntities.get(i).getPurchasedDate().trim();
+                String productOwner = itemEntities.get(i).getPlaceName().trim();
+                String productStatus;
+                if (productOwner.matches("-")) {
+                    productStatus = "Available";
+                } else {
+                    productStatus = "Active";
                 }
-                recyclerListDetailAdapter.setBrand(brand);
-                recyclerListDetailAdapter.setDetail(detail);
-                recyclerListDetailAdapter.setOwner(owner);
-                recyclerListDetailAdapter.setAddedDate(addedDate);
-                recyclerListDetailAdapter.setStatus(status);
-                recyclerListDetailAdapter.setKey(key);
-                recyclerListDetailAdapter.notifyDataSetChanged();
-                progressDialogBackground.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
+                String productKey = itemEntities.get(i).getUnnamed2().trim();
+                Log.d("date",""+productAddedDate);
+                brand.add(productBrand);
+                detail.add(productDetail);
+                owner.add(productOwner);
+                addedDate.add(productAddedDate);
+                status.add(productStatus);
+                key.add(productKey);
             }
+        }
+        recyclerListDetailAdapter.setBrand(brand);
+        recyclerListDetailAdapter.setDetail(detail);
+        recyclerListDetailAdapter.setOwner(owner);
+        recyclerListDetailAdapter.setAddedDate(addedDate);
+        recyclerListDetailAdapter.setStatus(status);
+        recyclerListDetailAdapter.setKey(key);
+        recyclerListDetailAdapter.notifyDataSetChanged();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("inLoop", databaseError.toString());
-                progressDialogBackground.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
+        progressDialogBackground.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private AdapterView.OnItemSelectedListener onSpinnerSelect = new AdapterView.OnItemSelectedListener() {
@@ -222,13 +204,7 @@ public class SummaryListDetailFragment extends Fragment {
                 String filter = adapterView.getItemAtPosition(i).toString();
                 switch (filter) {
                     case "All":
-                        recyclerListDetailAdapter.setBrand(brand);
-                        recyclerListDetailAdapter.setDetail(detail);
-                        recyclerListDetailAdapter.setOwner(owner);
-                        recyclerListDetailAdapter.setAddedDate(addedDate);
-                        recyclerListDetailAdapter.setStatus(status);
-                        recyclerListDetailAdapter.setKey(key);
-                        recyclerListDetailAdapter.notifyDataSetChanged();
+                        recyclerView.setAdapter(recyclerListDetailAdapter);
                         break;
                     case "Available":
                         spinnerSetRecyclerview(filter);
@@ -241,24 +217,42 @@ public class SummaryListDetailFragment extends Fragment {
             if (adapterView == spSortBy) {
                 String sortBy = adapterView.getItemAtPosition(i).toString();
                 switch (sortBy) {
-                    case "All":
-                        Toast.makeText(getContext(), "All", Toast.LENGTH_SHORT).show();
+                    case "Purchased Date▲":
+                        DownloadData("DateAsc");
+                        checkSpType();
                         break;
-                    case "Name":
-                        Toast.makeText(getContext(), "Name", Toast.LENGTH_SHORT).show();
+                    case "Purchased Date▼":
+                        DownloadData("DateDesc");
+                        checkSpType();
                         break;
-                    case "Purchased Date":
-                        Toast.makeText(getContext(), "Purchased Date", Toast.LENGTH_SHORT).show();
+                    case "Brand▲":
+                        DownloadData("BrandAsc");
+                        checkSpType();
+                        break;
+                    case "Brand▼":
+                        DownloadData("BrandDesc");
+                        checkSpType();
                         break;
                 }
             }
         }
+
 
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {
 
         }
     };
+
+    private void checkSpType() {
+        String filter = spFilter.getSelectedItem().toString();
+        if (!filter.matches("All")) {
+            spinnerSetRecyclerview(filter);
+        } else {
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(recyclerListDetailAdapter);
+        }
+    }
 
     private void spinnerSetRecyclerview(String spinnerStatus) {
 
@@ -268,7 +262,7 @@ public class SummaryListDetailFragment extends Fragment {
         ArrayList<String> filterOwner = new ArrayList<String>();
         ArrayList<String> filterAddedDate = new ArrayList<String>();
         ArrayList<String> filterKey = new ArrayList<String>();
-
+        Log.d("status", "" + status.size());
         for (int position = 0; position < status.size(); position++) {
             if (status.get(position).matches(spinnerStatus)) {
                 filterStatus.add(status.get(position));
@@ -279,15 +273,14 @@ public class SummaryListDetailFragment extends Fragment {
                 filterKey.add(key.get(position));
             }
         }
-
-        recyclerListDetailAdapter.setBrand(filterBrand);
-        recyclerListDetailAdapter.setDetail(filterDetail);
-        recyclerListDetailAdapter.setOwner(filterOwner);
-        recyclerListDetailAdapter.setAddedDate(filterAddedDate);
-        recyclerListDetailAdapter.setStatus(filterStatus);
-        recyclerListDetailAdapter.setKey(filterKey);
-        recyclerListDetailAdapter.notifyDataSetChanged();
+        newRecyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
+        newRecyclerListDetailAdapter.setBrand(filterBrand);
+        newRecyclerListDetailAdapter.setDetail(filterDetail);
+        newRecyclerListDetailAdapter.setOwner(filterOwner);
+        newRecyclerListDetailAdapter.setAddedDate(filterAddedDate);
+        newRecyclerListDetailAdapter.setStatus(filterStatus);
+        newRecyclerListDetailAdapter.setKey(filterKey);
+        newRecyclerListDetailAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(newRecyclerListDetailAdapter);
     }
-
-
 }

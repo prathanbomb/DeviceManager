@@ -20,13 +20,13 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/filter"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_14_sp" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerFilter"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1">
+                android:layout_height="50dp"
+                android:layout_weight="2">
 
             </androidx.appcompat.widget.AppCompatSpinner>
 
@@ -35,13 +35,13 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/sort_by"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_14_sp" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinnerSortBy"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1">
+                android:layout_height="50dp"
+                android:layout_weight="3">
 
             </androidx.appcompat.widget.AppCompatSpinner>
         </LinearLayout>
