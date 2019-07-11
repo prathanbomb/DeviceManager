@@ -161,7 +161,8 @@
     <string name="device_details">Device Details</string>
     <string name="serial_number">Serial Number</string>
     <string name="owner_name">Owner Name</string>
-    <string name="purchasedate">PurchaseDate</string>
+    <string name="purchase_date">PurchaseDate</string>
+    <string name="purchase_price">PurchasePrice</string>
     <string name="choose_item_type">Choose item type</string>
     <string name="id">ID</string>
     <string name="name">Name</string>

@@ -13,6 +13,7 @@ public class DataItem {
     private String detail;
     private String price;
     private String purchasedDate;
+    private String purchasedPrice;
     private String note;
     private String type;
     private String unnamed2;
@@ -22,7 +23,7 @@ public class DataItem {
 
     public DataItem(String id, String placeId, String placeName, String brand,
                     String serialNo, String model, String detail,
-                    String price, String purchasedDate, String note, String type,
+                    String price, String purchasedPrice, String purchasedDate, String note, String type,
                     String unnamed2) {
         this.id = id;
         this.placeId = placeId;
@@ -32,10 +33,18 @@ public class DataItem {
         this.model = model;
         this.detail = detail;
         this.price = price;
+        this.purchasedPrice = purchasedPrice;
         this.purchasedDate = purchasedDate;
         this.note = note;
         this.type = type;
         this.unnamed2 = unnamed2;
+    }
+    public String getPurchasedPrice() {
+        return purchasedPrice;
+    }
+
+    public void setPurchasedPrice(String purchasedPrice) {
+        this.purchasedPrice = purchasedPrice;
     }
 
     public String getId() {

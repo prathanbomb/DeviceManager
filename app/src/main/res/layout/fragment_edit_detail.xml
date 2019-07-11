@@ -49,35 +49,14 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:textSize="20sp" />
-            <LinearLayout
+
+            <Spinner
+                android:id="@+id/spinnerDeviceTypeList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Spinner
-                    android:id="@+id/spinnerDeviceTypeList"
-                    android:layout_weight="6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textSize="20sp" />
-                <TextView
-                    android:id="@+id/tvQuantity"
-                    android:gravity="center"
-                    android:text="@string/quantity"
-                    android:layout_weight="2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" />
-                <EditText
-                    android:id="@+id/etQuantity"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:text="@string/number_1"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="20sp" />
 
 
             <TextView
@@ -182,10 +161,60 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@string/purchase_price" />
+
+                    <EditText
+                        android:id="@+id/etDevicePurchasePrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:freezesText="true"
+                        android:hint="10000.00"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/purchase_date" />
+
+                    <EditText
+                        android:id="@+id/etPurchaseDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:freezesText="true"
+                        android:hint="28/06/2019"
+                        android:inputType="date" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="@string/price" />
 
                     <EditText
-                        android:id="@+id/etDevicePrice"
+                        android:id="@+id/etPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:freezesText="true"
@@ -200,18 +229,21 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:gravity="left"
+                        android:id="@+id/tvQuantity"
+                        android:text="@string/quantity"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/purchasedate" />
-
+                        android:layout_height="match_parent" />
                     <EditText
-                        android:id="@+id/etPurchaseDate"
+                        android:id="@+id/etQuantity"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:text="@string/number_1"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:freezesText="true"
-                        android:hint="28/06/2019"
-                        android:inputType="date" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
 

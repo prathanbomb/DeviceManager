@@ -58,13 +58,13 @@ public class AddDeviceFragment extends Fragment {
 
     private Spinner spType, spTypeList, spBranch;
     private EditText etOwnerName, etSerialNumber, etDeviceDetail, etDatePicker,
-            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote, etQuantity;
+            etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote, etQuantity, etPurchasePrice;
     private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
-    private String selected, lastKey, serial, serialState, abbreviation, type, unnamed2;
+    private String selected, lastKey, itemId, serial, serialState, abbreviation, type, unnamed2;
     //TODO:this is mock order
-    private int path, category, branch, order;
+    private int path, category, branch, order, countDevice = 1, quntity = 1;
     private ProgressBar progressBar;
     private View progressDialogBackground;
     private DatabaseReference databaseReference;
@@ -101,7 +101,6 @@ public class AddDeviceFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 serial = data.getStringExtra("serial");
                 checkSerial();
-                Log.d("serial537", serial);
                 etSerialNumber.setText(serial);
             }
         }
@@ -109,6 +108,7 @@ public class AddDeviceFragment extends Fragment {
 
     private void initInstances(View view, Bundle savedInstanceState) {
         loadData = new LoadData(getContext());
+
         spBranch = view.findViewById(R.id.spinnerBranch);
         spType = view.findViewById(R.id.spinnerDeviceType);
         spTypeList = view.findViewById(R.id.spinnerDeviceTypeList);
@@ -127,9 +127,9 @@ public class AddDeviceFragment extends Fragment {
         etOwnerId = view.findViewById(R.id.etOwnerId);
         etBrand = view.findViewById(R.id.etDeviceBrand);
         etDeviceModel = view.findViewById(R.id.etDeviceModel);
-        etDevicePrice = view.findViewById(R.id.etDevicePrice);
+        etDevicePrice = view.findViewById(R.id.etPrice);
         etNote = view.findViewById(R.id.etNote);
-        etDevicePrice = view.findViewById(R.id.etDevicePrice);
+        etPurchasePrice = view.findViewById(R.id.etDevicePurchasePrice);
         etQuantity = view.findViewById(R.id.etQuantity);
         tvQuantity = view.findViewById(R.id.tvQuantity);
 
@@ -147,24 +147,22 @@ public class AddDeviceFragment extends Fragment {
 
         etSerialNumber.setOnTouchListener(onTouchScan);
 
-        serial = getArguments().getString("Serial");
-        if (serial != null) {
+        itemId = getArguments().getString("Serial");
+        if (itemId != null) {
             tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
             etQuantity.setVisibility(View.INVISIBLE);
+            lastKey = "" + loadData.selectData(itemId).get(0).getAutoId();
             setData();
-        } else {
-            getLastKey();
         }
-
     }
 
     private void setData() {
-        tvItemId.setText(serial);
-        setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(serial.substring(5, 6)), null);
-        setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(serial.substring(6, 7)), null);
+        tvItemId.setText(itemId);
+        setSpinnerPosition(R.array.branch, spBranch, Integer.parseInt(itemId.substring(5, 6)), null);
+        setSpinnerPosition(R.array.device_types, spType, Integer.parseInt(itemId.substring(6, 7)), null);
         String spinnerName;
-        spinnerName = serial.substring(8, 11);
-        switch (Integer.parseInt(serial.substring(6, 7))) {
+        spinnerName = itemId.substring(8, 11);
+        switch (Integer.parseInt(itemId.substring(6, 7))) {
             case 1:
                 setSpinnerPosition(R.array.building, spTypeList, -1, spinnerName);
                 break;
@@ -178,7 +176,7 @@ public class AddDeviceFragment extends Fragment {
                 setSpinnerPosition(R.array.other, spTypeList, -1, spinnerName);
                 break;
         }
-        List<ItemEntity> itemEntity = loadData.selectData(serial);
+        List<ItemEntity> itemEntity = loadData.selectData(itemId);
         if (itemEntity.size() == 0) {
             return;
         }
@@ -189,6 +187,7 @@ public class AddDeviceFragment extends Fragment {
         etDeviceDetail.setText(itemEntity.get(0).getDetail());
         etDeviceModel.setText(itemEntity.get(0).getModel());
         etDevicePrice.setText(itemEntity.get(0).getPrice());
+        etPurchasePrice.setText(itemEntity.get(0).getPurchasedPrice());
         etDatePicker.setText(itemEntity.get(0).getPurchasedDate().substring(0, 10));
         etNote.setText(itemEntity.get(0).getNote());
     }
@@ -253,24 +252,32 @@ public class AddDeviceFragment extends Fragment {
                             if (itemEntity.get(i).getUnnamed2().toString().contains(form))
                                 order++;
                         }
-                        int count = Integer.parseInt(etQuantity.getText().toString());
-
+                        int count = 0;
+                        try {
+                            count = Integer.parseInt(etQuantity.getText().toString());
+                            quntity = count;
+                        } catch (NumberFormatException num) {
+                            Toast.makeText(getContext(), "" + num, Toast.LENGTH_SHORT).show();
+                        }
+                        getLastKey();
                         for (int i = 0; i < count; i++) {
                             saveData();
-                            if (count >= 2) {
-                                int key = Integer.parseInt(lastKey) + 1;
-                                lastKey = key + "";
-                                order++;
-                            }
+                            int key = Integer.parseInt(lastKey) + 1;
+                            lastKey = key + "";
+                            order++;
                         }
+
                     } else {
+                        loadData();
+                        progressDialogBackground.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.VISIBLE);
+
                         unnamed2 = tvItemId.getText().toString();
-                        lastKey = "" + loadData.selectData(serial).get(0).getAutoId();
-                        Log.d("lastKey", "" + lastKey);
                         databaseReference.child(lastKey).child("placeName").setValue(etOwnerName.getText().toString());
                         databaseReference.child(lastKey).child("detail").setValue(etDeviceDetail.getText().toString());
                         databaseReference.child(lastKey).child("serialNo").setValue(etSerialNumber.getText().toString());
                         databaseReference.child(lastKey).child("placeId").setValue(etOwnerId.getText().toString());
+                        databaseReference.child(lastKey).child("purchasedPrice").setValue(etPurchasePrice.getText().toString());
                         databaseReference.child(lastKey).child("price").setValue(etDevicePrice.getText().toString());
                         databaseReference.child(lastKey).child("unnamed2").setValue(tvItemId.getText().toString());
                         databaseReference.child(lastKey).child("note").setValue(etNote.getText().toString());
@@ -304,12 +311,14 @@ public class AddDeviceFragment extends Fragment {
                     getActivity().finish();*/
                 }
             }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }).
+
+                setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -317,27 +326,29 @@ public class AddDeviceFragment extends Fragment {
     private void saveData() {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        loadData();
-        getLastKey();
         // TODO: Add more item data
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
-                etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etDatePicker.getText().toString(),
-                etNote.getText().toString(), type, getUnnamed2());
+                etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etPurchasePrice.getText().toString(),
+                etDatePicker.getText().toString(), etNote.getText().toString(), type, getUnnamed2());
 
         if (lastKey != null) {
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
+                        if (countDevice == quntity) {
+                            loadData();
+                            Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
-                        // TODO: Add Success SuccessDialog
-                        progressDialogBackground.setVisibility(View.INVISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Intent intentBack = new Intent();
-                        getActivity().setResult(RESULT_OK, intentBack);
-                        getActivity().finish();
+                            // TODO: Add Success SuccessDialog
+                            progressDialogBackground.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Intent intentBack = new Intent();
+                            getActivity().setResult(RESULT_OK, intentBack);
+                            getActivity().finish();
+                        }
+                        countDevice++;
                     } else {
                         Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
                         progressDialogBackground.setVisibility(View.INVISIBLE);
@@ -349,10 +360,14 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void loadData() {
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressDialogBackground.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 loadData.deleteTable();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
@@ -363,9 +378,10 @@ public class AddDeviceFragment extends Fragment {
                     }
                     item.setAutoId(Integer.parseInt(s.getKey()));
                     loadData.insert(item);
+
                 }
-                editor.putBoolean("downloadStatus", false);
-                editor.commit();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -429,26 +445,33 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void getLastKey() {
-        lastKey = String.valueOf(loadData.getItem().size());
-        progressDialogBackground.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    private void checkSerial() {
-        Query query = databaseReference.orderByChild("serialNo").equalTo(serial);
-        query.addValueEventListener(new ValueEventListener() {
+        Query query = databaseReference.orderByKey().limitToLast(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    showAlertDialog("serial");
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    lastKey = s.getKey();
+                    path = Integer.parseInt(lastKey) + 1;
+                    lastKey = String.valueOf(path);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
+                progressDialogBackground.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    private void checkSerial() {
+        List<ItemEntity> itemEntities = loadData.getItem();
+        for (int i = 0; i < itemEntities.size(); i++) {
+            if (itemEntities.get(i).getSerialNo().matches(serial)) {
+                showAlertDialog("serial");
+            }
+        }
     }
 
     private static void hideKeyboardFrom(Context context, View view) {
@@ -481,12 +504,23 @@ public class AddDeviceFragment extends Fragment {
         if (TextUtils.isEmpty(etDeviceModel.getText())) {
             etDeviceModel.setText("-");
         }
-        if (TextUtils.isEmpty(etDevicePrice.getText())) {
-            Toast.makeText(getContext(), "Please input price per piece", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(etDevicePrice.getText()) && TextUtils.isEmpty(etPurchasePrice.getText())) {
+            Toast.makeText(getContext(), "Please input price", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (TextUtils.isEmpty(etDatePicker.getText())) {
+        }
+        if (TextUtils.isEmpty(etDevicePrice.getText())) {
+            etDevicePrice.setText("-");
+        }
+        if (TextUtils.isEmpty(etPurchasePrice.getText())) {
+            etPurchasePrice.setText("-");
+        }
+        if (TextUtils.isEmpty(etDatePicker.getText())) {
             Toast.makeText(getContext(), "Please input purchased date", Toast.LENGTH_SHORT).show();
             return false;
+        }
+        if (TextUtils.isEmpty(etQuantity.getText())) {
+            etDeviceModel.setText("1");
+            Toast.makeText(getContext(), "1 piece", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -495,9 +529,6 @@ public class AddDeviceFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if (view == btnConfirm) {
-                if (lastKey == null) {
-                    getLastKey();
-                }
                 hideKeyboardFrom(Contextor.getInstance().getContext(), view);
                 showAlertDialog("save");
             }
@@ -544,7 +575,7 @@ public class AddDeviceFragment extends Fragment {
     private AdapterView.OnItemSelectedListener onSpinnerSelect = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            if (adapterView == spType && serial == null) {
+            if (adapterView == spType && itemId == null) {
                 selected = adapterView.getItemAtPosition(i).toString();
                 switch (i) {
                     case 0:
