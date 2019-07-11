@@ -8,17 +8,23 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
+import com.example.devicemanager.adapter.SummaryAdapter;
 import com.example.devicemanager.view.SlidingTabLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class SummaryFragment extends Fragment {
-    ViewPager viewPager;
-    TabLayout tabLayout;
+    private FloatingActionButton fabContainer, fabAll, fabLaptop, fabDevice, fabFurniture, fabOther;
+    private boolean isFABOpen = false;
+    private RecyclerView rvSummary;
+    private SummaryAdapter summaryAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();
@@ -42,44 +48,57 @@ public class SummaryFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-        FragmentStatePagerAdapter viewPagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                switch (position) {
-                    case 0:
-                        return SummaryDeviceFragment.newInstance();
-                    case 1:
-                        return SummaryFunitureFragment.newInstance();
-                    case 2:
-                        return SummaryOtherFragment.newInstance();
-                    default:
-                        return null;
-                }
-            }
+        fabContainer = rootView.findViewById(R.id.fabSearch);
+        fabAll = rootView.findViewById(R.id.fabAll);
+        fabLaptop = rootView.findViewById(R.id.fabLaptop);
+        fabDevice = rootView.findViewById(R.id.fabDevice);
+        fabFurniture = rootView.findViewById(R.id.fabFurniture);
+        fabOther = rootView.findViewById(R.id.fabOther);
 
-            @Override
-            public int getCount() {
-                return 3;
-            }
+        fabContainer.setOnClickListener(onClickFABSearch);
 
-            @Nullable
-            @Override
-            public CharSequence getPageTitle(int position) {
-                switch (position) {
-                    case 0:
-                        return "Device";
-                    case 1:
-                        return "Furniture";
-                    case 2:
-                        return "Other";
-                    default:
-                        return "";
-                }
-            }
-        };
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout = rootView.findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
+        summaryAdapter = new SummaryAdapter(getContext());
+        rvSummary = rootView.findViewById(R.id.rvSummary);
     }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+        fabAll.animate().translationY(0);
+        fabLaptop.animate().translationY(0);
+        fabDevice.animate().translationY(0);
+        fabFurniture.animate().translationY(0);
+        fabOther.animate().translationY(0);
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+        fabAll.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_1));
+        fabLaptop.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_2));
+        fabDevice.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_3));
+        fabFurniture.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_4));
+        fabOther.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_5));
+    }
+
+    private View.OnClickListener onClickFABSearch = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view == fabContainer) {
+                if (!isFABOpen) {
+                    showFABMenu();
+                } else {
+                    closeFABMenu();
+                }
+            } else if (view == fabAll) {
+
+            } else if (view == fabLaptop) {
+
+            } else if (view == fabDevice) {
+
+            } else if (view == fabFurniture) {
+
+            } else if (view == fabOther) {
+
+            }
+        }
+    };
 }
