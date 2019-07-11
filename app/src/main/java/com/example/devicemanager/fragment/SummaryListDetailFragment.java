@@ -39,7 +39,7 @@ public class SummaryListDetailFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerListDetailAdapter recyclerListDetailAdapter, newRecyclerListDetailAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private String type;
+    private String type, brandType;
     private ArrayList<String> brand = new ArrayList<String>();
     private ArrayList<String> detail = new ArrayList<String>();
     private ArrayList<String> owner = new ArrayList<String>();
@@ -81,6 +81,9 @@ public class SummaryListDetailFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+        type = getArguments().getString("Type").trim();
+        brandType = getArguments().getString("Brand").trim().toLowerCase();
+
         loadData = new LoadData(getContext());
         spFilter = rootView.findViewById(R.id.spinnerFilter);
         spSortBy = rootView.findViewById(R.id.spinnerSortBy);
@@ -114,8 +117,6 @@ public class SummaryListDetailFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvListDetail);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerListDetailAdapter);
-
-        DownloadData("DateAsc");
 
     }
 
@@ -160,29 +161,30 @@ public class SummaryListDetailFragment extends Fragment {
 
         recyclerListDetailAdapter = new RecyclerListDetailAdapter(getContext());
 
-        type = getArguments().getString("Type").trim();
-        List<ItemEntity> itemEntities = loadData.selectProductByType(type,order);
+        List<ItemEntity> itemEntities = loadData.selectProductByType(type, order);
         if (itemEntities != null) {
             for (int i = 0; i < itemEntities.size(); i++) {
-                String productType = itemEntities.get(i).getType().trim();
-                String productBrand = itemEntities.get(i).getBrand().trim();
-                String productDetail = itemEntities.get(i).getDetail().trim();
-                String productAddedDate = itemEntities.get(i).getPurchasedDate().trim();
-                String productOwner = itemEntities.get(i).getPlaceName().trim();
-                String productStatus;
-                if (productOwner.matches("-")) {
-                    productStatus = "Available";
-                } else {
-                    productStatus = "Active";
+                if (brandType.matches("-")||brandType.matches(itemEntities.get(i).getBrand().trim().toLowerCase())) {
+                    String productType = itemEntities.get(i).getType().trim();
+                    String productBrand = itemEntities.get(i).getBrand().trim();
+                    String productDetail = itemEntities.get(i).getDetail().trim();
+                    String productAddedDate = itemEntities.get(i).getPurchasedDate().trim();
+                    String productOwner = itemEntities.get(i).getPlaceName().trim();
+                    String productStatus;
+                    if (productOwner.matches("-")) {
+                        productStatus = "Available";
+                    } else {
+                        productStatus = "Active";
+                    }
+                    String productKey = itemEntities.get(i).getUnnamed2().trim();
+                    Log.d("date", "" + productAddedDate);
+                    brand.add(productBrand);
+                    detail.add(productDetail);
+                    owner.add(productOwner);
+                    addedDate.add(productAddedDate);
+                    status.add(productStatus);
+                    key.add(productKey);
                 }
-                String productKey = itemEntities.get(i).getUnnamed2().trim();
-                Log.d("date",""+productAddedDate);
-                brand.add(productBrand);
-                detail.add(productDetail);
-                owner.add(productOwner);
-                addedDate.add(productAddedDate);
-                status.add(productStatus);
-                key.add(productKey);
             }
         }
         recyclerListDetailAdapter.setBrand(brand);

@@ -14,16 +14,30 @@
         android:paddingEnd="15dp"
         android:paddingRight="15dp">
 
-        <TextView
-            android:id="@+id/tvBrand"
-            style="@style/TextViewSmall"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:text="@string/brand"
-            android:textSize="@dimen/text_16_sp" />
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvBrand"
+                style="@style/TextViewSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tvType"
+                style="@style/TextViewSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center" />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,29 +45,75 @@
             android:layout_weight="5"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvTotal"
+            <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="@dimen/text_14_sp" />
+                android:layout_weight="6" />
 
-            <TextView
-                android:id="@+id/tvAvailable"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="@dimen/text_14_sp" />
+                android:orientation="vertical">
+                <TextView
+                    android:text="@string/available"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_14_sp" />
+                <TextView
+                    android:id="@+id/tvAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_14_sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvActive"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="@dimen/text_14_sp" />
+                android:orientation="vertical">
+                <TextView
+                    android:text="@string/active"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_14_sp" />
+
+                <TextView
+                    android:id="@+id/tvActive"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_14_sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:text="@string/total"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_14_sp" />
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_14_sp" />
+            </LinearLayout>
 
         </LinearLayout>
 

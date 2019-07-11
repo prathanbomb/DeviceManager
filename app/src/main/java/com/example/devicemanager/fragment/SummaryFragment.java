@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -18,18 +19,25 @@ import com.example.devicemanager.R;
 import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
 import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import com.example.devicemanager.adapter.SummaryAdapter;
+import com.example.devicemanager.manager.LoadData;
+import com.example.devicemanager.room.ItemEntity;
 import com.example.devicemanager.view.SlidingTabLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.List;
 
 public class SummaryFragment extends Fragment {
     private FloatingActionButton fabContainer, fabAll, fabLaptop, fabDevice, fabFurniture, fabOther;
     private boolean isFABOpen = false;
     private RecyclerView rvSummary;
-    private SummaryAdapter summaryAdapter;
+    private SummaryAdapter summaryAdapter,summaryAdapterLaptop;
     private RecyclerView.LayoutManager layoutManager;
     private RelativeLayout layoutAll, layoutDevice, layoutLaptop, layoutFurniture, layoutOther;
+
+    private LoadData loadData;
+    String[] typeDevice, typeFurniture, typeOther, typeAll;
+    int[] intDevice, intFurniture, intOther, intAll;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();
@@ -53,6 +61,8 @@ public class SummaryFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
+        loadData = new LoadData(getContext());
+        fabContainer = rootView.findViewById(R.id.fabFilter);
         fabContainer = rootView.findViewById(R.id.fabFilter);
         fabAll = rootView.findViewById(R.id.fabAll);
         fabLaptop = rootView.findViewById(R.id.fabLaptop);
@@ -73,8 +83,111 @@ public class SummaryFragment extends Fragment {
         layoutLaptop.setOnClickListener(onClickListener);
         layoutFurniture.setOnClickListener(onClickListener);
 
-        summaryAdapter = new SummaryAdapter(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         rvSummary = rootView.findViewById(R.id.rvSummary);
+
+        typeAll = new String[]{"ACCESS POINT", "ADAPTER", "AIR CONDITIONER", "APPLE CARE", "BARCODE READER", "BATTERY",
+                "BICYCLE", "CABINET", "CAMERA", "CAR", "CARD READER", "CARPET", "CART", "CASH DRAWER", "CHAIR",
+                "CHARGER", "CHROMECAST", "CLOTHES DRYERS", "COFFEE MACHINE", "COMPUTER", "COUNTER", "CURTAIN",
+                "DEVELOPER PROGRAM", "DISPLAY PORT", "DOCUMENT SHREDDER", "DONGLE", "DOOR ACCESS", "DRAWER",
+                "E-COMMERCE", "EQUIPMENT", "FAN", "FILM", "FURNITURE", "GAME", "GAS STOVE", "HDD",
+                "IMAC", "INTERIOR DECORATION", "IPAD", "IPAD COVER", "IPOD", "ITEM", "JUICE BLENDER",
+                "KEYBOARD", "KITCHEN", "LABEL PRINTER", "LAMP", "LAPTOP", "LOCKER", "MICRO SD CARD",
+                "MINIDRIVE", "MIRCROWAVE", "MOBILE PHONE", "MODEM ROUTER", "MONITOR", "NETWORK SWITCH",
+                "POCKET WIFI", "POWER BANK", "POWER SUPPLIER", "PRINTER", "PROGRAM", "REFRIGERATOR",
+                "RICE COOKER", "ROUTER", "SCANNER", "SERVER", "SERVER CABINET", "SHELVES", "SINK",
+                "SOFA", "SOFTWARE", "SOLID STATE DRIVE ", "SSD", "STOOL", "SWING", "TABLE", "TABLET",
+                "TELEPHONE", "USB", "WASHING MACHINE", "WATCH", "WATER HEATER", "WATER PUMP",
+                "WHITE BOARD", "WIRELESS", "ขาแขวน", "อุปกรณ์คอมพิวเตอร์"};
+        intAll = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,};
+
+        typeDevice = new String[]{"ACCESS POINT", "ADAPTER", "APPLE CARE", "BATTERY", "CARD READER",
+                "CHARGER", "CHROMECAST", "COMPUTER", "DEVELOPER PROGRAM", "DISPLAY PORT", "DONGLE", "E-COMMERCE",
+                "GAME", "HDD", "IMAC", "IPAD", "IPAD COVER", "IPOD", "ITEM", "KEYBOARD", "LAPTOP", "MICRO SD CARD",
+                "MINIDRIVE", "MOBILE PHONE", "MODEM ROUTER", "MONITOR", "NETWORK SWITCH", "POCKET WIFI", "POWER BANK",
+                "POWER SUPPLIER", "PROGRAM", "ROUTER", "SERVER", "SERVER CABINET", "SOFTWARE", "SOLID STATE DRIVE ",
+                "SSD", "TABLET", "USB", "WIRELESS", "ขาแขวน", "อุปกรณ์คอมพิวเตอร์"};
+        intDevice = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        typeFurniture = new String[]{"AIR CONDITIONER", "BARCODE READER", "CABINET", "CAMERA", "CARPET", "CART", "CASH DRAWER",
+                "CHAIR", "CLOTHES DRYERS", "COFFEE MACHINE", "COUNTER", "CURTAIN", "DOCUMENT SHREDDER", "DOOR ACCESS", "DRAWER",
+                "EQUIPMENT", "FAN", "FILM", "FURNITURE", "GAS STOVE", "INTERIOR DECORATION", "JUICE BLENDER", "KITCHEN",
+                "LABEL PRINTER", "LAMP", "LOCKER", "MIRCROWAVE", "PRINTER", "REFRIGERATOR", "RICE COOKER", "SCANNER", "SHELVES",
+                "SINK", "SOFA", "STOOL", "SWING", "TABLE", "TABLET", "TELEPHONE", "TELEVISION", "WASHING MACHINE", "WATCH",
+                "WATER HEATER", "WATER PUMP", "WHITE BOARD"};
+        intFurniture = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        typeOther = new String[]{"BUILDING", "BICYCLE", "CAR"};
+        intOther = new int[]{0, 0, 0};
+
+        getDataByType(typeAll, intAll);
+
+    }
+
+    private void getDataByType(String[] type, int[] count) {
+        summaryAdapter = new SummaryAdapter(getContext());
+        int[] typeTotal = count;
+        int[] typeAvailable = count;
+        int[] typeInUse = count;
+        List<ItemEntity> itemEntities = loadData.getItem();
+
+        for (int i = 0; i < itemEntities.size(); i++) {
+            for (int j = 0; j < type.length; j++)
+                if (itemEntities.get(i).getType().trim().matches(type[j])) {
+                    String place = itemEntities.get(i).getPlaceName();
+                    if (place.matches("-")) {
+                        typeAvailable[j] = typeAvailable[j] + 1;
+                    } else {
+                        typeInUse[j] = typeInUse[j] + 1;
+                    }
+                    typeTotal[j] = typeTotal[j] + 1;
+                    break;
+                }
+        }
+        summaryAdapter.setAvailable(typeAvailable);
+        summaryAdapter.setBrand(null);
+        summaryAdapter.setType(type);
+        summaryAdapter.setCount(typeInUse);
+        summaryAdapter.setTotal(typeTotal);
+        summaryAdapter.notifyDataSetChanged();
+        rvSummary.setLayoutManager(layoutManager);
+        rvSummary.setAdapter(summaryAdapter);
+    }
+
+    private void getLaptop() {
+        summaryAdapterLaptop = new SummaryAdapter(getContext());
+        String[] type = {"LAPTOP"};
+        String[] brand = {"Apple", "Dell", "HP", "Lenovo", "True IDC Chromebook 11", "-"};
+        int[] brandTotal = {0, 0, 0, 0, 0, 0};
+        int[] brandAvailable = {0, 0, 0, 0, 0, 0};
+        int[] brandInUse = {0, 0, 0, 0, 0, 0};
+        List<ItemEntity> itemEntities = loadData.getItem();
+
+        for (int i = 0; i < itemEntities.size(); i++) {
+            for (int j = 0; j < brand.length; j++)
+                if (itemEntities.get(i).getType().trim().toLowerCase().matches(type[0].toLowerCase())) {
+                    if (itemEntities.get(i).getBrand().trim().toLowerCase().matches(brand[j].trim().toLowerCase())) {
+                        String place = itemEntities.get(i).getPlaceName();
+                        if (place.matches("-")) {
+                            brandAvailable[j] = brandAvailable[j] + 1;
+                        } else {
+                            brandInUse[j] = brandInUse[j] + 1;
+                        }
+                        brandTotal[j] = brandTotal[j] + 1;
+                        break;
+                    }
+                }
+        }
+        summaryAdapterLaptop.setAvailable(brandAvailable);
+        summaryAdapterLaptop.setBrand(brand);
+        summaryAdapterLaptop.setType(type);
+        summaryAdapterLaptop.setCount(brandInUse);
+        summaryAdapterLaptop.setTotal(brandTotal);
+        summaryAdapterLaptop.notifyDataSetChanged();
+        rvSummary.setLayoutManager(layoutManager);
+        rvSummary.setAdapter(summaryAdapterLaptop);
     }
 
     private void closeFABMenu() {
@@ -136,19 +249,20 @@ public class SummaryFragment extends Fragment {
                 }
             }
            else if(view == layoutAll){
-                Toast.makeText(getActivity(), "All", Toast.LENGTH_SHORT).show();
+                getDataByType(typeAll, intAll);
+
             }
             else if (view == layoutDevice){
-                Toast.makeText(getActivity(), "Device", Toast.LENGTH_SHORT).show();
+                getDataByType(typeDevice, intDevice);
             }
             else if (view == layoutLaptop){
-                Toast.makeText(getActivity(), "Laptop", Toast.LENGTH_SHORT).show();
+                getLaptop();
             }
             else if (view == layoutFurniture){
-                Toast.makeText(getActivity(), "Furniture", Toast.LENGTH_SHORT).show();
+                getDataByType(typeFurniture, intFurniture);
             }
             else if (view == layoutOther){
-                Toast.makeText(getActivity(), "Other", Toast.LENGTH_SHORT).show();
+                getDataByType(typeOther, intAll);
             }
         }
     };

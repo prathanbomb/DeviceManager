@@ -23,6 +23,7 @@ public class SummaryListDetailActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
 
             bundle.putString("Type", getIntent().getStringExtra("Type"));
+            bundle.putString("Brand", getIntent().getStringExtra("Brand"));
 
             SummaryListDetailFragment fragment = SummaryListDetailFragment.newInstance();
             fragment.setArguments(bundle);

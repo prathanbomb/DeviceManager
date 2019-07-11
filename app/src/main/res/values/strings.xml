@@ -14,7 +14,7 @@
     </string-array>
 
     <string-array name="building">
-        <item>Building</item>
+        <item>BUILDING</item>
     </string-array>
 
     <string-array name="device_and_accessory">

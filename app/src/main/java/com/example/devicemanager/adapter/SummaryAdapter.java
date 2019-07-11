@@ -40,6 +40,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
     public void setAvailable(int[] available) {
         this.available = available;
     }
+
     public void setType(String[] type) {
         this.type = type;
     }
@@ -58,16 +59,30 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, SummaryListDetailActivity.class);
-                intent.putExtra("Type", brand[position]);
-                context.startActivity(intent);
+                if(type.length >1) {
+                    Intent intent = new Intent(context, SummaryListDetailActivity.class);
+                    intent.putExtra("Type", type[position]);
+                    intent.putExtra("Brand", "-");
+                    context.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(context, SummaryListDetailActivity.class);
+                    intent.putExtra("Type", type[0]);
+                    intent.putExtra("Brand", brand[position]);
+                    context.startActivity(intent);
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return brand.length;
+        if(type == null)
+            return 0;
+        if(type.length == 1){
+            return brand.length;
+        }
+        return type.length;
     }
 
     @Override
@@ -76,7 +91,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        TextView tvBrand,tvTotal,tvAvailable,tvActive;
+        TextView tvBrand, tvTotal, tvAvailable, tvActive, tvType;
 
         Holder(View itemView) {
             super(itemView);
@@ -84,12 +99,22 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
             tvTotal = itemView.findViewById(R.id.tvTotal);
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
             tvActive = itemView.findViewById(R.id.tvActive);
+            tvType = itemView.findViewById(R.id.tvType);
         }
+
         public void setItem(int position) {
-            tvBrand.setText("" + brand[position]);
+            if (brand != null) {
+                tvBrand.setText("" + brand[position]);
+            }
             tvTotal.setText("" + total[position]);
             tvAvailable.setText("" + available[position]);
             tvActive.setText("" + count[position]);
+            if (type.length <= 1) {
+                tvType.setText(type[0]);
+            }
+            else{
+                tvType.setText("" + type[position]);
+            }
         }
     }
 }
