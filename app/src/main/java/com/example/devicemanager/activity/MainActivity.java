@@ -153,12 +153,14 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
 
-                    if (!item.getPurchasedDate().matches("") &&
-                            !item.getPurchasedDate().matches("-")){
-                        item.setPurchasedDate(setDate(item.getPurchasedDate()));
+                    if (item != null){
+                        if (!item.getPurchasedDate().matches("") &&
+                                !item.getPurchasedDate().matches("-")){
+                            item.setPurchasedDate(setDate(item.getPurchasedDate()));
+                        }
+                        item.setAutoId(Integer.parseInt(s.getKey()));
+                        loadData.insert(item);
                     }
-                    item.setAutoId(Integer.parseInt(s.getKey()));
-                    loadData.insert(item);
                 }
                 editor.putBoolean("downloadStatus", false);
                 editor.commit();

@@ -48,7 +48,6 @@ public class DeviceDetailFragment extends Fragment {
     private Button btnCheck, btnEdit;
     private ProgressBar progressBar;
     private View progressDialogBackground;
-    private String itemStatus;
     private LoadData loadData;
 
 
@@ -105,7 +104,9 @@ public class DeviceDetailFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
-        getData(serial);
+        if (serial != null){
+            getData(serial);
+        }
 
     }
 
@@ -115,12 +116,6 @@ public class DeviceDetailFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         List<ItemEntity> itemEntity = loadData.selectData(serialNew);
-
-        if(itemEntity.size() == 0){
-            hideDialog();
-            showAlertDialog(R.string.dialog_msg_confirm, "add");
-            return;
-        }
 
         tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
         tvOwnerName.setText(checkNoneData(itemEntity.get(0).getPlaceName(), "No Owner"));

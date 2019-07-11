@@ -73,6 +73,7 @@ public class AddDeviceFragment extends Fragment {
     private LoadData loadData;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
+    private int updatedKey = 0;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -238,12 +239,17 @@ public class AddDeviceFragment extends Fragment {
                 break;
         }
 
+        if (itemId == null) {
+            lastKey = getLastKey();
+        }
+
         builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (type.matches("save") && checkForm()) {
                     if (tvItemId.getText().toString().matches("Item Id")) {
-                        String YY = etDatePicker.getText().toString().substring(13);
+
+                        String YY = etDatePicker.getText().toString().substring(8,10);
                         order = 1;
                         String form = "DGO" + YY + branch + category;
 
@@ -259,16 +265,15 @@ public class AddDeviceFragment extends Fragment {
                         } catch (NumberFormatException num) {
                             Toast.makeText(getContext(), "" + num, Toast.LENGTH_SHORT).show();
                         }
-                        getLastKey();
                         for (int i = 0; i < count; i++) {
                             saveData();
+                            setUpdatedId(lastKey);
                             int key = Integer.parseInt(lastKey) + 1;
                             lastKey = key + "";
                             order++;
                         }
 
                     } else {
-                        loadData();
                         progressDialogBackground.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.VISIBLE);
 
@@ -287,14 +292,8 @@ public class AddDeviceFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     editor.putBoolean("downloadStatus", true);
                                     editor.commit();
-                                    Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
-
-                                    // TODO: Add Success SuccessDialog
-                                    progressDialogBackground.setVisibility(View.INVISIBLE);
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    Intent intentBack = new Intent();
-                                    getActivity().setResult(RESULT_OK, intentBack);
-                                    getActivity().finish();
+                                    setUpdatedId(lastKey);
+                                    updatedKey++;
                                 } else {
                                     Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
                                     progressDialogBackground.setVisibility(View.INVISIBLE);
@@ -326,11 +325,12 @@ public class AddDeviceFragment extends Fragment {
     private void saveData() {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        String date = setDate(etDatePicker.getText().toString());
         // TODO: Add more item data
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
                 etBrand.getText().toString(), etSerialNumber.getText().toString(), etDeviceModel.getText().toString(),
                 etDeviceDetail.getText().toString(), etDevicePrice.getText().toString(), etPurchasePrice.getText().toString(),
-                etDatePicker.getText().toString(), etNote.getText().toString(), type, getUnnamed2());
+                date, etNote.getText().toString(), type, getUnnamed2());
 
         if (lastKey != null) {
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -338,7 +338,6 @@ public class AddDeviceFragment extends Fragment {
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
                         if (countDevice == quntity) {
-                            loadData();
                             Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
 
                             // TODO: Add Success SuccessDialog
@@ -359,47 +358,54 @@ public class AddDeviceFragment extends Fragment {
         }
     }
 
-    private void loadData() {
-        progressDialogBackground.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getUpdateKey() {
+        DatabaseReference databaseReference =
+                FirebaseDatabase.getInstance().getReference().child("Updated");
+        Query query = databaseReference.orderByKey().limitToLast(1);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                progressDialogBackground.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                loadData.deleteTable();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
-                    ItemEntity item = s.getValue(ItemEntity.class);
-
-                    if (!item.getPurchasedDate().matches("") &&
-                            !item.getPurchasedDate().matches("-")) {
-                        item.setPurchasedDate(setDate(item.getPurchasedDate()));
-                    }
-                    item.setAutoId(Integer.parseInt(s.getKey()));
-                    loadData.insert(item);
-
+                    updatedKey = Integer.parseInt(s.getKey()) + 1;
                 }
-                progressDialogBackground.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressDialogBackground.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
+                updatedKey = -1;
             }
         });
+    }
+
+    private void setUpdatedId(String lastKey) {
+        FirebaseDatabase.getInstance().getReference().child("Updated")
+                .child(updatedKey + "").child("id").setValue(lastKey)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
+
+                            // TODO: Add Success SuccessDialog
+                            progressDialogBackground.setVisibility(View.INVISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Intent intentBack = new Intent();
+                            getActivity().setResult(RESULT_OK, intentBack);
+                            getActivity().finish();
+                        }
+                    }
+                });
+        updatedKey++;
     }
 
     private String setDate(String inputDate) {
         if (inputDate.contains("GMT")) {
             inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
         }
-        String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
+        String inputFormat = "dd/MM/yyyy";
         SimpleDateFormat inputDateFormat = new SimpleDateFormat(
                 inputFormat, Locale.ENGLISH);
-        String outputFormat = "yyyy-MM-dd";
+        String outputFormat = "EEE MMM dd yyyy HH:mm:ss";
         SimpleDateFormat outputDateFormat = new SimpleDateFormat(
                 outputFormat, Locale.ENGLISH);
 
@@ -420,7 +426,7 @@ public class AddDeviceFragment extends Fragment {
     private String getUnnamed2() {
         if (unnamed2 == null) {
             String date = etDatePicker.getText().toString();
-            String YY = date.substring(13);
+            String YY = date.substring(8, 10);
             String num;
             if (order < 1) {
                 num = "001";
@@ -439,12 +445,12 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void updateLabel() {
-        String myFormat = "E MMM dd yyyy";
+        String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
         etDatePicker.setText(sdf.format(calendar.getTime()));
     }
 
-    private void getLastKey() {
+    private String getLastKey() {
         Query query = databaseReference.orderByKey().limitToLast(1);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -461,8 +467,10 @@ public class AddDeviceFragment extends Fragment {
                 Toast.makeText(getActivity(), "Cannot Insert Data", Toast.LENGTH_SHORT).show();
                 progressDialogBackground.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
+                lastKey = "";
             }
         });
+        return lastKey;
     }
 
     private void checkSerial() {
@@ -530,6 +538,7 @@ public class AddDeviceFragment extends Fragment {
         public void onClick(View view) {
             if (view == btnConfirm) {
                 hideKeyboardFrom(Contextor.getInstance().getContext(), view);
+                getUpdateKey();
                 showAlertDialog("save");
             }
         }
@@ -538,10 +547,19 @@ public class AddDeviceFragment extends Fragment {
     private View.OnClickListener onClickDate = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            new DatePickerDialog(getActivity(),
-                    date, calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)).show();
+            if (itemId != null){
+                String[] d = etDatePicker.getText().toString().split("-");
+                new DatePickerDialog(getActivity(),
+                        date, Integer.parseInt(d[0]),
+                        Integer.parseInt(d[1])-1,
+                        Integer.parseInt(d[2])).show();
+            }
+            else {
+                new DatePickerDialog(getActivity(),
+                        date, calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
         }
     };
 
