@@ -1,9 +1,12 @@
 package com.example.devicemanager.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,6 +20,7 @@ import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import com.example.devicemanager.adapter.SummaryAdapter;
 import com.example.devicemanager.view.SlidingTabLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 public class SummaryFragment extends Fragment {
@@ -25,6 +29,7 @@ public class SummaryFragment extends Fragment {
     private RecyclerView rvSummary;
     private SummaryAdapter summaryAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private RelativeLayout layoutAll, layoutDevice, layoutLaptop, layoutFurniture, layoutOther;
 
     public static SummaryFragment newInstance() {
         SummaryFragment fragment = new SummaryFragment();
@@ -48,14 +53,25 @@ public class SummaryFragment extends Fragment {
 
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
-        fabContainer = rootView.findViewById(R.id.fabSearch);
+        fabContainer = rootView.findViewById(R.id.fabFilter);
         fabAll = rootView.findViewById(R.id.fabAll);
         fabLaptop = rootView.findViewById(R.id.fabLaptop);
         fabDevice = rootView.findViewById(R.id.fabDevice);
         fabFurniture = rootView.findViewById(R.id.fabFurniture);
         fabOther = rootView.findViewById(R.id.fabOther);
 
-        fabContainer.setOnClickListener(onClickFABSearch);
+        layoutAll = rootView.findViewById(R.id.layoutAll);
+        layoutDevice = rootView.findViewById(R.id.layoutDevice);
+        layoutFurniture = rootView.findViewById(R.id.layoutFurniture);
+        layoutLaptop = rootView.findViewById(R.id.layoutLaptop);
+        layoutOther = rootView.findViewById(R.id.layoutOther);
+
+        fabContainer.setOnClickListener(onClickListener);
+        layoutAll.setOnClickListener(onClickListener);
+        layoutOther.setOnClickListener(onClickListener);
+        layoutDevice.setOnClickListener(onClickListener);
+        layoutLaptop.setOnClickListener(onClickListener);
+        layoutFurniture.setOnClickListener(onClickListener);
 
         summaryAdapter = new SummaryAdapter(getContext());
         rvSummary = rootView.findViewById(R.id.rvSummary);
@@ -63,23 +79,53 @@ public class SummaryFragment extends Fragment {
 
     private void closeFABMenu() {
         isFABOpen = false;
-        fabAll.animate().translationY(0);
-        fabLaptop.animate().translationY(0);
-        fabDevice.animate().translationY(0);
-        fabFurniture.animate().translationY(0);
-        fabOther.animate().translationY(0);
+        layoutAll.animate().translationY(0);
+        layoutLaptop.animate().translationY(0);
+        layoutDevice.animate().translationY(0);
+        layoutFurniture.animate().translationY(0);
+        layoutOther.animate().translationY(0);
+        delayCloseFab();
     }
 
     private void showFABMenu() {
         isFABOpen = true;
-        fabAll.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_1));
-        fabLaptop.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_2));
-        fabDevice.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_3));
-        fabFurniture.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_4));
-        fabOther.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_5));
+        delayOpenFab();
+        layoutAll.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_1));
+        layoutLaptop.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_2));
+        layoutDevice.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_3));
+        layoutFurniture.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_4));
+        layoutOther.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_5));
     }
 
-    private View.OnClickListener onClickFABSearch = new View.OnClickListener() {
+    private void delayCloseFab(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                layoutAll.setVisibility(View.INVISIBLE);
+                layoutDevice.setVisibility(View.INVISIBLE);
+                layoutLaptop.setVisibility(View.INVISIBLE);
+                layoutFurniture.setVisibility(View.INVISIBLE);
+                layoutOther.setVisibility(View.INVISIBLE);
+            }
+        }, 200);
+    }
+
+    private void delayOpenFab(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                layoutAll.setVisibility(View.VISIBLE);
+                layoutLaptop.setVisibility(View.VISIBLE);
+                layoutDevice.setVisibility(View.VISIBLE);
+                layoutFurniture.setVisibility(View.VISIBLE);
+                layoutOther.setVisibility(View.VISIBLE);
+            }
+        }, 200);
+    }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view == fabContainer) {
@@ -88,16 +134,21 @@ public class SummaryFragment extends Fragment {
                 } else {
                     closeFABMenu();
                 }
-            } else if (view == fabAll) {
-
-            } else if (view == fabLaptop) {
-
-            } else if (view == fabDevice) {
-
-            } else if (view == fabFurniture) {
-
-            } else if (view == fabOther) {
-
+            }
+           else if(view == layoutAll){
+                Toast.makeText(getActivity(), "All", Toast.LENGTH_SHORT).show();
+            }
+            else if (view == layoutDevice){
+                Toast.makeText(getActivity(), "Device", Toast.LENGTH_SHORT).show();
+            }
+            else if (view == layoutLaptop){
+                Toast.makeText(getActivity(), "Laptop", Toast.LENGTH_SHORT).show();
+            }
+            else if (view == layoutFurniture){
+                Toast.makeText(getActivity(), "Furniture", Toast.LENGTH_SHORT).show();
+            }
+            else if (view == layoutOther){
+                Toast.makeText(getActivity(), "Other", Toast.LENGTH_SHORT).show();
             }
         }
     };

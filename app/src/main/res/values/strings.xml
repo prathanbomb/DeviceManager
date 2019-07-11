@@ -183,4 +183,9 @@
     <string name="total">Total</string>
     <string name="available">Available</string>
     <string name="active">Active</string>
+    <string name="other">Other</string>
+    <string name="furniture">Furniture</string>
+    <string name="device">Device</string>
+    <string name="laptop">Laptop</string>
+    <string name="all">All</string>
 </resources>
