@@ -15,6 +15,7 @@ import com.example.devicemanager.activity.SummaryListDetailActivity;
 
 public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> {
     private String[] brand;
+    private String[] type;
     private Context context;
     private int[] available;
     private int[] count;
@@ -38,6 +39,9 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
 
     public void setAvailable(int[] available) {
         this.available = available;
+    }
+    public void setType(String[] type) {
+        this.type = type;
     }
 
 
