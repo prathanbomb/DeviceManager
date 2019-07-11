@@ -73,6 +73,10 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="ocr" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b3f868e856c5f5be63ee4a6e3f169b667e88cb66" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
