@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.fragment.LoginFragment;
 import com.example.devicemanager.fragment.MainFragment;
+import com.example.devicemanager.fragment.SummaryFragment;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.ItemEntity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     private View view;
     private ProgressBar progressBar;
-    private Button btnSummary;
+    private Button btnSummary, btnDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,16 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else {
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.contentContainer, MainFragment.newInstance())
+                                .replace(R.id.contentContainer
+                                        , MainFragment.newInstance()
+                                        , "MainFragment")
+                                .commit();
+
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.contentContainer
+                                        , SummaryFragment.newInstance()
+                                        , "SummaryFragment")
+                                .detach(SummaryFragment.newInstance())
                                 .commit();
                     }
                 }
@@ -83,14 +94,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
 
+        btnDetail = findViewById(R.id.btnDetail);
         btnSummary = findViewById(R.id.btnSummary);
-        btnSummary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SummaryActivity.class);
-                startActivity(intent);
-            }
-        });
+
+        btnDetail.setOnClickListener(onBtnClick);
+        btnSummary.setOnClickListener(onBtnClick);
 
         sp = this.getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
         editor = sp.edit();
@@ -153,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
 
-                    if (item != null){
+                    if (item != null) {
                         if (!item.getPurchasedDate().matches("") &&
-                                !item.getPurchasedDate().matches("-")){
+                                !item.getPurchasedDate().matches("-")) {
                             item.setPurchasedDate(setDate(item.getPurchasedDate()));
                         }
                         item.setAutoId(Integer.parseInt(s.getKey()));
@@ -175,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private String setDate(String inputDate){
-        if (inputDate.contains("GMT")){
+    private String setDate(String inputDate) {
+        if (inputDate.contains("GMT")) {
             inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
         }
         String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
@@ -199,4 +207,27 @@ public class MainActivity extends AppCompatActivity {
         return str;
 
     }
+
+    View.OnClickListener onBtnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            MainFragment mainFragment = (MainFragment)
+                    getSupportFragmentManager().findFragmentByTag("MainFragment");
+            SummaryFragment secondFragment = (SummaryFragment)
+                    getSupportFragmentManager().findFragmentByTag("SummaryFragment");
+
+            if (view == btnDetail) {
+                getSupportFragmentManager().beginTransaction()
+                        .attach(mainFragment)
+                        .detach(secondFragment)
+                        .commit();
+            } else if (view == btnSummary) {
+                getSupportFragmentManager().beginTransaction()
+                        .attach(secondFragment)
+                        .detach(mainFragment)
+                        .commit();
+            }
+        }
+    };
 }

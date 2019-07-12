@@ -6,24 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.adapter.RecyclerDeviceAdapter;
-import com.example.devicemanager.adapter.RecyclerOtherAdapter;
 import com.example.devicemanager.adapter.SummaryAdapter;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.ItemEntity;
-import com.example.devicemanager.view.SlidingTabLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
@@ -122,11 +114,11 @@ public class SummaryFragment extends Fragment {
         typeOther = new String[]{"BUILDING", "BICYCLE", "CAR"};
         intOther = new int[]{0, 0, 0};
 
-        getDataByType(typeAll, intAll,intAll,intAll);
+        getDataByType(typeAll);
 
     }
 
-    private void getDataByType(String[] type, int[] count,int[] countAvailable,int[] countInUse) {
+    private void getDataByType(String[] type) {
         summaryAdapter = new SummaryAdapter(getContext());
         int[] typeTotal = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -255,20 +247,20 @@ public class SummaryFragment extends Fragment {
                 }
             }
            else if(view == layoutAll){
-                getDataByType(typeAll, intAll,intAll,intAll);
+                getDataByType(typeAll);
 
             }
             else if (view == layoutDevice){
-                getDataByType(typeDevice, intDevice,intDevice,intDevice);
+                getDataByType(typeDevice);
             }
             else if (view == layoutLaptop){
                 getLaptop();
             }
             else if (view == layoutFurniture){
-                getDataByType(typeFurniture, intFurniture,intFurniture,intFurniture);
+                getDataByType(typeFurniture);
             }
             else if (view == layoutOther){
-                getDataByType(typeOther, intAll,intAll,intAll);
+                getDataByType(typeOther);
             }
         }
     };

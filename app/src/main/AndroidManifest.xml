@@ -45,10 +45,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SummaryActivity"
-            android:label="@string/summary"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.SummaryListDetailActivity"
             android:label=""
             android:screenOrientation="portrait" />
