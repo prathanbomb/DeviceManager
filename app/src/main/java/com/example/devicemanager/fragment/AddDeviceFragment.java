@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +30,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.ScanBarCodeAddDeviceActivity;
+import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.model.DataItem;
@@ -62,7 +67,6 @@ public class AddDeviceFragment extends Fragment {
             etOwnerId, etBrand, etDeviceModel, etDevicePrice, etNote, etQuantity,
             etPurchasePrice, etForwardDepreciation, etDepreciationRate, etDepreciationinYear,
             etAccumulateDepreciation, etForwardedBudget, etWarranty;
-    private Button btnConfirm;
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener date;
     private String selected, lastKey, itemId, serial, serialState, abbreviation, type, unnamed2, YY;
@@ -89,6 +93,24 @@ public class AddDeviceFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add_device, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_check);
+        menuItem.expandActionView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_check) {
+            hideKeyboardFrom(Contextor.getInstance().getContext(), getView());
+            getUpdateKey();
+            showAlertDialog("save");
+        }
+        return true;
     }
 
     @Nullable
@@ -151,9 +173,6 @@ public class AddDeviceFragment extends Fragment {
         calendar = Calendar.getInstance(TimeZone.getDefault());
         this.date = onDateSet;
         etDatePicker.setOnClickListener(onClickDate);
-
-        btnConfirm = view.findViewById(R.id.btnConfirm);
-        btnConfirm.setOnClickListener(clickListener);
 
         progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
@@ -405,14 +424,14 @@ public class AddDeviceFragment extends Fragment {
                 getUnnamed2().substring(3), "" + category, "" + branch, "-",
                 "-", "" + dateFormat.format(dateCheck).toString(), "" + order,
                 "" + abbreviation, "-", "DGO", etWarranty.getText().toString());
-        final ItemEntity itemSave = new ItemEntity(loadData.getItem().size(),getUnnamed2(),type,etDeviceDetail.getText().toString(),
-                etSerialNumber.getText().toString(),etOwnerName.getText().toString(),etDatePicker.getText().toString(),
-                etNote.getText().toString(),"-",etOwnerId.getText().toString(),getUnnamed2().substring(3),
-                etDevicePrice.getText().toString(),etDeviceModel.getText().toString(),etDepreciationRate.getText().toString(),
-                "ID",etBrand.getText().toString(),abbreviation,order+"","-",YY+"","DGO","-",etForwardedBudget.getText().toString(),
-                etAccumulateDepreciation.getText().toString(),etWarranty.getText().toString(),etDepreciationinYear.getText().toString(),
-                branch+"",""+category,etPurchasePrice.getText().toString(),etForwardedBudget.getText().toString(),
-                etForwardDepreciation.getText().toString(),dateFormat.format(dateCheck));
+        final ItemEntity itemSave = new ItemEntity(loadData.getItem().size(), getUnnamed2(), type, etDeviceDetail.getText().toString(),
+                etSerialNumber.getText().toString(), etOwnerName.getText().toString(), etDatePicker.getText().toString(),
+                etNote.getText().toString(), "-", etOwnerId.getText().toString(), getUnnamed2().substring(3),
+                etDevicePrice.getText().toString(), etDeviceModel.getText().toString(), etDepreciationRate.getText().toString(),
+                "ID", etBrand.getText().toString(), abbreviation, order + "", "-", YY + "", "DGO", "-", etForwardedBudget.getText().toString(),
+                etAccumulateDepreciation.getText().toString(), etWarranty.getText().toString(), etDepreciationinYear.getText().toString(),
+                branch + "", "" + category, etPurchasePrice.getText().toString(), etForwardedBudget.getText().toString(),
+                etForwardDepreciation.getText().toString(), dateFormat.format(dateCheck));
         if (lastKey != null) {
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -632,11 +651,7 @@ public class AddDeviceFragment extends Fragment {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (view == btnConfirm) {
-                hideKeyboardFrom(Contextor.getInstance().getContext(), view);
-                getUpdateKey();
-                showAlertDialog("save");
-            } else if (view == tvClickToShow) {
+            if (view == tvClickToShow) {
                 if (!clickMore) {
                     clickMore = true;
                     moreData.setVisibility(View.VISIBLE);
