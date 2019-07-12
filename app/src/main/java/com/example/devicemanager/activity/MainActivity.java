@@ -73,15 +73,14 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.contentContainer
-                                        , MainFragment.newInstance()
-                                        , "MainFragment")
-                                .commit();
-
-                        getSupportFragmentManager().beginTransaction()
-                                .add(R.id.contentContainer
                                         , SummaryFragment.newInstance()
                                         , "SummaryFragment")
                                 .detach(SummaryFragment.newInstance())
+                                .commit();
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.contentContainer
+                                        , MainFragment.newInstance()
+                                        , "MainFragment")
                                 .commit();
                     }
                 }

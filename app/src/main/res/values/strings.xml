@@ -172,8 +172,8 @@
     <string name="note">Note</string>
     <string name="more">More</string>
     <string name="depreciation_rate">Depreciation Rate</string>
-    <string name="accumulated_depreciation">Accumulated Depreciation</string>
-    <string name="forward_depreciation">Forward Depreciation</string>
+    <string name="accumulated_depreciation">อัตราค่าเสื่อม(%)</string>
+    <string name="forward_depreciation">ค่าเสื่อมยกมา</string>
     <string name="filter">Filter</string>
     <string name="sort_by">Sort By</string>
     <string name="number_1">1</string>
@@ -188,4 +188,7 @@
     <string name="device">Device</string>
     <string name="laptop">Laptop</string>
     <string name="all">All</string>
+    <string name="depreciation_inYear">ค่าเสื่อมราคาในปี</string>
+    <string name="accumulate_depreciation">ค่าเสื่อมสะสมรวมปีนี้</string>
+    <string name="forwarded_budget">มูลค่ายกไป</string>
 </resources>
