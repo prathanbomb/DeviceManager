@@ -199,6 +199,7 @@ public class SummaryFragment extends Fragment {
         isFABOpen = true;
         delayOpenFab();
         hidedView.setVisibility(View.VISIBLE);
+        hidedView.setOnClickListener(onClickView);
         layoutAll.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_1));
         layoutLaptop.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_2));
         layoutDevice.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_3));
@@ -264,6 +265,13 @@ public class SummaryFragment extends Fragment {
                 getDataByType(typeOther);
                 closeFABMenu();
             }
+        }
+    };
+
+    private View.OnClickListener onClickView = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            closeFABMenu();
         }
     };
 }

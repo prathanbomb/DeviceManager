@@ -73,15 +73,10 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.contentContainer
-                                        , SummaryFragment.newInstance()
-                                        , "SummaryFragment")
-                                .detach(SummaryFragment.newInstance())
-                                .commit();
-                        getSupportFragmentManager().beginTransaction()
-                                .add(R.id.contentContainer
                                         , MainFragment.newInstance()
                                         , "MainFragment")
                                 .commit();
+                        btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     }
                 }
             };
@@ -221,11 +216,25 @@ public class MainActivity extends AppCompatActivity {
                         .attach(mainFragment)
                         .detach(secondFragment)
                         .commit();
+                btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             } else if (view == btnSummary) {
-                getSupportFragmentManager().beginTransaction()
-                        .attach(secondFragment)
-                        .detach(mainFragment)
-                        .commit();
+                if (secondFragment == null){
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.contentContainer,
+                                    SummaryFragment.newInstance(),
+                                    "SummaryFragment")
+                            .detach(mainFragment)
+                            .commit();
+                }
+                else {
+                    getSupportFragmentManager().beginTransaction()
+                            .attach(secondFragment)
+                            .detach(mainFragment)
+                            .commit();
+                }
+                btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
         }
     };
