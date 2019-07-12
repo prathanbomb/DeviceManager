@@ -145,7 +145,7 @@ public class SummaryListDetailFragment extends Fragment {
             int spinnerPosition = spinnerFilterAdapter.getPosition("All");
             spinner.setSelection(spinnerPosition);
         } else if (spinner == spSortBy) {
-            int spinnerPosition = spinnerFilterAdapter.getPosition("Purchased Date");
+            int spinnerPosition = spinnerFilterAdapter.getPosition("Date");
             spinner.setSelection(spinnerPosition);
         }
     }
@@ -219,19 +219,19 @@ public class SummaryListDetailFragment extends Fragment {
             if (adapterView == spSortBy) {
                 String sortBy = adapterView.getItemAtPosition(i).toString();
                 switch (sortBy) {
-                    case "Purchased Date▲":
+                    case "Date ▲":
                         DownloadData("DateAsc");
                         checkSpType();
                         break;
-                    case "Purchased Date▼":
+                    case "Date ▼":
                         DownloadData("DateDesc");
                         checkSpType();
                         break;
-                    case "Brand▲":
+                    case "Brand ▲":
                         DownloadData("BrandAsc");
                         checkSpType();
                         break;
-                    case "Brand▼":
+                    case "Brand ▼":
                         DownloadData("BrandDesc");
                         checkSpType();
                         break;

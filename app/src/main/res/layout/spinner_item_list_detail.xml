@@ -7,4 +7,5 @@
     android:padding="12dp"
     android:textColor="@color/grey"
     android:textSize="@dimen/text_14_sp"
+    android:ellipsize="end"
     android:maxLines="1"/>

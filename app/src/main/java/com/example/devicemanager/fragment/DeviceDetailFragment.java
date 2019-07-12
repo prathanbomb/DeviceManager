@@ -121,19 +121,25 @@ public class DeviceDetailFragment extends Fragment {
 
         List<ItemEntity> itemEntity = loadData.selectData(serialNew);
 
-        lastKey = itemEntity.get(0).getAutoId() + "" ;
+        if (itemEntity != null){
+            lastKey = itemEntity.get(0).getAutoId() + "" ;
 
-        tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
-        tvOwnerName.setText(checkNoneData(itemEntity.get(0).getPlaceName(), "No Owner"));
-        tvDeviceDetail.setText(checkNoneData(itemEntity.get(0).getDetail(), "N/A"));
-        tvBrand.setText(checkNoneData(itemEntity.get(0).getBrand(), "N/A"));
-        tvType.setText(itemEntity.get(0).getType());
-        tvModel.setText("Model : " + checkNoneData(itemEntity.get(0).getModel(), "N/A"));
-        tvSerialNumber.setText("S/N : " + checkNoneData(itemEntity.get(0).getSerialNo(), "No Serial"));
+            tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
+            tvOwnerName.setText(checkNoneData(itemEntity.get(0).getPlaceName(), "No Owner"));
+            tvDeviceDetail.setText(checkNoneData(itemEntity.get(0).getDetail(), "N/A"));
+            tvBrand.setText(checkNoneData(itemEntity.get(0).getBrand(), "N/A"));
+            tvType.setText(itemEntity.get(0).getType());
+            tvModel.setText("Model : " + checkNoneData(itemEntity.get(0).getModel(), "N/A"));
+            tvSerialNumber.setText("S/N : " + checkNoneData(itemEntity.get(0).getSerialNo(), "No Serial"));
 
-        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + itemEntity.get(0).getLastUpdated());
-        tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + setDate(itemEntity.get(0).getPurchasedDate()));
-        hideDialog();
+            tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + itemEntity.get(0).getLastUpdated());
+            tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + setDate(itemEntity.get(0).getPurchasedDate()));
+            hideDialog();
+        }
+        else {
+            getActivity().finish();
+            hideDialog();
+        }
     }
 
     private String checkNoneData(String data, String text) {

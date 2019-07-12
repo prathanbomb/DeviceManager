@@ -25,6 +25,7 @@ import com.example.devicemanager.activity.AddDeviceActivity;
 import com.example.devicemanager.activity.DeviceDetailActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.adapter.ItemListAdapter;
+import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.DataManager;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.AppDatabase;

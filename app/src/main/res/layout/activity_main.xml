@@ -18,24 +18,26 @@
             android:layout_weight="1" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="60dp"
+            android:orientation="horizontal">
 
             <Button
-                android:background="#fff"
                 android:id="@+id/btnDetail"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/device_detail" />
+                android:background="@color/colorPrimary"
+                android:text="@string/device_detail"
+                android:textColor="#ffffff" />
 
             <Button
-                android:background="#fff"
                 android:id="@+id/btnSummary"
                 android:layout_width="0dp"
+                android:textColor="#ffffff"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:text="@string/summary" />
         </LinearLayout>
     </LinearLayout>
