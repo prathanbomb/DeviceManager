@@ -51,7 +51,7 @@ public class DeviceDetailFragment extends Fragment {
     private LoadData loadData;
     private int updatedKey;
     private String lastKey;
-
+    List<ItemEntity> itemEntity;
 
     public static DeviceDetailFragment newInstances(String barcode) {
         DeviceDetailFragment fragment = new DeviceDetailFragment();
@@ -108,7 +108,7 @@ public class DeviceDetailFragment extends Fragment {
 
         getUpdateKey();
 
-        if (serial != null){
+        if (serial != null) {
             getData(serial);
         }
 
@@ -119,10 +119,10 @@ public class DeviceDetailFragment extends Fragment {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-        List<ItemEntity> itemEntity = loadData.selectData(serialNew);
+        itemEntity = loadData.selectData(serialNew);
 
-        if (itemEntity != null){
-            lastKey = itemEntity.get(0).getAutoId() + "" ;
+        if (itemEntity != null) {
+            lastKey = itemEntity.get(0).getAutoId() + "";
 
             tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
             tvOwnerName.setText(checkNoneData(itemEntity.get(0).getPlaceName(), "No Owner"));
@@ -135,8 +135,7 @@ public class DeviceDetailFragment extends Fragment {
             tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + itemEntity.get(0).getLastUpdated());
             tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + setDate(itemEntity.get(0).getPurchasedDate()));
             hideDialog();
-        }
-        else {
+        } else {
             getActivity().finish();
             hideDialog();
         }
@@ -144,10 +143,9 @@ public class DeviceDetailFragment extends Fragment {
 
     private String checkNoneData(String data, String text) {
 
-        if (data.trim().matches("-")){
+        if (data.trim().matches("-")) {
             return text;
-        }
-        else {
+        } else {
             return data;
         }
 
@@ -211,15 +209,17 @@ public class DeviceDetailFragment extends Fragment {
         final Date date = new Date();
         databaseReference.setValue(dateFormat.format(date))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    hideDialog();
-                    tvLastUpdate.setText("Last Check : " + dateFormat.format(date));
-                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            int autoId = itemEntity.get(0).getAutoId();
+                            hideDialog();
+                            loadData.getItem().get(autoId).setLastUpdated("" + dateFormat.format(date));
+                            tvLastUpdate.setText("Last Check : " + loadData.getItem().get(autoId).getLastUpdated());
+                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("checkedDevice", e.toString());
@@ -259,7 +259,7 @@ public class DeviceDetailFragment extends Fragment {
                 });
     }
 
-    private String setDate(String inputDate){
+    private String setDate(String inputDate) {
         String inputFormat = "yyyy-MM-dd";
         SimpleDateFormat inputDateFormat = new SimpleDateFormat(
                 inputFormat, Locale.ENGLISH);
