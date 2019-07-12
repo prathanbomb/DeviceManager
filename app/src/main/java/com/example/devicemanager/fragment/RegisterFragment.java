@@ -155,13 +155,12 @@ public class RegisterFragment extends Fragment {
         strEmail = etEmail.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
         strCode = etCode.getText().toString().trim();
-        String regEmail = strEmail.substring(strEmail.indexOf("@") + 1);
 
         if (TextUtils.isEmpty(strEmail) || TextUtils.isEmpty(strPassword) || TextUtils.isEmpty(strCode)) {
             closeLoadingDialog();
             Toast.makeText(context, "Please insert all the fields", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (isAdded() && !regEmail.matches(getResources().getString(R.string.digio_email))) {
+        } else if (isAdded() && !strEmail.contains(getResources().getString(R.string.digio_email))) {
             closeLoadingDialog();
             Toast.makeText(context, "Wrong E-Mail address", Toast.LENGTH_SHORT).show();
             return false;

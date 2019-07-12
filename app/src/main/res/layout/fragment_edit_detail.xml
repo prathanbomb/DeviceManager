@@ -135,14 +135,40 @@
                 android:hint="@string/item_detail"
                 android:inputType="text" />
 
-            <EditText
-                android:id="@+id/etDeviceModel"
+            <TextView
+                android:id="@+id/tvWarranty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:freezesText="true"
-                android:hint="@string/model"
-                android:inputType="text" />
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Warranty (Years)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etDeviceModel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="5"
+                    android:freezesText="true"
+                    android:hint="@string/model"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/etWarranty"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:hint="1"
+                    android:inputType="number" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -246,30 +272,7 @@
                         android:inputType="number"
                         android:text="@string/number_1" />
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvWarranty"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:text="Warranty(Year)" />
-
-                    <EditText
-                        android:id="@+id/etWarranty"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:hint="1"/>
-                </LinearLayout>
             </LinearLayout>
 
             <EditText
