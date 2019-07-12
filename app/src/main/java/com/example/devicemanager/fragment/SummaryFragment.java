@@ -20,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class SummaryFragment extends Fragment {
-    private FloatingActionButton fabContainer, fabAll, fabLaptop, fabDevice, fabFurniture, fabOther;
+    private FloatingActionButton fabContainer;
     private boolean isFABOpen = false;
     private RecyclerView rvSummary;
     private SummaryAdapter summaryAdapter,summaryAdapterLaptop;
@@ -56,12 +56,6 @@ public class SummaryFragment extends Fragment {
     private void initInstances(View rootView, Bundle savedInstanceState) {
         loadData = new LoadData(getContext());
         fabContainer = rootView.findViewById(R.id.fabFilter);
-        fabContainer = rootView.findViewById(R.id.fabFilter);
-        fabAll = rootView.findViewById(R.id.fabAll);
-        fabLaptop = rootView.findViewById(R.id.fabLaptop);
-        fabDevice = rootView.findViewById(R.id.fabDevice);
-        fabFurniture = rootView.findViewById(R.id.fabFurniture);
-        fabOther = rootView.findViewById(R.id.fabOther);
 
         layoutAll = rootView.findViewById(R.id.layoutAll);
         layoutDevice = rootView.findViewById(R.id.layoutDevice);

@@ -2,86 +2,88 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="150dp"
+    android:layout_margin="5dp"
+    android:layout_marginBottom="3dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingStart="15dp"
-        android:paddingLeft="15dp"
-        android:paddingEnd="15dp"
-        android:paddingRight="15dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvBrand"
                 style="@style/TextViewSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textSize="@dimen/text_20_sp" />
 
             <TextView
                 android:id="@+id/tvType"
                 style="@style/TextViewSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:gravity="center" />
-
+                android:gravity="center"
+                android:textSize="@dimen/text_20_sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="1"
+            android:gravity="end"
             android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="6" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
                 android:orientation="vertical">
+
                 <TextView
-                    android:text="@string/available"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:text="@string/available"
                     android:textSize="@dimen/text_14_sp" />
+
                 <TextView
                     android:id="@+id/tvAvailable"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="@dimen/text_14_sp" />
+                    android:textColor="#009688"
+                    android:textSize="@dimen/text_16_sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
                 android:orientation="vertical">
+
                 <TextView
-                    android:text="@string/active"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:text="@string/active"
                     android:textSize="@dimen/text_14_sp" />
 
                 <TextView
@@ -90,20 +92,21 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textSize="@dimen/text_14_sp" />
+                    android:textColor="#F44336"
+                    android:textSize="@dimen/text_16_sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
-                    android:text="@string/total"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:text="@string/total"
                     android:textSize="@dimen/text_14_sp" />
 
                 <TextView
@@ -112,10 +115,13 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textColor="#3F51B5"
                     android:textSize="@dimen/text_14_sp" />
+
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

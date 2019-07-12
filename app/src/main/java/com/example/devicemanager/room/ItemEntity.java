@@ -53,8 +53,10 @@ public class ItemEntity {
     private String depreciationYear;
     private String branchCode;
     private String assetTypeCode;
-    private String lastCheckedDate;
     private String purchasedPrice;
+    private String forwardDepreciation;
+    private String forwardBudget;
+    private String lastUpdated;
 
     public ItemEntity(){
 
@@ -66,7 +68,8 @@ public class ItemEntity {
                       String order, String groupByFIXGL, String ad, String unnamed1, String sticker,
                       String forwardedBudget, String accumulatedDepreciation, String warrantyDate,
                       String depreciationYear, String branchCode, String assetTypeCode,
-                      String purchasedPrice/*, String lastCheckedDate*/) {
+                      String purchasedPrice, String forwardBudget, String forwardDepreciation,
+                      String lastUpdated) {
         this.autoId = autoId;
         this.unnamed2 = unnamed2;
         this.type = type;
@@ -96,7 +99,9 @@ public class ItemEntity {
         this.branchCode = branchCode;
         this.assetTypeCode = assetTypeCode;
         this.purchasedPrice = purchasedPrice;
-        //this.lastCheckedDate = lastCheckedDate;
+        this.lastUpdated = lastUpdated;
+        this.forwardBudget = forwardBudget;
+        this.forwardDepreciation = forwardDepreciation;
     }
 
     public String getUnnamed2() {
@@ -330,13 +335,28 @@ public class ItemEntity {
         this.purchasedPrice = purchasedPrice;
     }
 
-
-    public String getLastCheckedDate() {
-        return lastCheckedDate;
+    public String getForwardDepreciation() {
+        return forwardDepreciation;
     }
 
-    public void setLastCheckedDate(String lastCheckedDate) {
-        this.lastCheckedDate = lastCheckedDate;
+    public void setForwardDepreciation(String forwardDepreciation) {
+        this.forwardDepreciation = forwardDepreciation;
+    }
+
+    public String getForwardBudget() {
+        return forwardBudget;
+    }
+
+    public void setForwardBudget(String forwardBudget) {
+        this.forwardBudget = forwardBudget;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
 }
