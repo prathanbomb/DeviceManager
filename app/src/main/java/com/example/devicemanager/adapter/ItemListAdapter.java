@@ -41,6 +41,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.Holder
         this.itemId = itemId;
     }
 
+    public static List<ItemEntity> getList() {
+        return list;
+    }
+
     private String itemId;
 
     public ItemListAdapter(Context context) {
