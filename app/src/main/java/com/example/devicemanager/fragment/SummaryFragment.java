@@ -34,6 +34,7 @@ public class SummaryFragment extends Fragment {
     private SummaryAdapter summaryAdapter,summaryAdapterLaptop;
     private RecyclerView.LayoutManager layoutManager;
     private RelativeLayout layoutAll, layoutDevice, layoutLaptop, layoutFurniture, layoutOther;
+    private View hidedView;
 
     private LoadData loadData;
     String[] typeDevice, typeFurniture, typeOther, typeAll;
@@ -75,6 +76,7 @@ public class SummaryFragment extends Fragment {
         layoutFurniture = rootView.findViewById(R.id.layoutFurniture);
         layoutLaptop = rootView.findViewById(R.id.layoutLaptop);
         layoutOther = rootView.findViewById(R.id.layoutOther);
+        hidedView = rootView.findViewById(R.id.hidedView);
 
         fabContainer.setOnClickListener(onClickListener);
         layoutAll.setOnClickListener(onClickListener);
@@ -198,6 +200,7 @@ public class SummaryFragment extends Fragment {
 
     private void closeFABMenu() {
         isFABOpen = false;
+        hidedView.setVisibility(View.INVISIBLE);
         layoutAll.animate().translationY(0);
         layoutLaptop.animate().translationY(0);
         layoutDevice.animate().translationY(0);
@@ -209,6 +212,7 @@ public class SummaryFragment extends Fragment {
     private void showFABMenu() {
         isFABOpen = true;
         delayOpenFab();
+        hidedView.setVisibility(View.VISIBLE);
         layoutAll.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_1));
         layoutLaptop.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_2));
         layoutDevice.animate().translationY(-getResources().getDimension(R.dimen.transition_floating_3));
@@ -254,21 +258,25 @@ public class SummaryFragment extends Fragment {
                     closeFABMenu();
                 }
             }
-           else if(view == layoutAll){
+            else if(view == layoutAll){
                 getDataByType(typeAll, intAll,intAll,intAll);
-
+                closeFABMenu();
             }
             else if (view == layoutDevice){
                 getDataByType(typeDevice, intDevice,intDevice,intDevice);
+                closeFABMenu();
             }
             else if (view == layoutLaptop){
                 getLaptop();
+                closeFABMenu();
             }
             else if (view == layoutFurniture){
                 getDataByType(typeFurniture, intFurniture,intFurniture,intFurniture);
+                closeFABMenu();
             }
             else if (view == layoutOther){
                 getDataByType(typeOther, intAll,intAll,intAll);
+                closeFABMenu();
             }
         }
     };

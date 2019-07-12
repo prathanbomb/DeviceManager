@@ -49,6 +49,8 @@ public class DeviceDetailFragment extends Fragment {
     private ProgressBar progressBar;
     private View progressDialogBackground;
     private LoadData loadData;
+    private int updatedKey;
+    private String lastKey;
 
 
     public static DeviceDetailFragment newInstances(String barcode) {
@@ -104,6 +106,8 @@ public class DeviceDetailFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.spin_kit);
         progressDialogBackground = (View) view.findViewById(R.id.view);
 
+        getUpdateKey();
+
         if (serial != null){
             getData(serial);
         }
@@ -116,6 +120,8 @@ public class DeviceDetailFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         List<ItemEntity> itemEntity = loadData.selectData(serialNew);
+
+        lastKey = itemEntity.get(0).getAutoId() + "" ;
 
         tvItemId.setText("Item ID : " + itemEntity.get(0).getUnnamed2());
         tvOwnerName.setText(checkNoneData(itemEntity.get(0).getPlaceName(), "No Owner"));
@@ -168,6 +174,7 @@ public class DeviceDetailFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 if (state.matches("check")) {
                     checkedDevice();
+                    setUpdatedId(lastKey);
                 } else if (state.matches("add")) {
                     Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                     intent.putExtra("Serial", serial);
@@ -189,9 +196,11 @@ public class DeviceDetailFragment extends Fragment {
     }
 
     private void checkedDevice() {
+        progressDialogBackground.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         final String idKey = loadData.selectData(serial).get(0).getAutoId() + "";
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("Data").child(idKey).child("lastCheckedDate");
+                .child("Data").child(idKey).child("lastUpdated");
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         final Date date = new Date();
         databaseReference.setValue(dateFormat.format(date))
@@ -199,6 +208,7 @@ public class DeviceDetailFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
+                    hideDialog();
                     tvLastUpdate.setText("Last Check : " + dateFormat.format(date));
                     Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                 }
@@ -209,6 +219,38 @@ public class DeviceDetailFragment extends Fragment {
                 Log.d("checkedDevice", e.toString());
             }
         });
+    }
+
+    private void getUpdateKey() {
+        DatabaseReference databaseReference =
+                FirebaseDatabase.getInstance().getReference().child("Updated");
+        Query query = databaseReference.orderByKey().limitToLast(1);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    updatedKey = Integer.parseInt(s.getKey()) + 1;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                updatedKey = -1;
+            }
+        });
+    }
+
+    private void setUpdatedId(String lastKey) {
+        FirebaseDatabase.getInstance().getReference().child("Updated")
+                .child(updatedKey + "").child("id").setValue(lastKey)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            updatedKey++;
+                        }
+                    }
+                });
     }
 
     private String setDate(String inputDate){

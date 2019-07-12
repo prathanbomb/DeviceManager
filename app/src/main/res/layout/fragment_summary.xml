@@ -10,6 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <View
+        android:id="@+id/hidedView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B5FFFFFF"
+        android:visibility="invisible" />
+
     <RelativeLayout
         android:id="@+id/layoutAll"
         style="@style/RelativeLayoutForFab"
@@ -19,12 +26,9 @@
             android:id="@+id/tvAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/all"
-            android:textSize="20sp" />
+            style="@style/TextViewForFab"
+            android:background="@drawable/rounded_shape"
+            android:text="@string/all" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAll"
@@ -47,12 +51,8 @@
             android:id="@+id/tvLaptop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/laptop"
-            android:textSize="20sp" />
+            style="@style/TextViewForFab"
+            android:text="@string/laptop" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabLaptop"
@@ -75,12 +75,8 @@
             android:id="@+id/tvDevice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/device"
-            android:textSize="20sp" />
+            style="@style/TextViewForFab"
+            android:text="@string/device" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabDevice"
@@ -103,12 +99,8 @@
             android:id="@+id/tvFurniture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/furniture"
-            android:textSize="20sp" />
+            style="@style/TextViewForFab"
+            android:text="@string/furniture"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabFurniture"
@@ -130,12 +122,8 @@
             android:id="@+id/tvOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/other"
-            android:textSize="20sp" />
+            style="@style/TextViewForFab"
+            android:text="@string/other" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabOther"
