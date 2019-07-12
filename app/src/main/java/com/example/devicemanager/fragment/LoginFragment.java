@@ -130,8 +130,7 @@ public class LoginFragment extends Fragment {
 
     private boolean checkEmail() {
         String email = etEmail.getText().toString().toLowerCase();
-        String emailSubString = email.substring(email.length() - 11);
-        if (emailSubString.matches(getResources().getString(R.string.digio_email))) {
+        if (email.contains(getResources().getString(R.string.digio_email))) {
             return true;
         } else {
             progressDialogBackground.setVisibility(View.INVISIBLE);
@@ -152,7 +151,7 @@ public class LoginFragment extends Fragment {
             hideKeyboardFrom(getContext(), view);
             progressDialogBackground.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-            if(checkEmail()) {
+            if (checkEmail()) {
                 mAuthListener = new FirebaseAuth.AuthStateListener() {
                     @Override
                     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
