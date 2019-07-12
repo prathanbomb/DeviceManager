@@ -131,7 +131,7 @@ public class DeviceDetailFragment extends Fragment {
         tvModel.setText("Model : " + checkNoneData(itemEntity.get(0).getModel(), "N/A"));
         tvSerialNumber.setText("S/N : " + checkNoneData(itemEntity.get(0).getSerialNo(), "No Serial"));
 
-        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + "-");
+        tvLastUpdate.setText(getResources().getString(R.string.last_check) + " : " + itemEntity.get(0).getLastUpdated());
         tvAddedDate.setText(getResources().getString(R.string.added_date) + " : " + setDate(itemEntity.get(0).getPurchasedDate()));
         hideDialog();
     }

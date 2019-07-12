@@ -205,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_weight="4"
+                    android:layout_weight="3"
                     android:orientation="vertical">
 
                     <TextView
@@ -225,25 +225,50 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
+                    android:layout_weight="2"
                     android:orientation="vertical">
 
                     <TextView
-                        android:gravity="left"
                         android:id="@+id/tvQuantity"
-                        android:text="@string/quantity"
-                        android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="@string/quantity" />
+
                     <EditText
                         android:id="@+id/etQuantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:inputType="number"
-                        android:text="@string/number_1"
-                        android:layout_weight="1"
+                        android:text="@string/number_1" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvWarranty"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="Warranty(Year)" />
+
+                    <EditText
+                        android:id="@+id/etWarranty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:hint="1"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -255,7 +280,7 @@
                 android:inputType="textMultiLine" />
 
             <TextView
-                android:id="@+id/tvClicktoShow"
+                android:id="@+id/tvClickToShow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -282,7 +307,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:hint="@string/forward_depreciation"
                         android:inputType="numberDecimal" />
 
@@ -290,8 +315,8 @@
                         android:id="@+id/etDepreciationRate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:hint="@string/depreciation_rate"
+                        android:layout_weight="1"
+                        android:hint="@string/accumulated_depreciation"
                         android:inputType="numberDecimal" />
                 </LinearLayout>
 
@@ -301,31 +326,38 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/etAccumulateDepreciation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="2"
-                        android:hint="ค่าเสื่อมราคาสะสม"
-                        android:inputType="numberDecimal" />
-
-                    <EditText
                         android:id="@+id/etDepreciationinYear"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:hint="ค่าเสื่อมราคาในปี"
+                        android:hint="@string/depreciation_inYear"
                         android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/etAccumulateDepreciation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:hint="@string/accumulate_depreciation"
+                        android:inputType="numberDecimal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/etForwardedBudget"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="มูลค่ายกมา"
+                        android:hint="@string/forwarded_budget"
                         android:inputType="numberDecimal" />
                 </LinearLayout>
 

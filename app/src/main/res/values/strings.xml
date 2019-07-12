@@ -154,7 +154,7 @@
     <string name="digio_email">digio.co.th</string>
     <string name="added_date">Added Date</string>
     <string name="last_check">Last Check</string>
-    <string name="price">Price</string>
+    <string name="price">Price per pieces</string>
     <string name="model">Model</string>
     <string name="brand">Brand</string>
     <string name="details">Details</string>
