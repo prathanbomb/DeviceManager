@@ -143,6 +143,8 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         floatingButton = rootView.findViewById(R.id.fabAdd);
         floatingButton.setOnClickListener(onClickFab);
         recyclerView = rootView.findViewById(R.id.recyclerView);
+        view = rootView.findViewById(R.id.view);
+        progressBar = rootView.findViewById(R.id.spin_kit);
 
         dataManager = new DataManager();
 
@@ -152,9 +154,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         adapter = new ItemListAdapter(getContext());
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        view = rootView.findViewById(R.id.view);
-        progressBar = rootView.findViewById(R.id.spin_kit);
-
+        adapter.notifyDataSetChanged();
     }
 
     private View.OnClickListener onClickFab = new View.OnClickListener() {

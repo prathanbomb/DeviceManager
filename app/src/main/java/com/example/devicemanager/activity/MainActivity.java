@@ -1,6 +1,7 @@
 package com.example.devicemanager.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -14,9 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.devicemanager.R;
+import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.fragment.LoginFragment;
 import com.example.devicemanager.fragment.MainFragment;
 import com.example.devicemanager.fragment.SummaryFragment;
+import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.ItemEntity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -110,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
             view.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
         }
+
+        if (getIntent().getStringExtra("itemId") != null){
+            ItemListAdapter adapter = new ItemListAdapter(Contextor.getInstance().getContext());
+            adapter.setItemId(getIntent().getStringExtra("itemId"));
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -202,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    View.OnClickListener onBtnClick = new View.OnClickListener() {
+    private View.OnClickListener onBtnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
 

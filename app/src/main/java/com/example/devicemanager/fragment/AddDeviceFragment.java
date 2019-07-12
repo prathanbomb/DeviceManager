@@ -377,6 +377,7 @@ public class AddDeviceFragment extends Fragment {
                     editor.putBoolean("downloadStatus", true);
                     editor.commit();
                     Intent intentBack = new Intent();
+                    intentBack.putExtra("itemId", itemEntity.get(0).getUnnamed2());
                     getActivity().setResult(RESULT_OK, intentBack);
                     getActivity().finish();
                 } else {
@@ -423,8 +424,8 @@ public class AddDeviceFragment extends Fragment {
                             Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
                             progressDialogBackground.setVisibility(View.INVISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
-                            Intent intentBack = new Intent();
-                            getActivity().setResult(RESULT_OK, intentBack);
+                            Intent intent = new Intent();
+                            intent.putExtra("itemId", itemSave.getUnnamed2());
                             getActivity().finish();
                         }
                         countDevice++;
