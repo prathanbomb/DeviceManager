@@ -123,9 +123,6 @@ public class DeviceDetailFragment extends Fragment {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-        sp = getContext().getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
-        editor = sp.edit();
-
         itemEntity = loadData.selectData(serialNew);
 
         if (itemEntity != null) {
@@ -225,8 +222,10 @@ public class DeviceDetailFragment extends Fragment {
                             loadData.getItem().get(autoId).setLastUpdated("" + dateFormat.format(date));
                             Log.d("xxxxxxx",""+loadData.getItem().get(autoId).getLastUpdated());
 
+                            sp = getContext().getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
+                            editor = sp.edit();
                             editor.putBoolean("downloadStatus", true);
-                            editor.commit();
+                            editor.apply();
 
                             tvLastUpdate.setText("Last Check : " + dateFormat.format(date));
                             Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();

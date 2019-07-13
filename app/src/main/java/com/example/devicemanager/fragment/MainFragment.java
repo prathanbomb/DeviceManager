@@ -160,7 +160,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     private View.OnClickListener onClickFab = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(getContext(), AddDeviceActivity.class);
+            Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
             startActivity(intent);
         }
     };

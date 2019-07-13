@@ -1,5 +1,6 @@
 package com.example.devicemanager.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -82,6 +83,7 @@ public class AddDeviceFragment extends Fragment {
     List<ItemEntity> itemEntity;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
+    private Context context;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -95,6 +97,15 @@ public class AddDeviceFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = getLayoutInflater().inflate(R.layout.fragment_edit_detail, container, false);
+        initInstances(view, savedInstanceState);
+        return view;
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -113,14 +124,6 @@ public class AddDeviceFragment extends Fragment {
         return true;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = getLayoutInflater().inflate(R.layout.fragment_edit_detail, container, false);
-        initInstances(view, savedInstanceState);
-        return view;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -134,7 +137,8 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void initInstances(View view, Bundle savedInstanceState) {
-        loadData = new LoadData(getContext());
+        context = Contextor.getInstance().getContext();
+        loadData = new LoadData(context);
 
         spBranch = view.findViewById(R.id.spinnerBranch);
         spType = view.findViewById(R.id.spinnerDeviceType);
@@ -181,7 +185,7 @@ public class AddDeviceFragment extends Fragment {
 
         etSerialNumber.setOnTouchListener(onTouchScan);
 
-        itemId = getArguments().getString("Serial");
+        itemId = getArguments() != null ? getArguments().getString("Serial") : null;
         if (itemId != null) {
             tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
             etQuantity.setVisibility(View.INVISIBLE);
@@ -446,6 +450,7 @@ public class AddDeviceFragment extends Fragment {
                             progressBar.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent();
                             intent.putExtra("itemId", itemSave.getUnnamed2());
+                            startActivity(intent);
                             getActivity().finish();
                         }
                         countDevice++;
@@ -670,12 +675,12 @@ public class AddDeviceFragment extends Fragment {
         public void onClick(View view) {
             if (itemId != null) {
                 String[] d = etDatePicker.getText().toString().split("-");
-                new DatePickerDialog(getActivity(),
+                new DatePickerDialog(context,
                         date, Integer.parseInt(d[0]),
                         Integer.parseInt(d[1]) - 1,
                         Integer.parseInt(d[2])).show();
             } else {
-                new DatePickerDialog(getActivity(),
+                new DatePickerDialog(context,
                         date, calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)).show();

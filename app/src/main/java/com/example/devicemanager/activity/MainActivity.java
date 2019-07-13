@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -88,9 +89,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initInstances() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(false);
-
         btnDetail = findViewById(R.id.btnDetail);
         btnSummary = findViewById(R.id.btnSummary);
 
@@ -99,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         sp = this.getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
         editor = sp.edit();
+
         view = findViewById(R.id.view);
         progressBar = findViewById(R.id.spin_kit);
         view.setVisibility(View.VISIBLE);
@@ -220,14 +219,16 @@ public class MainActivity extends AppCompatActivity {
             SummaryFragment secondFragment = (SummaryFragment)
                     getSupportFragmentManager().findFragmentByTag("SummaryFragment");
 
-            if (view == btnDetail) {
-                getSupportFragmentManager().beginTransaction()
-                        .attach(mainFragment)
-                        .detach(secondFragment)
-                        .commit();
-                btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            } else if (view == btnSummary) {
+            if (view == btnDetail && mainFragment != null) {
+                if (secondFragment != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .attach(mainFragment)
+                            .detach(secondFragment)
+                            .commit();
+                    btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                }
+            } else if (view == btnSummary && mainFragment != null) {
                 if (secondFragment == null){
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.contentContainer,
@@ -244,6 +245,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.contentContainer
+                                , MainFragment.newInstance()
+                                , "MainFragment")
+                        .commit();
             }
         }
     };
