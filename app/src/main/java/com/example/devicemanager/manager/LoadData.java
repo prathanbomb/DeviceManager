@@ -29,6 +29,19 @@ public class LoadData {
         new InsertAsyncTask(itemDao).execute(itemEntity);
     }
 
+    public void updateLastUpdate(String lastUpdate, int id) {
+        new UpdateLastUpdate(itemDao, lastUpdate, id).execute();
+    }
+
+    public void updateItem(String lastUpdate, String ownedName, String ownerId, String brand, String serial_no, String item_detail,
+                           String model, String warrantyDate, String purchasedPrice, String purchased_date, String price, String note,
+                           String forwardDepreciation, String depreciationRate, String depreciationYear, String accumulatedDepreciation,
+                           String forwardBudget, int id) {
+        new UpdateItem(itemDao, lastUpdate, ownedName, ownerId, brand, serial_no, item_detail, model, warrantyDate, purchasedPrice,
+                purchased_date, price, note, forwardDepreciation, depreciationRate, depreciationYear, accumulatedDepreciation,
+                forwardBudget, id).execute();
+    }
+
     public void deleteTable() {
         new DeleteAsyncTask(itemDao).execute();
     }
@@ -177,6 +190,65 @@ public class LoadData {
             } else {
                 return null;
             }
+        }
+    }
+
+    private class UpdateLastUpdate extends AsyncTask<String, Integer, Integer> {
+        private ItemDao itemDao;
+        String lastUpdate;
+        int id;
+
+
+        UpdateLastUpdate(ItemDao itemDao, String lastUpdate, int id) {
+            this.itemDao = itemDao;
+            this.lastUpdate = lastUpdate;
+            this.id = id;
+        }
+
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            itemDao.updateLastUpdate(lastUpdate, id);
+            return null;
+        }
+    }
+
+    private class UpdateItem extends AsyncTask<String, Integer, Integer> {
+        ItemDao itemDao;
+        String lastUpdate, ownedName, ownerId, brand, serial_no, item_detail, model, warrantyDate, purchasedPrice, purchased_date,
+                price, note, forwardDepreciation, depreciationRate, depreciationYear, accumulatedDepreciation, forwardBudget;
+        int id;
+
+        public UpdateItem(ItemDao itemDao, String lastUpdate, String ownedName, String ownerId, String brand, String serial_no,
+                          String item_detail, String model, String warrantyDate, String purchasedPrice, String purchased_date,
+                          String price, String note, String forwardDepreciation, String depreciationRate, String depreciationYear,
+                          String accumulatedDepreciation, String forwardBudget, int id) {
+            this.itemDao = itemDao;
+            this.lastUpdate = lastUpdate;
+            this.ownedName = ownedName;
+            this.ownerId = ownerId;
+            this.brand = brand;
+            this.serial_no = serial_no;
+            this.item_detail = item_detail;
+            this.model = model;
+            this.warrantyDate = warrantyDate;
+            this.purchasedPrice = purchasedPrice;
+            this.purchased_date = purchased_date;
+            this.price = price;
+            this.note = note;
+            this.forwardDepreciation = forwardDepreciation;
+            this.depreciationRate = depreciationRate;
+            this.depreciationYear = depreciationYear;
+            this.accumulatedDepreciation = accumulatedDepreciation;
+            this.forwardBudget = forwardBudget;
+            this.id = id;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            itemDao.updateDataFromAdd(lastUpdate, ownedName, ownerId, brand, serial_no, item_detail, model, warrantyDate, purchasedPrice, purchased_date,
+                    price, note, forwardDepreciation, depreciationRate, depreciationYear, accumulatedDepreciation, forwardBudget,id);
+            return null;
         }
     }
 }

@@ -84,6 +84,9 @@ public class AddDeviceFragment extends Fragment {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     private Context context;
+    private ItemEntity itemSave;
+    private SimpleDateFormat dateFormat;
+    private Date dateCheck;
 
     public static AddDeviceFragment newInstances() {
         AddDeviceFragment fragment = new AddDeviceFragment();
@@ -139,6 +142,9 @@ public class AddDeviceFragment extends Fragment {
     private void initInstances(View view, Bundle savedInstanceState) {
         context = Contextor.getInstance().getContext();
         loadData = new LoadData(context);
+
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        dateCheck = new Date();
 
         spBranch = view.findViewById(R.id.spinnerBranch);
         spType = view.findViewById(R.id.spinnerDeviceType);
@@ -345,61 +351,27 @@ public class AddDeviceFragment extends Fragment {
 
     private void updateData() {
         final int autoId = itemEntity.get(0).getAutoId();
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        final Date dateCheck = new Date();
-        databaseReference.child(lastKey).child("placeName").setValue(etOwnerName.getText().toString());
-        loadData.getItem().get(autoId).setPlaceName(etOwnerName.getText().toString());
+        itemSave = new ItemEntity(loadData.getItem().size(), getUnnamed2(), type, etDeviceDetail.getText().toString(),
+                etSerialNumber.getText().toString(), etOwnerName.getText().toString(), etDatePicker.getText().toString(),
+                etNote.getText().toString(), "-", etOwnerId.getText().toString(), getUnnamed2().substring(3),
+                etDevicePrice.getText().toString(), etDeviceModel.getText().toString(), etDepreciationRate.getText().toString(),
+                "ID", etBrand.getText().toString(), abbreviation, order + "", "-", YY + "", "DGO", "-", etForwardedBudget.getText().toString(),
+                etAccumulateDepreciation.getText().toString(), etWarranty.getText().toString(), etDepreciationinYear.getText().toString(),
+                branch + "", "" + category, etPurchasePrice.getText().toString(), etForwardedBudget.getText().toString(),
+                etForwardDepreciation.getText().toString(), dateFormat.format(dateCheck));
 
-        databaseReference.child(lastKey).child("lastUpdated").setValue(dateFormat.format(dateCheck));
-        loadData.getItem().get(autoId).setLastUpdated(dateFormat.format(dateCheck));
-
-        databaseReference.child(lastKey).child("detail").setValue(etDeviceDetail.getText().toString());
-        loadData.getItem().get(autoId).setDetail(etDeviceDetail.getText().toString());
-
-        databaseReference.child(lastKey).child("serialNo").setValue(etSerialNumber.getText().toString());
-        loadData.getItem().get(autoId).setSerialNo(etSerialNumber.getText().toString());
-
-        databaseReference.child(lastKey).child("placeId").setValue(etOwnerId.getText().toString());
-        loadData.getItem().get(autoId).setPlaceId(etOwnerId.getText().toString());
-
-        databaseReference.child(lastKey).child("purchasedPrice").setValue(etPurchasePrice.getText().toString());
-        loadData.getItem().get(autoId).setPurchasedPrice(etPurchasePrice.getText().toString());
-
-        databaseReference.child(lastKey).child("price").setValue(etDevicePrice.getText().toString());
-        loadData.getItem().get(autoId).setPrice(etDevicePrice.getText().toString());
-
-        databaseReference.child(lastKey).child("unnamed2").setValue(tvItemId.getText().toString());
-        loadData.getItem().get(autoId).setUnnamed2(tvItemId.getText().toString());
-
-        databaseReference.child(lastKey).child("note").setValue(etNote.getText().toString());
-        loadData.getItem().get(autoId).setNote(etNote.getText().toString());
-
-        databaseReference.child(lastKey).child("forwardDepreciation").setValue(etForwardDepreciation.getText().toString());
-        loadData.getItem().get(autoId).setForwardDepreciation(etForwardDepreciation.getText().toString());
-
-        databaseReference.child(lastKey).child("depreciationRate").setValue(etDepreciationRate.getText().toString());
-        loadData.getItem().get(autoId).setDepreciationRate(etDepreciationRate.getText().toString());
-
-        databaseReference.child(lastKey).child("depreciationYear").setValue(etDepreciationinYear.getText().toString());
-        loadData.getItem().get(autoId).setDepreciationYear(etDepreciationinYear.getText().toString());
-
-        databaseReference.child(lastKey).child("accumulatedDepreciation").setValue(etAccumulateDepreciation.getText().toString());
-        loadData.getItem().get(autoId).setAccumulatedDepreciation(etAccumulateDepreciation.getText().toString());
-
-        databaseReference.child(lastKey).child("forwardedBudget").setValue(etForwardedBudget.getText().toString());
-        loadData.getItem().get(autoId).setForwardBudget(etForwardedBudget.getText().toString());
-
-        databaseReference.child(lastKey).child("warrantyDate").setValue(etWarranty.getText().toString());
-        loadData.getItem().get(autoId).setWarrantyDate(etWarranty.getText().toString());
-
-        setUpdatedId(lastKey);
-        databaseReference.child(lastKey).child("model").setValue(etDeviceModel.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.child(lastKey).setValue(itemSave).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    loadData.getItem().get(autoId).setModel(etDeviceModel.getText().toString());
-                    editor.putBoolean("downloadStatus", true);
-                    editor.commit();
+                    setUpdatedId(lastKey);
+                    loadData.updateItem(dateFormat.format(dateCheck),etOwnerName.getText().toString(),etOwnerId.getText().toString(),
+                            etBrand.getText().toString(),etSerialNumber.getText().toString(),etDeviceDetail.getText().toString(),
+                            etDeviceModel.getText().toString(),etWarranty.getText().toString(),etPurchasePrice.getText().toString(),
+                            etDatePicker.getText().toString(),etDevicePrice.getText().toString(),etNote.getText().toString(),
+                            etForwardDepreciation.getText().toString(),etDepreciationRate.getText().toString(),
+                            etDepreciationinYear.getText().toString(),etAccumulateDepreciation.getText().toString(),
+                            etForwardedBudget.getText().toString(), autoId);
                     Intent intentBack = new Intent();
                     intentBack.putExtra("itemId", itemEntity.get(0).getUnnamed2());
                     getActivity().setResult(RESULT_OK, intentBack);
@@ -417,8 +389,6 @@ public class AddDeviceFragment extends Fragment {
         progressDialogBackground.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         String date = setDate(etDatePicker.getText().toString());
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        final Date dateCheck = new Date();
         // TODO: Add more item data
         //TODO:รหัสทรัพสิน ID
         DataItem item = new DataItem("ID", etOwnerId.getText().toString(), etOwnerName.getText().toString(),
@@ -430,13 +400,14 @@ public class AddDeviceFragment extends Fragment {
                 getUnnamed2().substring(3), "" + category, "" + branch, "-",
                 "-", "" + dateFormat.format(dateCheck).toString(), "" + order,
                 "" + abbreviation, "-", "DGO", etWarranty.getText().toString());
-        final ItemEntity itemSave = new ItemEntity(loadData.getItem().size(), getUnnamed2(), type, etDeviceDetail.getText().toString(),
+        itemSave = new ItemEntity(loadData.getItem().size(), getUnnamed2(), type, etDeviceDetail.getText().toString(),
                 etSerialNumber.getText().toString(), etOwnerName.getText().toString(), etDatePicker.getText().toString(),
                 etNote.getText().toString(), "-", etOwnerId.getText().toString(), getUnnamed2().substring(3),
                 etDevicePrice.getText().toString(), etDeviceModel.getText().toString(), etDepreciationRate.getText().toString(),
-                "ID", etBrand.getText().toString(), abbreviation, order + "", "-", YY + "", "DGO", "-", etForwardedBudget.getText().toString(),
-                etAccumulateDepreciation.getText().toString(), etWarranty.getText().toString(), etDepreciationinYear.getText().toString(),
-                branch + "", "" + category, etPurchasePrice.getText().toString(), etForwardedBudget.getText().toString(),
+                "ID", etBrand.getText().toString(), abbreviation, order + "", "-", YY + "", "DGO",
+                "-", etForwardedBudget.getText().toString(), etAccumulateDepreciation.getText().toString(),
+                etWarranty.getText().toString(), etDepreciationinYear.getText().toString(), branch + "",
+                "" + category, etPurchasePrice.getText().toString(), etForwardedBudget.getText().toString(),
                 etForwardDepreciation.getText().toString(), dateFormat.format(dateCheck));
         if (lastKey != null) {
             databaseReference.child(lastKey).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -535,9 +506,9 @@ public class AddDeviceFragment extends Fragment {
                 num = "001";
                 order++;
             } else if (order < 10) {
-                num = "00" + String.valueOf(order);
+                num = "00" + order;
             } else if (order < 100) {
-                num = "0" + String.valueOf(order);
+                num = "0" + order;
             } else {
                 num = "" + order;
             }

@@ -2,10 +2,8 @@ package com.example.devicemanager.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,8 +52,6 @@ public class DeviceDetailFragment extends Fragment {
     private int updatedKey;
     private String lastKey;
     List<ItemEntity> itemEntity;
-    SharedPreferences sp;
-    SharedPreferences.Editor editor;
 
     public static DeviceDetailFragment newInstances(String barcode) {
         DeviceDetailFragment fragment = new DeviceDetailFragment();
@@ -218,16 +214,8 @@ public class DeviceDetailFragment extends Fragment {
                         if (task.isSuccessful()) {
                             int autoId = itemEntity.get(0).getAutoId();
                             hideDialog();
-
-                            loadData.getItem().get(autoId).setLastUpdated("" + dateFormat.format(date));
-                            Log.d("xxxxxxx",""+loadData.getItem().get(autoId).getLastUpdated());
-
-                            sp = getContext().getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
-                            editor = sp.edit();
-                            editor.putBoolean("downloadStatus", true);
-                            editor.apply();
-
-                            tvLastUpdate.setText("Last Check : " + dateFormat.format(date));
+                            loadData.updateLastUpdate(dateFormat.format(date),autoId);
+                            tvLastUpdate.setText("Last Check : " + loadData.getItem().get(autoId).getLastUpdated());
                             Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                         }
                     }

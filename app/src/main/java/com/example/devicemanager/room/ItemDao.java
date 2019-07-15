@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -33,6 +34,20 @@ public interface ItemDao {
 
     @Insert
     void insertAll(ItemEntity item);
+
+    @Query("UPDATE itementity SET lastUpdated = :lastUpdate WHERE autoId = :id")
+    void updateLastUpdate(String lastUpdate,int id);
+
+    @Query("UPDATE itementity SET " +
+            "lastUpdated = :lastUpdate ,owner_name = :ownedName ,placeId = :ownerId,brand = :brand ,serial_no = :serial_no ,"+
+            "item_detail = :item_detail ,model = :model ,warrantyDate = :warrantyDate ,purchasedPrice = :purchasedPrice ,"+
+            "purchased_date = :purchased_date ,price = :price ,note = :note ,forwardDepreciation = :forwardDepreciation ,"+
+            "depreciationRate = :depreciationRate ,depreciationYear = :depreciationYear ," +
+            "accumulatedDepreciation = :accumulatedDepreciation ,forwardBudget = :forwardBudget WHERE autoId = :id")
+    void updateDataFromAdd(String lastUpdate, String ownedName, String ownerId, String brand, String serial_no, String item_detail,
+                           String model, String warrantyDate, String purchasedPrice, String purchased_date, String price, String note,
+                           String forwardDepreciation, String depreciationRate, String depreciationYear, String accumulatedDepreciation,
+                           String forwardBudget, int id);
 
     @Query("DELETE FROM ItemEntity")
     void delete();
