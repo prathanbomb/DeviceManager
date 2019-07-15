@@ -426,7 +426,6 @@ public class AddDeviceFragment extends Fragment {
                             progressBar.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent();
                             intent.putExtra("itemId", itemSave.getUnnamed2());
-                            startActivity(intent);
                             getActivity().finish();
                         }
                         countDevice++;
