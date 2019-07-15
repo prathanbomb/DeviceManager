@@ -43,6 +43,7 @@ import com.example.devicemanager.model.DataItem;
 import com.example.devicemanager.room.ItemEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +84,6 @@ public class AddDeviceFragment extends Fragment {
     List<ItemEntity> itemEntity;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
-    private Context context;
     private ItemEntity itemSave;
     private SimpleDateFormat dateFormat;
     private Date dateCheck;
@@ -140,8 +140,7 @@ public class AddDeviceFragment extends Fragment {
     }
 
     private void initInstances(View view, Bundle savedInstanceState) {
-        context = Contextor.getInstance().getContext();
-        loadData = new LoadData(context);
+        loadData = new LoadData(getContext());
 
         dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         dateCheck = new Date();
@@ -193,10 +192,15 @@ public class AddDeviceFragment extends Fragment {
 
         itemId = getArguments() != null ? getArguments().getString("Serial") : null;
         if (itemId != null) {
-            tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
-            etQuantity.setVisibility(View.INVISIBLE);
-            lastKey = "" + loadData.selectData(itemId).get(0).getAutoId();
-            setData();
+            if (itemId.length() < 14){
+                Toast.makeText(getContext(), "Something went wrong.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                tvQuantity.setText(getResources().getString(R.string.quantity) + ":1");
+                etQuantity.setVisibility(View.INVISIBLE);
+                lastKey = "" + loadData.selectData(itemId).get(0).getAutoId();
+                setData();
+            }
         }
     }
 
@@ -244,7 +248,7 @@ public class AddDeviceFragment extends Fragment {
 
     private void setSpinner(int spinnerlist, Spinner spinner) {
         spinnerAdapter = ArrayAdapter.createFromResource(
-                Contextor.getInstance().getContext(),
+                getContext(),
                 spinnerlist,
                 R.layout.spinner_item);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
@@ -255,7 +259,7 @@ public class AddDeviceFragment extends Fragment {
     private void setSpinnerPosition(int spinerlist, Spinner spinner, int position, String spinerName) {
         if (position == -1) {
             spinnerAdapter = ArrayAdapter.createFromResource(
-                    Contextor.getInstance().getContext(),
+                    getContext(),
                     spinerlist,
                     R.layout.spinner_item);
             spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
@@ -414,6 +418,7 @@ public class AddDeviceFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+
                         if (countDevice == quntity) {
                             loadData.insert(itemSave);
                             Toast.makeText(getActivity(), "Complete!", Toast.LENGTH_SHORT).show();
@@ -646,12 +651,12 @@ public class AddDeviceFragment extends Fragment {
         public void onClick(View view) {
             if (itemId != null) {
                 String[] d = etDatePicker.getText().toString().split("-");
-                new DatePickerDialog(context,
+                new DatePickerDialog(getContext(),
                         date, Integer.parseInt(d[0]),
                         Integer.parseInt(d[1]) - 1,
                         Integer.parseInt(d[2])).show();
             } else {
-                new DatePickerDialog(context,
+                new DatePickerDialog(getContext(),
                         date, calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -715,15 +720,9 @@ public class AddDeviceFragment extends Fragment {
                 type = selected.toUpperCase();
             } else if (adapterView == spBranch) {
                 switch (i) {
-                    case 0:
-                        branch = 1;
-                        break;
-                    case 1:
-                        branch = 2;
-                        break;
-                    case 2:
-                        branch = 3;
-                        break;
+                    case 0: branch = 1; break;
+                    case 1: branch = 2; break;
+                    case 2: branch = 3; break;
                 }
             }
         }
