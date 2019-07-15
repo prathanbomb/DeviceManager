@@ -19,18 +19,30 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.AddDeviceActivity;
 import com.example.devicemanager.activity.DeviceDetailActivity;
 import com.example.devicemanager.activity.ScanBarcodeActivity;
 import com.example.devicemanager.adapter.ItemListAdapter;
-import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.DataManager;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.AppDatabase;
+import com.example.devicemanager.room.ItemEntity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -47,7 +59,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     private FirebaseAuth mAuth;
     private RecyclerView recyclerView;
     private DataManager dataManager;
-    private ItemListAdapter adapter;
+    private ItemListAdapter adapter,adapterNew;
     private LinearLayoutManager layoutManager;
     private LoadData loadData;
     private Boolean downloadStatus;
@@ -56,6 +68,7 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
     private View view;
     private ProgressBar progressBar;
     AppDatabase database;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public MainFragment() {
         super();
@@ -147,14 +160,17 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         progressBar = rootView.findViewById(R.id.spin_kit);
 
         dataManager = new DataManager();
+        loadData = new LoadData(getContext());
 
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
         adapter = new ItemListAdapter(getContext());
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        swipeRefreshLayout =  rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(pullToRefresh);
+
     }
 
     private View.OnClickListener onClickFab = new View.OnClickListener() {
@@ -164,4 +180,71 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
             startActivity(intent);
         }
     };
+
+    androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener pullToRefresh = new androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            progressBar.setVisibility(View.VISIBLE);
+            view.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
+            loadData();
+        }
+    };
+    private void loadData() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                loadData.deleteTable();
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    ItemEntity item = s.getValue(ItemEntity.class);
+
+                    if (item != null) {
+                        if (!item.getPurchasedDate().matches("") &&
+                                !item.getPurchasedDate().matches("-")) {
+                            item.setPurchasedDate(setDate(item.getPurchasedDate()));
+                        }
+                        item.setAutoId(Integer.parseInt(s.getKey()));
+                        loadData.insert(item);
+                    }
+                }
+                new ItemListAdapter(getContext());
+                recyclerView.setAdapter(adapter);
+
+                view.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private String setDate(String inputDate) {
+        if (inputDate.contains("GMT")) {
+            inputDate = inputDate.substring(0, inputDate.indexOf("GMT")).trim();
+        }
+        String inputFormat = "EEE MMM dd yyyy HH:mm:ss";
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat(
+                inputFormat, Locale.ENGLISH);
+        String outputFormat = "yyyy-MM-dd";
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+                outputFormat, Locale.ENGLISH);
+
+        Date date;
+        String str = inputDate;
+
+        try {
+            date = inputDateFormat.parse(inputDate);
+            str = outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return str;
+
+    }
 }
