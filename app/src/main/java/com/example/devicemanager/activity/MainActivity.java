@@ -1,10 +1,8 @@
 package com.example.devicemanager.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
+                        showLoadingView();
                         setUpLoadData();
+                        //setStartFragment();
                     }
                 }
             };
@@ -110,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+        editor = sp.edit();
+        editor.clear();
+        editor.apply();
+
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
@@ -118,17 +122,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor = sp.edit();
-        editor.clear();
-        editor.apply();
     }
 
     private void setUpLoadData() {
+        Log.d("test1707", sp.getBoolean("downloadStatus", true) + " Status");
         if (sp.getBoolean("downloadStatus", true)) {
-            showLoadingView();
             if (loadData.deleteTable() == 1) {
                 loadData();
             }
+        }
+        else {
+            hideLoadingView();
+            setStartFragment();
         }
     }
 
@@ -155,8 +160,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if (insertStatus == 1) {
+                if (insertStatus == 1){
                     setStartFragment();
+                    hideLoadingView();
                 }
             }
 
@@ -174,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setStartFragment() {
-        hideLoadingView();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contentContainer
                         , MainFragment.newInstance()
@@ -184,11 +189,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLoadingView(){
+        Log.d("test1707", "show loading");
         view.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
     }
 
     private void hideLoadingView(){
+        Log.d("test1707", "hide loading");
         view.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
