@@ -38,6 +38,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static android.app.Activity.RESULT_OK;
 
 public class DeviceDetailFragment extends Fragment {
@@ -79,7 +81,9 @@ public class DeviceDetailFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 11111) {
             if (resultCode == RESULT_OK) {
-                getActivity().finish();
+                loadData = new LoadData(getActivity());
+                getData(serial);
+                SuccessDialog();
             }
         }
     }
@@ -151,19 +155,6 @@ public class DeviceDetailFragment extends Fragment {
 
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (view == btnEdit) {
-                Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
-                intent.putExtra("Serial", serial);
-                startActivityForResult(intent, 11111);
-            } else if (view == btnCheck) {
-                showAlertDialog(R.string.dialog_msg_checked, "check");
-            }
-        }
-    };
-
     private void hideDialog() {
         progressDialogBackground.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
@@ -179,6 +170,7 @@ public class DeviceDetailFragment extends Fragment {
                 if (state.matches("check")) {
                     checkedDevice();
                     setUpdatedId(lastKey);
+                    SuccessDialog();
                 } else if (state.matches("add")) {
                     Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
                     intent.putExtra("Serial", serial);
@@ -280,4 +272,28 @@ public class DeviceDetailFragment extends Fragment {
         return str;
 
     }
+
+    private void SuccessDialog() {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Success")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view == btnEdit) {
+                Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
+                intent.putExtra("Serial", serial);
+                startActivityForResult(intent, 11111);
+            } else if (view == btnCheck) {
+                showAlertDialog(R.string.dialog_msg_checked, "check");
+            }
+        }
+    };
 }
