@@ -6,7 +6,7 @@
         <item>สาขาเชียงใหม่</item>
         <item>สาขานนทบุรี</item>
     </string-array>
-<string-array name="device_types">
+    <string-array name="device_types">
         <item>Building</item>
         <item>Device and Accessory</item>
         <item>Furniture</item>
@@ -15,6 +15,96 @@
 
     <string-array name="building">
         <item>BUILDING</item>
+    </string-array>
+
+    <string-array name="allType">
+        <item>ACCESS POINT</item>
+        <item>ADAPTER</item>
+        <item>AIR CONDITIONER</item>
+        <item>APPLE CARE</item>
+        <item>BARCODE READER</item>
+        <item>BATTERY</item>
+        <item>BICYCLE</item>
+        <item>CABINET</item>
+        <item>CAMERA</item>
+        <item>CAR</item>
+        <item>CARD READER</item>
+        <item>CARPET</item>
+        <item>CART</item>
+        <item>CASH DRAWER</item>
+        <item>CHAIR</item>
+        <item>CHARGER</item>
+        <item>CHROMECAST</item>
+        <item>CLOTHES DRYERS</item>
+        <item>COFFEE MACHINE</item>
+        <item>COMPUTER</item>
+        <item>COUNTER</item>
+        <item>CURTAIN</item>
+        <item>DEVELOPER PROGRAM</item>
+        <item>DISPLAY PORT</item>
+        <item>DOCUMENT SHREDDER</item>
+        <item>DONGLE</item>
+        <item>DOOR ACCESS</item>
+        <item>DRAWER</item>
+        <item>E-COMMERCE</item>
+        <item>EQUIPMENT</item>
+        <item>FAN</item>
+        <item>FILM</item>
+        <item>FURNITURE</item>
+        <item>GAME</item>
+        <item>GAS STOVE</item>
+        <item>HDD</item>
+        <item>IMAC</item>
+        <item>INTERIOR DECORATION</item>
+        <item>PAD</item>
+        <item>IPAD COVER</item>
+        <item>IPOD</item>
+        <item>ITEM</item>
+        <item>JUICE BLENDER</item>
+        <item>KEYBOARD</item>
+        <item>KITCHEN</item>
+        <item>LABEL PRINTER</item>
+        <item>LAMP</item>
+        <item>LAPTOP</item>
+        <item>LOCKER</item>
+        <item>MICRO SD CARD</item>
+        <item>MINIDRIVE</item>
+        <item>MIRCROWAVE</item>
+        <item>MOBILE PHONE</item>
+        <item>MODEM ROUTER</item>
+        <item>MONITOR</item>
+        <item>NETWORK SWITCH</item>
+        <item>POCKET WIFI</item>
+        <item>POWER BANK</item>
+        <item>POWER SUPPLIER</item>
+        <item>PRINTER</item>
+        <item>PROGRAM</item>
+        <item>REFRIGERATOR</item>
+        <item>RICE COOKER</item>
+        <item>ROUTER</item>
+        <item>SCANNER</item>
+        <item>SERVER</item>
+        <item>SERVER CABINET</item>
+        <item>SHELVES</item>
+        <item>SINK</item>
+        <item>SOFA</item>
+        <item>SOFTWARE</item>
+        <item>SOLID STATE DRIVE</item>
+        <item>SSD</item>
+        <item>STOOL</item>
+        <item>SWING</item>
+        <item>TABLE</item>
+        <item>TABLET</item>
+        <item>TELEPHONE</item>
+        <item>USB</item>
+        <item>WASHING MACHINE</item>
+        <item>WATCH</item>
+        <item>WATER HEATER</item>
+        <item>WATER PUMP</item>
+        <item>WHITE BOARD</item>
+        <item>WIRELESS</item>
+        <item>ขาแขวน</item>
+        <item>อุปกรณ์คอมพิวเตอร์</item>
     </string-array>
 
     <string-array name="device_and_accessory">
@@ -110,6 +200,11 @@
 
     <string-array name="other">
         <item>BICYCLE</item>
+        <item>CAR</item>
+    </string-array>
+    <string-array name="other_summary">
+        <item>BICYCLE</item>
+        <item>BUILDING</item>
         <item>CAR</item>
     </string-array>
 
