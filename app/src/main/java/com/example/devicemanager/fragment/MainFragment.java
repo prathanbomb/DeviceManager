@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,6 +107,8 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
 
         final SearchView searchViewActionBar = (SearchView) menuItem.getActionView();
         searchViewActionBar.clearFocus();
+        searchViewActionBar.setIconifiedByDefault(false);
+        searchViewActionBar.setPadding(0,0,20,0);
         searchViewActionBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -126,6 +129,8 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
                 return true;
             }
         });
+
+
     }
 
     @Override
@@ -187,7 +192,10 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
             progressBar.setVisibility(View.VISIBLE);
             view.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
-            loadData();
+            if (loadData.deleteTable() == 1) {
+                loadData();
+                Log.d("test1607", "swipe");
+            }
         }
     };
     private void loadData() {
@@ -195,7 +203,6 @@ public class MainFragment extends Fragment implements ItemListAdapter.Holder.Ite
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loadData.deleteTable();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
 

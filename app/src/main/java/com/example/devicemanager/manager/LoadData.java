@@ -25,8 +25,16 @@ public class LoadData {
         itemDao = db.itemDao();
     }
 
-    public void insert(ItemEntity itemEntity) {
-        new InsertAsyncTask(itemDao).execute(itemEntity);
+    public Integer insert(ItemEntity itemEntity) {
+        int status = 0;
+        try {
+            status = new InsertAsyncTask(itemDao).execute(itemEntity).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return status;
     }
 
     public void updateLastUpdate(String lastUpdate, int id) {
@@ -42,8 +50,16 @@ public class LoadData {
                 forwardBudget, id).execute();
     }
 
-    public void deleteTable() {
-        new DeleteAsyncTask(itemDao).execute();
+    public Integer deleteTable() {
+        Integer status = 0;
+        try {
+            status = new DeleteAsyncTask(itemDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return status;
     }
 
     public List<ItemEntity> selectData(String id) {
@@ -107,6 +123,11 @@ public class LoadData {
             itemDao.insertAll(itemEntities[0]);
             return 1;
         }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+        }
     }
 
     private static class GetItemAsyncTask extends AsyncTask<ItemEntity, Void, List<ItemEntity>> {
@@ -137,7 +158,7 @@ public class LoadData {
         }
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<ItemEntity, Void, Void> {
+    private static class DeleteAsyncTask extends AsyncTask<ItemEntity, Void, Integer> {
         private ItemDao itemDao;
 
         DeleteAsyncTask(ItemDao itemDao) {
@@ -145,9 +166,14 @@ public class LoadData {
         }
 
         @Override
-        protected Void doInBackground(ItemEntity... itemEntities) {
+        protected Integer doInBackground(ItemEntity... itemEntities) {
             itemDao.delete();
-            return null;
+            return 1;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
         }
     }
 

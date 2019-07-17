@@ -26,19 +26,29 @@
                 android:id="@+id/btnDetail"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:text="@string/device_detail"
+                android:drawableStart="@drawable/ic_list"
+                android:drawableLeft="@drawable/ic_list"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="@string/detail"
                 android:textColor="#ffffff" />
 
             <Button
                 android:id="@+id/btnSummary"
                 android:layout_width="0dp"
-                android:textColor="#ffffff"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:text="@string/summary" />
+                android:drawableStart="@drawable/ic_summary"
+                android:drawableLeft="@drawable/ic_summary"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="@string/summary"
+                android:textColor="#ffffff" />
         </LinearLayout>
     </LinearLayout>
 

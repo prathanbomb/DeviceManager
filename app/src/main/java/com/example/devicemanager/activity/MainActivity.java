@@ -13,23 +13,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.devicemanager.R;
-import com.example.devicemanager.adapter.ItemListAdapter;
 import com.example.devicemanager.fragment.LoginFragment;
 import com.example.devicemanager.fragment.MainFragment;
 import com.example.devicemanager.fragment.SummaryFragment;
-import com.example.devicemanager.manager.Contextor;
 import com.example.devicemanager.manager.LoadData;
 import com.example.devicemanager.room.ItemEntity;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -43,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private LoadData loadData;
-    private Boolean downloadStatus;
-    SharedPreferences sp;
-    SharedPreferences.Editor editor;
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
     private View view;
     private ProgressBar progressBar;
     private Button btnSummary, btnDetail;
+    private int insertStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.contentContainer
-                                        , MainFragment.newInstance()
-                                        , "MainFragment")
-                                .commit();
-                        btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                        setUpLoadData();
                     }
                 }
             };
@@ -91,33 +83,15 @@ public class MainActivity extends AppCompatActivity {
     private void initInstances() {
         btnDetail = findViewById(R.id.btnDetail);
         btnSummary = findViewById(R.id.btnSummary);
+        view = findViewById(R.id.view);
+        progressBar = findViewById(R.id.spin_kit);
 
         btnDetail.setOnClickListener(onBtnClick);
         btnSummary.setOnClickListener(onBtnClick);
 
         sp = this.getSharedPreferences("DownloadStatus", Context.MODE_PRIVATE);
-        editor = sp.edit();
-
-        view = findViewById(R.id.view);
-        progressBar = findViewById(R.id.spin_kit);
-        view.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
 
         loadData = new LoadData(this);
-
-        downloadStatus = sp.getBoolean("downloadStatus", true);
-        if (downloadStatus) {
-            loadData();
-        } else {
-            view.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        if (getIntent().getStringExtra("itemId") != null){
-            ItemListAdapter adapter = new ItemListAdapter(Contextor.getInstance().getContext());
-            adapter.setItemId(getIntent().getStringExtra("itemId"));
-            adapter.notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -128,12 +102,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        downloadStatus = sp.getBoolean("downloadStatus", true);
-        if (downloadStatus) {
-            loadData();
-        } else {
-            view.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
+        if (getIntent().getStringExtra("itemId") != null) {
+            setUpLoadData();
         }
     }
 
@@ -148,18 +118,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        editor = sp.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
+    }
+
+    private void setUpLoadData() {
+        if (sp.getBoolean("downloadStatus", true)) {
+            showLoadingView();
+            if (loadData.deleteTable() == 1) {
+                loadData();
+            }
+        }
     }
 
     private void loadData() {
+        insertStatus = 0;
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Data");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                view.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                loadData.deleteTable();
+                editor = sp.edit();
+                editor.putBoolean("downloadStatus", false);
+                editor.apply();
+
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     ItemEntity item = s.getValue(ItemEntity.class);
 
@@ -169,20 +151,46 @@ public class MainActivity extends AppCompatActivity {
                             item.setPurchasedDate(setDate(item.getPurchasedDate()));
                         }
                         item.setAutoId(Integer.parseInt(s.getKey()));
-                        loadData.insert(item);
+                        insertStatus = loadData.insert(item);
                     }
                 }
-                editor.putBoolean("downloadStatus", false);
-                editor.commit();
-                view.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
+
+                if (insertStatus == 1) {
+                    setStartFragment();
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Snackbar.make(view, "Download Failed", Snackbar.LENGTH_SHORT)
+                        .setAction("Reload", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                setUpLoadData();
+                            }
+                        }).show();
             }
         });
+    }
+
+    private void setStartFragment() {
+        hideLoadingView();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.contentContainer
+                        , MainFragment.newInstance()
+                        , "MainFragment")
+                .commit();
+        btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+    }
+
+    private void showLoadingView(){
+        view.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingView(){
+        view.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private String setDate(String inputDate) {
@@ -229,15 +237,15 @@ public class MainActivity extends AppCompatActivity {
                     btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 }
             } else if (view == btnSummary && mainFragment != null) {
-                if (secondFragment == null){
+                showLoadingView();
+                if (secondFragment == null) {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.contentContainer,
                                     SummaryFragment.newInstance(),
                                     "SummaryFragment")
                             .detach(mainFragment)
                             .commit();
-                }
-                else {
+                } else {
                     getSupportFragmentManager().beginTransaction()
                             .attach(secondFragment)
                             .detach(mainFragment)
@@ -245,12 +253,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 btnSummary.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 btnDetail.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                hideLoadingView();
             } else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.contentContainer
-                                , MainFragment.newInstance()
-                                , "MainFragment")
-                        .commit();
+                setStartFragment();
             }
         }
     };
