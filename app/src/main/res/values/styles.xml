@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -44,7 +44,7 @@
     </style>
 
     <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:background">@drawable/rounded_shape</item>
+        <item name="background">@drawable/rounded_shape</item>
         <item name="android:textColor">#fff</item>
         <item name="android:padding">10dp</item>
         <item name="android:textSize">16sp</item>
@@ -61,7 +61,7 @@
     <style name="TextViewSmall">
         <item name="android:textSize">16sp</item>
         <item name="android:padding">3dp</item>
-        <item name="android:color">@color/grey</item>
+        <item name="color">@color/grey</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -75,13 +75,13 @@
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">?android:attr/listDivider</item>
+        <item name="background">?android:attr/listDivider</item>
     </style>
 
     <style name="TextViewForDetailDevice">
         <item name="android:padding">10dp</item>
         <item name="android:paddingLeft">30dp</item>
-        <item name="android:paddingStart">30dp</item>
+        <item name="paddingStart">30dp</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -101,7 +101,7 @@
     </style>
 
     <style name="TextViewForFab">
-        <item name="android:background">@drawable/rounded_shape</item>
+        <item name="background">@drawable/rounded_shape</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginEnd">10dp</item>
         <item name="android:layout_marginBottom">15dp</item>

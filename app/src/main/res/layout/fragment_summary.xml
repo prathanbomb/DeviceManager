@@ -24,9 +24,9 @@
 
         <TextView
             android:id="@+id/tvAll"
+            style="@style/TextViewForFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TextViewForFab"
             android:background="@drawable/rounded_shape"
             android:text="@string/all" />
 
@@ -49,9 +49,9 @@
 
         <TextView
             android:id="@+id/tvLaptop"
+            style="@style/TextViewForFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TextViewForFab"
             android:text="@string/laptop" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -73,9 +73,9 @@
 
         <TextView
             android:id="@+id/tvDevice"
+            style="@style/TextViewForFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TextViewForFab"
             android:text="@string/device" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -97,10 +97,10 @@
 
         <TextView
             android:id="@+id/tvFurniture"
+            style="@style/TextViewForFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TextViewForFab"
-            android:text="@string/furniture"/>
+            android:text="@string/furniture" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabFurniture"
@@ -120,9 +120,9 @@
 
         <TextView
             android:id="@+id/tvOther"
+            style="@style/TextViewForFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TextViewForFab"
             android:text="@string/other" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -72,7 +72,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="22dp"
                     android:layout_marginRight="22dp"
-                    android:src="@drawable/ic_person" />
+                    app:srcCompat="@drawable/ic_person" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -120,7 +120,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="22dp"
                     android:layout_marginRight="22dp"
-                    android:src="@drawable/ic_detail" />
+                    app:srcCompat="@drawable/ic_detail" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -168,8 +168,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="22dp"
                     android:layout_marginRight="22dp"
-                    android:src="@drawable/ic_tag"
-                    android:tint="#A2A2A2" />
+                    android:tint="#A2A2A2"
+                    app:srcCompat="@drawable/ic_tag" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -254,8 +254,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="22dp"
                     android:layout_marginRight="22dp"
-                    android:src="@drawable/ic_calendar"
-                    android:tint="#A2A2A2" />
+                    android:tint="#A2A2A2"
+                    app:srcCompat="@drawable/ic_calendar" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -329,7 +329,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="22dp"
                     android:layout_marginRight="22dp"
-                    android:src="@drawable/ic_note" />
+                    app:srcCompat="@drawable/ic_note" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

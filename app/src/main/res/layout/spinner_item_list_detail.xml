@@ -3,9 +3,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:ellipsize="end"
     android:gravity="start"
+    android:maxLines="1"
     android:padding="12dp"
     android:textColor="@color/grey"
-    android:textSize="@dimen/text_14_sp"
-    android:ellipsize="end"
-    android:maxLines="1"/>
+    android:textSize="@dimen/text_14_sp" />
