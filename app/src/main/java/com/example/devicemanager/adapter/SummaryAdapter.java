@@ -2,9 +2,11 @@ package com.example.devicemanager.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,17 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.devicemanager.R;
 import com.example.devicemanager.activity.SummaryListDetailActivity;
+import com.example.devicemanager.manager.Contextor;
 
 public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> {
-    private String[] brand;
-    private String[] type;
     private Context context;
-    private int[] available;
-    private int[] count;
-    private int[] total;
+    private int[] available,count,total;
+    private Context contector = Contextor.getInstance().getContext();
+    private String[] brand,type,
+            funiture = contector.getResources().getStringArray(R.array.furniture),
+            other = contector.getResources().getStringArray(R.array.other_summary);
 
     public SummaryAdapter(Context context) {
         this.context = context;
+
     }
 
     public void setBrand(String[] brand) {
@@ -59,13 +63,12 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(type.length >1) {
+                if (type.length > 1) {
                     Intent intent = new Intent(context, SummaryListDetailActivity.class);
                     intent.putExtra("Type", type[position]);
                     intent.putExtra("Brand", "-");
                     context.startActivity(intent);
-                }
-                else {
+                } else {
                     Intent intent = new Intent(context, SummaryListDetailActivity.class);
                     intent.putExtra("Type", type[0]);
                     intent.putExtra("Brand", brand[position]);
@@ -77,9 +80,9 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
 
     @Override
     public int getItemCount() {
-        if(type == null)
+        if (type == null)
             return 0;
-        if(type.length == 1){
+        if (type.length == 1) {
             return brand.length;
         }
         return type.length;
@@ -92,6 +95,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
 
     class Holder extends RecyclerView.ViewHolder {
         TextView tvBrand, tvTotal, tvAvailable, tvActive, tvType;
+        ImageView imgView;
 
         Holder(View itemView) {
             super(itemView);
@@ -100,21 +104,67 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.Holder> 
             tvAvailable = itemView.findViewById(R.id.tvAvailable);
             tvActive = itemView.findViewById(R.id.tvActive);
             tvType = itemView.findViewById(R.id.tvType);
+            imgView = itemView.findViewById(R.id.imgView);
         }
 
         public void setItem(int position) {
             if (brand != null) {
                 tvBrand.setText("" + brand[position]);
+                switch (brand[position].toLowerCase()) {
+                    case "apple":
+                        imgView.setImageResource(R.drawable.ic_brand_apple);
+                        break;
+                    case "hp":
+                        imgView.setImageResource(R.drawable.ic_brand_hp);
+                        break;
+                    case "lenovo":
+                        imgView.setImageResource(R.drawable.ic_brand_lenovo);
+                        break;
+                    case "dell":
+                        imgView.setImageResource(R.drawable.ic_brand_dell);
+                        break;
+                    case "true idc chromebook 11":
+                        imgView.setImageResource(R.drawable.ic_brand_chromebook);
+                        break;
+                    case "-":
+                        imgView.setImageResource(R.drawable.ic_barcode);
+                        break;
+                }
             }
             tvTotal.setText("" + total[position]);
             tvAvailable.setText("" + available[position]);
             tvActive.setText("" + count[position]);
             if (type.length <= 1) {
                 tvType.setText(type[0]);
-            }
-            else{
+                setImage(0);
+            } else {
                 tvType.setText("" + type[position]);
+                setImage(position);
             }
+        }
+
+        private void setImage(int position) {
+            if (brand!=null){
+                return;
+            }
+            if(type[position].matches("LAPTOP")){
+                imgView.setImageResource(R.drawable.ic_summary_laptop);
+                return;
+            }
+            for (int i = 0; i < other.length; i++) {
+                if (other[i].toUpperCase().trim().matches(type[position].toUpperCase().trim())){
+                    imgView.setImageResource(R.drawable.ic_summary_other);
+                    return;
+                }
+            }
+            for (int i = 0; i < funiture.length; i++) {
+                if (funiture[i].toUpperCase().trim().matches(type[position].toUpperCase().trim())){
+                    imgView.setImageResource(R.drawable.ic_summary_furniture_s);
+                    return;
+                }
+            }
+            imgView.setImageResource(R.drawable.ic_summary_device_s);
+
         }
     }
 }
