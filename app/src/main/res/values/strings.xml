@@ -211,7 +211,7 @@
     <string-array name="filter">
         <item>All</item>
         <item>Available</item>
-        <item>Active</item>
+        <item>InUse</item>
     </string-array>
 
     <string-array name="sort_by">
@@ -277,7 +277,7 @@
     <string name="barcode">barcode</string>
     <string name="total">Total</string>
     <string name="available">Available</string>
-    <string name="active">Active</string>
+    <string name="active">InUse</string>
     <string name="other">Other</string>
     <string name="furniture">Furniture</string>
     <string name="device">Device</string>
