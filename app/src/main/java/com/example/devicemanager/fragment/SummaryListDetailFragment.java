@@ -174,7 +174,7 @@ public class SummaryListDetailFragment extends Fragment {
                     if (productOwner.matches("-")) {
                         productStatus = "Available";
                     } else {
-                        productStatus = "Active";
+                        productStatus = "InUse";
                     }
                     String productKey = itemEntities.get(i).getUnnamed2().trim();
                     Log.d("date", "" + productAddedDate);
@@ -211,7 +211,7 @@ public class SummaryListDetailFragment extends Fragment {
                     case "Available":
                         spinnerSetRecyclerview(filter);
                         break;
-                    case "Active":
+                    case "InUse":
                         spinnerSetRecyclerview(filter);
                         break;
                 }
@@ -264,7 +264,6 @@ public class SummaryListDetailFragment extends Fragment {
         ArrayList<String> filterOwner = new ArrayList<String>();
         ArrayList<String> filterAddedDate = new ArrayList<String>();
         ArrayList<String> filterKey = new ArrayList<String>();
-        Log.d("status", "" + status.size());
         for (int position = 0; position < status.size(); position++) {
             if (status.get(position).matches(spinnerStatus)) {
                 filterStatus.add(status.get(position));
